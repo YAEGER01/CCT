@@ -39,7 +39,6 @@ if (isset($_POST['action']) && isset($_POST['order_id'])) {
     header("Location: track_orders.php");
     exit();
 }
-
 // Fetch orders made to the seller
 $orderQuery = "
     SELECT o.id AS order_id, o.status, m.name AS meal_name, m.price, u.username AS customer_name 
