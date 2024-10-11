@@ -41,7 +41,7 @@ if (isset($_POST['action']) && isset($_POST['order_id'])) {
 }
 // Fetch orders made to the seller
 $orderQuery = "
-    SELECT o.id AS order_id, o.status, m.name AS meal_name, m.price, u.username AS customer_name 
+    SELECT o.id AS order_id, o.status, m.name AS meal_name, o.quantity, m.price, u.username AS customer_name 
     FROM orders o
     JOIN meals m ON o.meal_id = m.id
     JOIN users u ON o.user_id = u.id
@@ -117,6 +117,7 @@ $orderResult = $stmt->get_result();
             <div class="order">
                 <h3>Meal: <?php echo htmlspecialchars($order['meal_name']); ?></h3>
                 <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['customer_name']); ?></p>
+                <p><strong>Quantity:</strong> <?php echo htmlspecialchars($order['quantity']); ?></p>
                 <p><strong>Total Price:</strong> $<?php echo htmlspecialchars($order['price']); ?></p>
                 <p><strong>Status:</strong> <?php echo htmlspecialchars($order['status']); ?></p>
 
