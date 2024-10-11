@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Login or Signup</title>
+    <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
+
     <style>
         body {
     font-family: Arial, sans-serif;
@@ -35,6 +37,7 @@ a:hover {
     background-color: #3e8e41;
 }
     </style>
+
 </head>
 <body>
     <h1>Welcome!</h1>
