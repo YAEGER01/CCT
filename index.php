@@ -41,11 +41,10 @@ a:hover {
 </head>
 <body>
     <h1>Welcome!</h1>
-    <p>Please choose an option:</p>
+    <p>Login or Signup</p>
     <ul>
         <li><a href="login.php">Login</a></li>
         <li><a href="signup.php">Signup</a></li>
-
         <!-- this is the main branch -->
     </ul>
 </body>
