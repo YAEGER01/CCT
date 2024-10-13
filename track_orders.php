@@ -11,50 +11,65 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 $seller_id = $_SESSION['user_id']; // Get seller's ID
 
 // Handle accepting and declining orders
-if (isset($_POST['action']) && isset($_POST['order_id'])) {
-    $order_id = intval($_POST['order_id']);
-    $new_status = ($_POST['action'] === 'accept') ? 'accepted' : 'declined';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action'])) {
+        $order_id = intval($_POST['order_id']); // Get the order ID
 
-    // Update the order status in the database
-    $updateQuery = "UPDATE orders SET status = ? WHERE id = ? AND meal_id IN (SELECT id FROM meals WHERE seller_id = ?)";
-    $stmt = $conn->prepare($updateQuery);
+        if ($_POST['action'] === 'accept') {
+            // Fetch the order details first
+            $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
+            $orderResult = mysqli_query($conn, $orderQuery);
+            
+            if (!$orderResult) {
+                die("Error fetching order: " . mysqli_error($conn)); // Debugging output
+            }
+        
+            $order = mysqli_fetch_assoc($orderResult);
+        
+            if ($order) {
+                // Insert into accepted_orders table
+                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity) 
+                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']})";
+        
+                if (!mysqli_query($conn, $insertQuery)) {
+                    die("Error inserting into accepted_orders: " . mysqli_error($conn)); // Debugging output
+                }
+                
+                // Instead of deleting the order, update the status to 'accepted'
+                $updateStatusQuery = "UPDATE orders SET status = 'accepted' WHERE id = $order_id";
+                if (!mysqli_query($conn, $updateStatusQuery)) {
+                    die("Error updating order status: " . mysqli_error($conn)); // Debugging output
+                }
+        
+                // Refresh the page or redirect
+                header("Location: track_orders.php");
+                exit();
+            }
+        }
+        
+        } elseif ($_POST['action'] === 'decline') {
+            // Optionally, update the order status to 'declined'
+            $updateQuery = "UPDATE orders SET status = 'declined' WHERE id = $order_id";
+            mysqli_query($conn, $updateQuery);
 
-    // Check if prepare() failed and output error if it did
-    if ($stmt === false) {
-        die("Error in query preparation: " . $conn->error);
+            // Refresh the page or redirect
+            header("Location: track_orders.php");
+            exit();
+        }
+    
     }
 
-    // Bind parameters and execute the query
-    $stmt->bind_param('sii', $new_status, $order_id, $seller_id);
-    $stmt->execute();
 
-    // Check if the status update was successful
-    if ($stmt->affected_rows > 0) {
-        echo "Order successfully " . htmlspecialchars($new_status);
-    } else {
-        echo "Failed to update order status. Please try again.";
-    }
-
-    // Redirect back to the track_orders page after updating the status
-    header("Location: track_orders.php");
-    exit();
-}
 // Fetch orders made to the seller
 $orderQuery = "
     SELECT o.id AS order_id, o.status, m.name AS meal_name, o.quantity, m.price, u.username AS customer_name 
     FROM orders o
     JOIN meals m ON o.meal_id = m.id
     JOIN users u ON o.user_id = u.id
-    WHERE m.seller_id = ? AND (o.status = 'pending' OR o.status = 'accepted' OR o.status = 'declined')
+    WHERE m.seller_id = ? AND o.status = 'pending'
     ORDER BY o.id DESC";
-    
+
 $stmt = $conn->prepare($orderQuery);
-
-// Check if prepare() failed and output error if it did
-if ($stmt === false) {
-    die("Error in query preparation: " . $conn->error);
-}
-
 $stmt->bind_param('i', $seller_id);
 $stmt->execute();
 $orderResult = $stmt->get_result();
@@ -67,75 +82,63 @@ $orderResult = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Orders</title>
     <style>
-     body {
-    font-family: Arial, sans-serif;
-    background-color: #2b2b2b; /* Grayish-black background */
-    color: white; /* White text for contrast */
-}
-
-.header {
-    background-color: #6a0dad; /* Purple header */
-    color: white;
-    padding: 15px;
-    text-align: center;
-    border-bottom: 5px solid #4b0082; /* Darker purple border */
-    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
-}
-
-.header a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.header a:hover {
-    color: #ddd; /* Lighter shade on hover */
-}
-
-.order-container {
-    margin: 20px;
-}
-
-.order {
-    background-color: #333; /* Dark background for orders */
-    border: 1px solid #444; /* Slightly lighter gray for border */
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 12px; /* Rounded corners for orders */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-}
-
-.order h3 {
-    color: #6a0dad; /* Purple for meal names */
-}
-
-.button {
-    padding: 10px;
-    background-color: #6a0dad; /* Purple buttons */
-    color: white;
-    border: none;
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.button.accept {
-    background-color: #28a745; /* Green for accept button */
-}
-
-.button.decline {
-    background-color: #dc3545; /* Red for decline button */
-}
-
-.button:hover {
-    opacity: 0.9;
-}
-
-button:focus {
-    outline: none;
-    box-shadow: 0 0 10px #6a0dad; /* Purple glow on focus */
-}
-
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2b2b2b; /* Grayish-black background */
+            color: white; /* White text for contrast */
+        }
+        .header {
+            background-color: #6a0dad; /* Purple header */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 5px solid #4b0082; /* Darker purple border */
+            border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+        }
+        .header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .header a:hover {
+            color: #ddd; /* Lighter shade on hover */
+        }
+        .order-container {
+            margin: 20px;
+        }
+        .order {
+            background-color: #333; /* Dark background for orders */
+            border: 1px solid #444; /* Slightly lighter gray for border */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px; /* Rounded corners for orders */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+        }
+        .order h3 {
+            color: #6a0dad; /* Purple for meal names */
+        }
+        .button {
+            padding: 10px;
+            background-color: #6a0dad; /* Purple buttons */
+            color: white;
+            border: none;
+            border-radius: 8px; /* Rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button.accept {
+            background-color: #28a745; /* Green for accept button */
+        }
+        .button.decline {
+            background-color: #dc3545; /* Red for decline button */
+        }
+        .button:hover {
+            opacity: 0.9;
+        }
+        button:focus {
+            outline: none;
+            box-shadow: 0 0 10px #6a0dad; /* Purple glow on focus */
+        }
     </style>
 </head>
 <body>

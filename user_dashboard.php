@@ -29,6 +29,27 @@ function renderStores($result) {
         echo "<p>No stores available at the moment.</p>";
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['user_action'])) {
+        $action = $_POST['user_action'];
+
+        switch ($action) {
+            case 'view_orders':
+                header("Location: cart.php");
+                exit();
+            case 'edit_profile':
+                header("Location: user_edit.php");
+                exit();
+            case 'logout':
+                session_destroy();
+                header("Location: login.php");
+                exit();
+            default:
+                echo "Invalid action!";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -72,21 +93,34 @@ function renderStores($result) {
         .logout:hover, .cart:hover {
             background-color: #4A4A4A; /* Lighter grayish black on hover */
         }
+        .form-container {
+            margin: 20px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #D3D3D3; /* Light gray text */
+        }
+        /* Stores Section */
         .store-container {
-            margin: 20px auto;
-            max-width: 1200px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px; /* Space between store items */
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .store {
+            width: 250px; /* Fixed width for equal sizing */
+            height: 250px; /* Fixed height for equal sizing */
             background-color: #383838; /* Dark grayish black for store card */
             border: 1px solid #6A5ACD; /* Purple border */
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px; /* Space around store cards */
         }
         .store:hover {
             transform: scale(1.05);
@@ -99,39 +133,52 @@ function renderStores($result) {
             cursor: pointer;
             border-radius: 5px;
             text-decoration: none;
-            display: inline-block;
             margin-top: 10px;
         }
         .view-meals:hover {
             background-color: #5a4db1; /* Darker purple on hover */
         }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #D3D3D3; /* Light gray text */
+        /* Style the select box */
+        .action-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background-color: #6a0dad;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <div class="header">
-        <h1>Welcome, <?php echo $username; ?>!</h1>
-        <div class="nav-buttons">
-            <a href="cart.php" class="cart">Cart</a>
-            <a href="logout.php" class="logout">Logout</a>
+        <div class="form-container">
+            <h2>User Dashboard</h2>
+            <form action="user_dashboard.php" method="post">
+                <select name="user_action" class="action-select" onchange="this.form.submit()">
+                    <option value="">...</option>
+                    <option value="view_orders">View Orders</option>
+                    <option value="edit_profile">Edit Profile</option>
+                    <option value="logout">Logout</option>
+                </select>
+            </form>
         </div>
     </div>
 
     <!-- Stores Section -->
     <div class="store-container">
         <h2>Available Stores</h2>
-        <?php renderStores($result); ?>
-
-        <?php
-        // Close the result set and connection
-        $result->close();
-        $conn->close();
-        ?>
+        <div class="stores-grid">
+            <?php renderStores($result); ?>
+        </div>
     </div>
+
+    <?php
+    // Close the result set and connection
+    $result->close();
+    $conn->close();
+    ?>
 </body>
 </html>
