@@ -178,7 +178,7 @@ $conn->close();
 
             <label for="role">Role</label>
             <select id="role" name="role" required>
-                <option value="user">User</option>
+                <option value="user">Buyer</option>
                 <option value="seller">Seller</option>
             </select>
 
