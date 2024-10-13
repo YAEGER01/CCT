@@ -152,7 +152,7 @@ $sellerResult->close();
                         <form method="POST" action="cart.php">
                             <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
                             <label for="quantity">Qty:</label>
-                            <input type="number" name="quantity" min="1" value="1" required>
+                            <input type="number" name="quantity" required>
                             <button type="submit">Add to Cart</button>
                         </form>
                     </div>
