@@ -65,11 +65,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Meal</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .form-container { width: 50%; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
-        label { display: block; margin-bottom: 10px; }
-        input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px; margin-bottom: 20px; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2b2b2b; /* Grayish-black background */
+            color: white; /* White text for contrast */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        .form-container {
+            width: 50%;
+            margin: 20px auto; /* Center the form */
+            padding: 40px; /* Increased padding for better spacing */
+            border: 1px solid #444; /* Darker grayish-black border */
+            background-color: #333; /* Dark gray background */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+            text-align: center; /* Center text within the container */
+        }
+        label {
+            display: block;
+            margin-bottom: 8px; /* Reduced margin for labels */
+            color: #6a0dad; /* Purple label */
+            font-weight: bold; /* Make label text bold */
+        }
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 12px; /* Standard padding for inputs */
+            margin-bottom: 25px; /* Increased space between inputs */
+            border: 1px solid #555; /* Grayish-black border */
+            border-radius: 8px; /* Rounded corners for input fields */
+            background-color: #444; /* Dark background for inputs */
+            color: white; /* White text for inputs */
+            box-sizing: border-box; /* Ensure padding is included in width */
+        }
+        textarea {
+            resize: vertical; /* Allow vertical resizing only */
+            min-height: 120px; /* Increased minimum height for the textarea */
+        }
+        button {
+            padding: 12px 24px; /* Increased padding for buttons */
+            background-color: #6a0dad; /* Purple button */
+            color: white;
+            border: none;
+            border-radius: 8px; /* Rounded corners for buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px; /* Increased space above the button */
+            display: inline-block; /* Make the button an inline-block element */
+        }
+        button:hover {
+            background-color: #4b0082; /* Darker purple on hover */
+        }
     </style>
 </head>
 <body>
@@ -88,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <label>Meal Image:</label>
         <input type="file" name="meal_image" accept="image/*">
-        <br>
+
         <button type="submit">Update Meal</button>
     </form>
 </div>

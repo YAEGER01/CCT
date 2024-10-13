@@ -6,55 +6,57 @@ include 'db.php';
 session_start();
 
 // Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize inputs
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']); // Sanitize password
+    $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
+    $password = trim(mysqli_real_escape_string($conn, $_POST['password']));
 
     // Validate inputs
     if (empty($email) || empty($password)) {
-        echo "Email and password are required.";
+        $error = "Email and password are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Invalid email format.";
+        $error = "Invalid email format.";
     } else {
         // Prepare an SQL statement to check user credentials
         $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        if ($stmt) {
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        // Check if the user exists
-        if ($result->num_rows > 0) {
-            // Fetch user data
-            $user = $result->fetch_assoc();
+            // Check if the user exists
+            if ($result->num_rows > 0) {
+                // Fetch user data
+                $user = $result->fetch_assoc();
 
-            // Verify password (compare plain text)
-            if ($password == $user['password']) {
-                // Store user information in session
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
+                // Compare plain text password
+                if ($password === $user['password']) { // Basic comparison
+                    // Store user information in session
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['role'] = $user['role'];
 
-                // Redirect based on role
-                if ($user['role'] == 'seller') {
-                    header("Location: seller_dashboard.php"); // Redirect to seller dashboard
+                    // Redirect based on role
+                    if ($user['role'] === 'seller') {
+                        header("Location: seller_dashboard.php");
+                    } else {
+                        header("Location: user_dashboard.php");
+                    }
+                    exit(); // Ensure no further code is executed
                 } else {
-                    header("Location: user_dashboard.php"); // Redirect to user dashboard
+                    $error = "Incorrect password.";
                 }
-                exit(); // Ensure no further code is executed
             } else {
-                echo "Incorrect password.";
+                $error = "No user found with that email.";
             }
-        } else {
-            echo "No user found with that email.";
-        }
 
-        // Close the statement
-        $stmt->close();
+            $stmt->close();
+        } else {
+            $error = "Database error: Unable to prepare statement.";
+        }
     }
 }
 
-// Close the database connection
 $conn->close();
 ?>
 
@@ -66,66 +68,127 @@ $conn->close();
     <title>Login</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-}
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2E2E2E; /* Grayish black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
+        .container {
+            background-color: #383838; /* Lighter grayish black */
+            padding: 40px;
+            border-radius: 12px; /* Smooth edges */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
 
-form {
-    max-width: 400px;
-    margin: 0 auto;
-}
+        h2 {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #D3D3D3; /* Light gray */
+        }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #D3D3D3; /* Light gray */
+        }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #6A5ACD; /* Purple border */
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #2E2E2E; /* Grayish black input background */
+            color: #D3D3D3; /* Light gray text */
+            transition: border-color 0.3s;
+        }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+        input:focus {
+            border-color: #5a4db1; /* Darker purple on focus */
+            outline: none;
+        }
 
-button:hover {
-    background-color: #3e8e41;
-}
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #6A5ACD; /* Purple button */
+            color: white;
+            border: none;
+            border-radius: 12px; /* Smooth edges */
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
 
-a {
-    color: #007bff;
-    text-decoration: none;
-}
+        button:hover {
+            background-color: #5a4db1; /* Darker purple on hover */
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-footer a {
+            color: #6A5ACD; /* Purple link */
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form method="post" action="login.php">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="Email" required><br>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Password" required><br><br>
+    <div class="container">
+        <h2>Login</h2>
 
-        <button type="submit">Login</button><br><br>
+        <?php if (isset($error)): ?>
+            <div class="error"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
 
-        <!-- Link to signup page -->
-        <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
-    </form>
+        <form method="post" action="login.php">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
+            </div>
+        </form>
+    </div>
+
 </body>
 </html>

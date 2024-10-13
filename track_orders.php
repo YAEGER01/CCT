@@ -67,41 +67,75 @@ $orderResult = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Orders</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        .order-container {
-            margin: 20px;
-        }
-        .order {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-        }
-        .button {
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button.accept {
-            background-color: #28a745;
-        }
-        .button.decline {
-            background-color: #dc3545;
-        }
-        .button:hover {
-            opacity: 0.9;
-        }
+     body {
+    font-family: Arial, sans-serif;
+    background-color: #2b2b2b; /* Grayish-black background */
+    color: white; /* White text for contrast */
+}
+
+.header {
+    background-color: #6a0dad; /* Purple header */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 5px solid #4b0082; /* Darker purple border */
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+}
+
+.header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.header a:hover {
+    color: #ddd; /* Lighter shade on hover */
+}
+
+.order-container {
+    margin: 20px;
+}
+
+.order {
+    background-color: #333; /* Dark background for orders */
+    border: 1px solid #444; /* Slightly lighter gray for border */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px; /* Rounded corners for orders */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.order h3 {
+    color: #6a0dad; /* Purple for meal names */
+}
+
+.button {
+    padding: 10px;
+    background-color: #6a0dad; /* Purple buttons */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button.accept {
+    background-color: #28a745; /* Green for accept button */
+}
+
+.button.decline {
+    background-color: #dc3545; /* Red for decline button */
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 10px #6a0dad; /* Purple glow on focus */
+}
+
     </style>
 </head>
 <body>

@@ -95,51 +95,83 @@ if (isset($_POST['checkout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        .meal-container {
-            margin: 20px;
-        }
-        .meal {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .meal img {
-            max-width: 100px;
-            height: auto;
-            margin-right: 15px;
-        }
-        .button {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .back-button {
-            margin: 20px;
-            background-color: #007BFF;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
+      body {
+    font-family: Arial, sans-serif;
+    background-color: #2b2b2b; /* Grayish black background */
+    color: #fff; /* White text for contrast */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #6a0dad; /* Purple color for header */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 5px solid #4b0082; /* Darker purple for contrast */
+    border-radius: 0 0 15px 15px; /* Rounded bottom corners */
+}
+
+.meal-container {
+    margin: 20px;
+    background-color: #333; /* Dark grayish black for meal container */
+    padding: 15px;
+    border-radius: 15px; /* Smooth rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.meal {
+    background-color: #444; /* Darker grayish black for each meal */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 15px; /* Rounded corners for meals */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #555; /* Slight border for differentiation */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.meal img {
+    max-width: 100px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 10px; /* Rounded image corners */
+}
+
+.button {
+    background-color: #6a0dad; /* Purple button */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 10px; /* Smooth rounded button */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.button:hover {
+    background-color: #4b0082; /* Darker purple on hover */
+}
+
+.back-button {
+    margin: 20px;
+    background-color: #6a0dad; /* Purple for the back button */
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 10px; /* Rounded corners for the button */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #4b0082; /* Darker purple on hover */
+}
+
+input[type='checkbox'] {
+    transform: scale(1.3); /* Slightly bigger checkboxes for better visibility */
+}
+
     </style>
 </head>
 <body>
