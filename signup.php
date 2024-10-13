@@ -109,6 +109,9 @@ button:hover {
         </select><br><br>
 
         <button type="submit">Sign Up</button>
+
+         <!-- Link to signup page -->
+         <p>Already have an account? <a href="login.php">Login here</a></p>
     </form>
 </body>
 </html>
