@@ -15,33 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } else {
-        // Hash the password for security
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // Directly use the plain password (no hashing)
+        $query = "INSERT INTO users (username, email, password, role) VALUES ('$username', '$email', '$password', '$role')";
 
-        // Prepare an SQL statement to insert the user data
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-        
-        if ($stmt) {
-            $stmt->bind_param("ssss", $username, $email, $hashed_password, $role);
-            
-            // Execute the statement and check for success
-            if ($stmt->execute()) {
-                header("Location: login.php");
-                exit();
-            } else {
-                $error = "Error: " . $stmt->error;
-            }
-
-            // Close the statement
-            $stmt->close();
+        if (mysqli_query($conn, $query)) {
+            header("Location: login.php");
+            exit();
         } else {
-            $error = "Failed to prepare SQL statement.";
+            $error = "Error: " . mysqli_error($conn);
         }
     }
 }
 
 // Close the database connection
-$conn->close();
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -52,16 +39,14 @@ $conn->close();
     <title>Signup</title>
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <style>
-        /* General Body and Container Styling */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #2E2E2E; /* Grayish black */
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
 
         .container {
@@ -76,7 +61,7 @@ $conn->close();
 
         h2 {
             margin-bottom: 20px;
-            color: #D3D3D3; /* Light gray for contrast */
+            color: #D3D3D3; /* Light gray */
         }
 
         form {
@@ -84,7 +69,6 @@ $conn->close();
         }
 
         label {
-            text-align: left;
             display: block;
             margin-bottom: 5px;
             color: #D3D3D3; /* Light gray */
@@ -100,16 +84,8 @@ $conn->close();
             margin: 10px 0 20px;
             border: 1px solid #6A5ACD; /* Purple border */
             border-radius: 8px; /* Smooth edges */
-            box-sizing: border-box;
-            font-size: 16px;
             background-color: #2E2E2E; /* Grayish black */
             color: #D3D3D3; /* Light gray text */
-            transition: border-color 0.3s;
-        }
-
-        input:focus, select:focus {
-            border-color: #5a4db1; /* Darker purple on focus */
-            outline: none;
         }
 
         button {
@@ -118,14 +94,13 @@ $conn->close();
             color: white;
             padding: 15px;
             border: none;
-            border-radius: 12px; /* Smooth edges for button */
+            border-radius: 12px; /* Smooth edges */
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #5a4db1; /* Darker purple on hover */
+            background-color: #5a4db1; /* Darker purple */
         }
 
         .form-footer {
@@ -133,8 +108,8 @@ $conn->close();
         }
 
         .form-footer a {
-            text-decoration: none;
             color: #6A5ACD; /* Purple link */
+            text-decoration: none;
         }
 
         .form-footer a:hover {
@@ -144,17 +119,6 @@ $conn->close();
         .error {
             color: red;
             margin-bottom: 20px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            button {
-                padding: 12px;
-            }
         }
     </style>
 </head>
