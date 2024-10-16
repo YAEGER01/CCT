@@ -65,7 +65,12 @@
             border-radius: 12px;
             /* Increased border radius */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 50px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: inline-block;
+            padding: 50px;
         }
     </style>
 </head>
