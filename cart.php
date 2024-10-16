@@ -1,5 +1,4 @@
-
-<?php 
+<?php
 // Start session and include database connection
 session_start();
 include 'db.php';
@@ -71,7 +70,7 @@ if (isset($_POST['checkout'])) {
         while ($cartItem = mysqli_fetch_assoc($cartResult)) {
             $meal_id = intval($cartItem['meal_id']);
             $quantity = intval($cartItem['quantity']);
-            
+
             // Insert each cart item as a new order
             $orderQuery = "INSERT INTO orders (user_id, meal_id, quantity, status) 
                            VALUES ($user_id, $meal_id, $quantity, 'pending')";
@@ -93,6 +92,7 @@ if (isset($_POST['checkout'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,6 +105,7 @@ if (isset($_POST['checkout'])) {
             margin: 0;
             padding: 0;
         }
+
         .header {
             background-color: #6a0dad;
             color: white;
@@ -113,6 +114,7 @@ if (isset($_POST['checkout'])) {
             border-bottom: 5px solid #4b0082;
             border-radius: 0 0 15px 15px;
         }
+
         .meal-container {
             margin: 20px;
             background-color: #333;
@@ -120,6 +122,7 @@ if (isset($_POST['checkout'])) {
             border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
+
         .meal {
             background-color: #444;
             padding: 15px;
@@ -131,12 +134,14 @@ if (isset($_POST['checkout'])) {
             border: 1px solid #555;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
         .meal img {
             max-width: 100px;
             height: auto;
             margin-right: 15px;
             border-radius: 10px;
         }
+
         .button {
             background-color: #6a0dad;
             color: white;
@@ -146,9 +151,11 @@ if (isset($_POST['checkout'])) {
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .button:hover {
             background-color: #4b0082;
         }
+
         .back-button {
             margin: 20px;
             background-color: #6a0dad;
@@ -159,14 +166,17 @@ if (isset($_POST['checkout'])) {
             display: inline-block;
             transition: background-color 0.3s ease;
         }
+
         .back-button:hover {
             background-color: #4b0082;
         }
+
         input[type='checkbox'] {
             transform: scale(1.3);
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>Your Cart</h1>
@@ -198,4 +208,5 @@ if (isset($_POST['checkout'])) {
         </form>
     </div>
 </body>
+
 </html>

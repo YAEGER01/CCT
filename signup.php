@@ -33,6 +33,7 @@ mysqli_close($conn);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +42,8 @@ mysqli_close($conn);
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2E2E2E; /* Grayish black */
+            background-color: #2E2E2E;
+            /* Grayish black */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,18 +52,21 @@ mysqli_close($conn);
         }
 
         .container {
-            background-color: #383838; /* Lighter grayish black */
+            background-color: #383838;
+            /* Lighter grayish black */
             width: 100%;
             max-width: 400px;
             padding: 30px;
-            border-radius: 12px; /* Increased border radius */
+            border-radius: 12px;
+            /* Increased border radius */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
 
         h2 {
             margin-bottom: 20px;
-            color: #D3D3D3; /* Light gray */
+            color: #D3D3D3;
+            /* Light gray */
         }
 
         form {
@@ -71,7 +76,8 @@ mysqli_close($conn);
         label {
             display: block;
             margin-bottom: 5px;
-            color: #D3D3D3; /* Light gray */
+            color: #D3D3D3;
+            /* Light gray */
             font-weight: bold;
         }
 
@@ -82,25 +88,32 @@ mysqli_close($conn);
             width: 100%;
             padding: 10px;
             margin: 10px 0 20px;
-            border: 1px solid #6A5ACD; /* Purple border */
-            border-radius: 8px; /* Smooth edges */
-            background-color: #2E2E2E; /* Grayish black */
-            color: #D3D3D3; /* Light gray text */
+            border: 1px solid #6A5ACD;
+            /* Purple border */
+            border-radius: 8px;
+            /* Smooth edges */
+            background-color: #2E2E2E;
+            /* Grayish black */
+            color: #D3D3D3;
+            /* Light gray text */
         }
 
         button {
             width: 100%;
-            background-color: #6A5ACD; /* Purple button */
+            background-color: #6A5ACD;
+            /* Purple button */
             color: white;
             padding: 15px;
             border: none;
-            border-radius: 12px; /* Smooth edges */
+            border-radius: 12px;
+            /* Smooth edges */
             cursor: pointer;
             font-size: 16px;
         }
 
         button:hover {
-            background-color: #5a4db1; /* Darker purple */
+            background-color: #5a4db1;
+            /* Darker purple */
         }
 
         .form-footer {
@@ -108,7 +121,8 @@ mysqli_close($conn);
         }
 
         .form-footer a {
-            color: #6A5ACD; /* Purple link */
+            color: #6A5ACD;
+            /* Purple link */
             text-decoration: none;
         }
 
@@ -122,6 +136,7 @@ mysqli_close($conn);
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -155,4 +170,5 @@ mysqli_close($conn);
     </div>
 
 </body>
+
 </html>

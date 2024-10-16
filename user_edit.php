@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Update user details
     $new_username = htmlspecialchars($_POST['username']);
     $new_email = htmlspecialchars($_POST['email']);
-    
+
     $update_sql = "UPDATE users SET username = ?, email = ? WHERE id = ?";
     $update_stmt = $conn->prepare($update_sql);
     $update_stmt->bind_param("ssi", $new_username, $new_email, $user_id);
-    
+
     if ($update_stmt->execute()) {
         // Update the session variables
         $_SESSION['username'] = $new_username;
@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 0;
             background-color: #2E2E2E;
         }
+
         .container {
             max-width: 600px;
             margin: 50px auto;
@@ -70,18 +72,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 8px;
             color: #D3D3D3;
         }
+
         h2 {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="email"] {
+
+        input[type="text"],
+        input[type="email"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #555;
@@ -89,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #6A5ACD;
             color: white;
         }
+
         input[type="submit"] {
             background-color: #6A5ACD;
             color: white;
@@ -98,11 +106,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             cursor: pointer;
             width: 100%;
         }
+
         input[type="submit"]:hover {
             background-color: #5a4db1;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h2>Edit Profile</h2>
@@ -119,4 +129,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </body>
+
 </html>

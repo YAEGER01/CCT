@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,77 +68,116 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b; /* Grayish-black background */
-            color: white; /* White text for contrast */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+            background-color: #2b2b2b;
+            /* Grayish-black background */
+            color: white;
+            /* White text for contrast */
+            margin: 0;
+            /* Remove default margin */
+            padding: 0;
+            /* Remove default padding */
         }
+
         .form-container {
             width: 50%;
-            margin: 20px auto; /* Center the form */
-            padding: 40px; /* Increased padding for better spacing */
-            border: 1px solid #444; /* Darker grayish-black border */
-            background-color: #333; /* Dark gray background */
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-            text-align: center; /* Center text within the container */
+            margin: 20px auto;
+            /* Center the form */
+            padding: 40px;
+            /* Increased padding for better spacing */
+            border: 1px solid #444;
+            /* Darker grayish-black border */
+            background-color: #333;
+            /* Dark gray background */
+            border-radius: 15px;
+            /* Rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Subtle shadow for depth */
+            text-align: center;
+            /* Center text within the container */
         }
+
         label {
             display: block;
-            margin-bottom: 8px; /* Reduced margin for labels */
-            color: #6a0dad; /* Purple label */
-            font-weight: bold; /* Make label text bold */
+            margin-bottom: 8px;
+            /* Reduced margin for labels */
+            color: #6a0dad;
+            /* Purple label */
+            font-weight: bold;
+            /* Make label text bold */
         }
-        input[type="text"], input[type="number"], textarea {
-            width: 100%;
-            padding: 12px; /* Standard padding for inputs */
-            margin-bottom: 25px; /* Increased space between inputs */
-            border: 1px solid #555; /* Grayish-black border */
-            border-radius: 8px; /* Rounded corners for input fields */
-            background-color: #444; /* Dark background for inputs */
-            color: white; /* White text for inputs */
-            box-sizing: border-box; /* Ensure padding is included in width */
-        }
+
+        input[type="text"],
+        input[type="number"],
         textarea {
-            resize: vertical; /* Allow vertical resizing only */
-            min-height: 120px; /* Increased minimum height for the textarea */
+            width: 100%;
+            padding: 12px;
+            /* Standard padding for inputs */
+            margin-bottom: 25px;
+            /* Increased space between inputs */
+            border: 1px solid #555;
+            /* Grayish-black border */
+            border-radius: 8px;
+            /* Rounded corners for input fields */
+            background-color: #444;
+            /* Dark background for inputs */
+            color: white;
+            /* White text for inputs */
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
         }
+
+        textarea {
+            resize: vertical;
+            /* Allow vertical resizing only */
+            min-height: 120px;
+            /* Increased minimum height for the textarea */
+        }
+
         button {
-            padding: 12px 24px; /* Increased padding for buttons */
-            background-color: #6a0dad; /* Purple button */
+            padding: 12px 24px;
+            /* Increased padding for buttons */
+            background-color: #6a0dad;
+            /* Purple button */
             color: white;
             border: none;
-            border-radius: 8px; /* Rounded corners for buttons */
+            border-radius: 8px;
+            /* Rounded corners for buttons */
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin-top: 15px; /* Increased space above the button */
-            display: inline-block; /* Make the button an inline-block element */
+            margin-top: 15px;
+            /* Increased space above the button */
+            display: inline-block;
+            /* Make the button an inline-block element */
         }
+
         button:hover {
-            background-color: #4b0082; /* Darker purple on hover */
+            background-color: #4b0082;
+            /* Darker purple on hover */
         }
     </style>
 </head>
+
 <body>
 
-<div class="form-container">
-    <h2>Edit Meal</h2>
-    <form method="POST" action="edit_meal.php?meal_id=<?php echo $meal_id; ?>" enctype="multipart/form-data">
-        <label>Meal Name:</label>
-        <input type="text" name="meal_name" value="<?php echo htmlspecialchars($meal['name']); ?>" required>
+    <div class="form-container">
+        <h2>Edit Meal</h2>
+        <form method="POST" action="edit_meal.php?meal_id=<?php echo $meal_id; ?>" enctype="multipart/form-data">
+            <label>Meal Name:</label>
+            <input type="text" name="meal_name" value="<?php echo htmlspecialchars($meal['name']); ?>" required>
 
-        <label>Description:</label>
-        <textarea name="description" required><?php echo htmlspecialchars($meal['description']); ?></textarea>
+            <label>Description:</label>
+            <textarea name="description" required><?php echo htmlspecialchars($meal['description']); ?></textarea>
 
-        <label>Price:</label>
-        <input type="number" name="price" step="0.01" value="<?php echo htmlspecialchars($meal['price']); ?>" required>
+            <label>Price:</label>
+            <input type="number" name="price" step="0.01" value="<?php echo htmlspecialchars($meal['price']); ?>" required>
 
-        <label>Meal Image:</label>
-        <input type="file" name="meal_image" accept="image/*">
+            <label>Meal Image:</label>
+            <input type="file" name="meal_image" accept="image/*">
 
-        <button type="submit">Update Meal</button>
-    </form>
-</div>
+            <button type="submit">Update Meal</button>
+        </form>
+    </div>
 
 </body>
+
 </html>

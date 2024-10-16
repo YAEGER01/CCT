@@ -25,6 +25,7 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,14 +33,17 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b; /* Grayish-black background */
-            color: white; /* White text for contrast */
+            background-color: #2b2b2b;
+            /* Grayish-black background */
+            color: white;
+            /* White text for contrast */
             margin: 0;
             padding: 20px;
         }
 
         h1 {
-            color: #6a0dad; /* Purple headings */
+            color: #6a0dad;
+            /* Purple headings */
             text-align: center;
         }
 
@@ -47,46 +51,59 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background-color: #333; /* Dark gray background for table */
-            border-radius: 15px; /* Rounded corners for the table */
-            overflow: hidden; /* Clip the corners */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+            background-color: #333;
+            /* Dark gray background for table */
+            border-radius: 15px;
+            /* Rounded corners for the table */
+            overflow: hidden;
+            /* Clip the corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Shadow for depth */
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #555; /* Grayish border */
+            border-bottom: 1px solid #555;
+            /* Grayish border */
         }
 
         th {
-            background-color: #6a0dad; /* Purple header */
+            background-color: #6a0dad;
+            /* Purple header */
             color: white;
         }
 
         tr:nth-child(even) {
-            background-color: #444; /* Darker row background */
+            background-color: #444;
+            /* Darker row background */
         }
 
         tr:hover {
-            background-color: #555; /* Hover effect for rows */
+            background-color: #555;
+            /* Hover effect for rows */
         }
 
         a {
             color: white;
             text-decoration: none;
-            background-color: #6a0dad; /* Purple button */
+            background-color: #6a0dad;
+            /* Purple button */
             padding: 10px 15px;
-            border-radius: 8px; /* Rounded corners for buttons */
+            border-radius: 8px;
+            /* Rounded corners for buttons */
             margin-bottom: 20px;
             display: inline-block;
         }
 
         a:hover {
-            background-color: #4b0082; /* Darker purple on hover */
+            background-color: #4b0082;
+            /* Darker purple on hover */
         }
     </style>
 </head>
+
 <body>
     <a href="seller_dashboard.php">Dashboard</a>
     <h1>Recent Transactions</h1>
@@ -119,4 +136,5 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
         </tbody>
     </table>
 </body>
+
 </html>

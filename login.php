@@ -62,6 +62,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,7 +70,8 @@ $conn->close();
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2E2E2E; /* Grayish black background */
+            background-color: #2E2E2E;
+            /* Grayish black background */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -78,9 +80,11 @@ $conn->close();
         }
 
         .container {
-            background-color: #383838; /* Lighter grayish black */
+            background-color: #383838;
+            /* Lighter grayish black */
             padding: 40px;
-            border-radius: 12px; /* Smooth edges */
+            border-radius: 12px;
+            /* Smooth edges */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             max-width: 400px;
             width: 100%;
@@ -89,14 +93,16 @@ $conn->close();
         h2 {
             margin-bottom: 30px;
             text-align: center;
-            color: #D3D3D3; /* Light gray */
+            color: #D3D3D3;
+            /* Light gray */
         }
 
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #D3D3D3; /* Light gray */
+            color: #D3D3D3;
+            /* Light gray */
         }
 
         input[type="email"],
@@ -104,27 +110,33 @@ $conn->close();
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #6A5ACD; /* Purple border */
+            border: 1px solid #6A5ACD;
+            /* Purple border */
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
-            background-color: #2E2E2E; /* Grayish black input background */
-            color: #D3D3D3; /* Light gray text */
+            background-color: #2E2E2E;
+            /* Grayish black input background */
+            color: #D3D3D3;
+            /* Light gray text */
             transition: border-color 0.3s;
         }
 
         input:focus {
-            border-color: #5a4db1; /* Darker purple on focus */
+            border-color: #5a4db1;
+            /* Darker purple on focus */
             outline: none;
         }
 
         button {
             width: 100%;
             padding: 15px;
-            background-color: #6A5ACD; /* Purple button */
+            background-color: #6A5ACD;
+            /* Purple button */
             color: white;
             border: none;
-            border-radius: 12px; /* Smooth edges */
+            border-radius: 12px;
+            /* Smooth edges */
             font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
@@ -132,7 +144,8 @@ $conn->close();
         }
 
         button:hover {
-            background-color: #5a4db1; /* Darker purple on hover */
+            background-color: #5a4db1;
+            /* Darker purple on hover */
         }
 
         .form-footer {
@@ -141,7 +154,8 @@ $conn->close();
         }
 
         .form-footer a {
-            color: #6A5ACD; /* Purple link */
+            color: #6A5ACD;
+            /* Purple link */
             text-decoration: none;
         }
 
@@ -166,6 +180,7 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -191,4 +206,5 @@ $conn->close();
     </div>
 
 </body>
+
 </html>

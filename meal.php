@@ -45,6 +45,7 @@ $sellerResult->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,80 +55,102 @@ $sellerResult->close();
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2E2E2E; /* Grayish black background */
+            background-color: #2E2E2E;
+            /* Grayish black background */
         }
+
         .header {
-            background-color: #6A5ACD; /* Purple header */
+            background-color: #6A5ACD;
+            /* Purple header */
             color: white;
             padding: 15px;
             text-align: center;
         }
+
         .back-button {
             display: inline-block;
             margin: 20px;
-            background-color: #6A5ACD; /* Purple button */
+            background-color: #6A5ACD;
+            /* Purple button */
             color: white;
             padding: 10px 15px;
             text-decoration: none;
             border-radius: 5px;
         }
+
         .meal-container {
             max-width: 800px;
             margin: 20px auto;
             padding: 15px;
-            background-color: #383838; /* Dark grayish black */
+            background-color: #383838;
+            /* Dark grayish black */
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
+
         .meal {
-            border: 1px solid #6A5ACD; /* Purple border for meal card */
+            border: 1px solid #6A5ACD;
+            /* Purple border for meal card */
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 8px;
             display: flex;
             align-items: center;
-            background-color: #444; /* Slightly lighter grayish black */
+            background-color: #444;
+            /* Slightly lighter grayish black */
         }
+
         .meal img {
             max-width: 150px;
             height: auto;
             margin-right: 15px;
         }
+
         .meal-details {
             flex-grow: 1;
             color: white;
         }
+
         .meal-details h3 {
             margin: 0;
         }
+
         .meal-details p {
             margin: 5px 0;
         }
+
         .meal-actions {
             display: flex;
             align-items: center;
         }
+
         .meal-actions input[type='number'] {
             width: 60px;
             margin-right: 10px;
         }
+
         button {
             padding: 10px 15px;
-            background-color: #6A5ACD; /* Purple button */
+            background-color: #6A5ACD;
+            /* Purple button */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
-            background-color: #5a4db1; /* Darker purple on hover */
+            background-color: #5a4db1;
+            /* Darker purple on hover */
         }
+
         .no-meals {
             text-align: center;
             color: #888;
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <div class="header">
@@ -172,4 +195,5 @@ $sellerResult->close();
     $conn->close();
     ?>
 </body>
+
 </html>

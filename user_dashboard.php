@@ -17,7 +17,8 @@ $sql = "SELECT DISTINCT u.id, u.username FROM users u WHERE u.role = 'seller'";
 $result = $conn->query($sql);
 
 // Function to render the store list
-function renderStores($result) {
+function renderStores($result)
+{
     if ($result->num_rows > 0) {
         while ($store = $result->fetch_assoc()) {
             echo "<div class='store'>";
@@ -54,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,10 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2E2E2E; /* Grayish black background */
+            background-color: #2E2E2E;
+            /* Grayish black background */
         }
+
         .header {
-            background-color: #6A5ACD; /* Purple header */
+            background-color: #6A5ACD;
+            /* Purple header */
             color: white;
             padding: 20px;
             text-align: center;
@@ -76,42 +81,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: space-between;
             align-items: center;
         }
+
         .header h1 {
             margin: 0;
         }
+
         .nav-buttons {
             display: flex;
             gap: 10px;
         }
-        .logout, .cart {
-            background-color: #383838; /* Darker grayish black */
+
+        .logout,
+        .cart {
+            background-color: #383838;
+            /* Darker grayish black */
             color: white;
             padding: 10px;
             text-decoration: none;
             border-radius: 5px;
         }
-        .logout:hover, .cart:hover {
-            background-color: #4A4A4A; /* Lighter grayish black on hover */
+
+        .logout:hover,
+        .cart:hover {
+            background-color: #4A4A4A;
+            /* Lighter grayish black on hover */
         }
+
         .form-container {
             margin: 20px;
         }
+
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: #D3D3D3; /* Light gray text */
+            color: #D3D3D3;
+            /* Light gray text */
         }
+
         /* Stores Section */
         .store-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .store {
-            width: 250px; /* Fixed width for equal sizing */
-            height: 250px; /* Fixed height for equal sizing */
-            background-color: #383838; /* Dark grayish black for store card */
-            border: 1px solid #6A5ACD; /* Purple border */
+            width: 250px;
+            /* Fixed width for equal sizing */
+            height: 250px;
+            /* Fixed height for equal sizing */
+            background-color: #383838;
+            /* Dark grayish black for store card */
+            border: 1px solid #6A5ACD;
+            /* Purple border */
             border-radius: 8px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -120,13 +142,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin: 10px; /* Space around store cards */
+            margin: 10px;
+            /* Space around store cards */
         }
+
         .store:hover {
             transform: scale(1.05);
         }
+
         .view-meals {
-            background-color: #6A5ACD; /* Purple button */
+            background-color: #6A5ACD;
+            /* Purple button */
             color: white;
             padding: 10px;
             border: none;
@@ -135,9 +161,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-decoration: none;
             margin-top: 10px;
         }
+
         .view-meals:hover {
-            background-color: #5a4db1; /* Darker purple on hover */
+            background-color: #5a4db1;
+            /* Darker purple on hover */
         }
+
         /* Style the select box */
         .action-select {
             width: 100%;
@@ -151,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <div class="header">
@@ -181,4 +211,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->close();
     ?>
 </body>
+
 </html>
