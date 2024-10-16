@@ -146,7 +146,7 @@ $sellerResult->close();
                     <div class="meal-details">
                         <h3><?php echo htmlspecialchars($meal['name']); ?></h3>
                         <p><?php echo htmlspecialchars($meal['description']); ?></p>
-                        <p><strong>Price: $<?php echo htmlspecialchars($meal['price']); ?></strong></p>
+                        <p><strong>Price: ₱<?php echo htmlspecialchars($meal['price']); ?></strong></p>
                     </div>
                     <div class="meal-actions">
                         <form method="POST" action="cart.php">
