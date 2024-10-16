@@ -185,7 +185,7 @@ if (isset($_POST['checkout'])) {
                     echo "<div>";
                     echo "<h3>" . htmlspecialchars($cartItem['name']) . "</h3>";
                     echo "<p>Quantity: " . htmlspecialchars($cartItem['quantity']) . "</p>";
-                    echo "<p><strong>Price: $" . htmlspecialchars($cartItem['price']) . "</strong></p>";
+                    echo "<p><strong>Price: ₱" . htmlspecialchars($cartItem['price']) . "</strong></p>";
                     echo "</div>";
                     echo "</div>";
                 }

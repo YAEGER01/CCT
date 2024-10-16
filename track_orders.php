@@ -155,7 +155,7 @@ $orderResult = $stmt->get_result();
                 <h3>Meal: <?php echo htmlspecialchars($order['meal_name']); ?></h3>
                 <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['customer_name']); ?></p>
                 <p><strong>Quantity:</strong> <?php echo htmlspecialchars($order['quantity']); ?></p>
-                <p><strong>Total Price:</strong> $<?php echo htmlspecialchars($order['price']); ?></p>
+                <p><strong>Total Price:</strong> ₱<?php echo htmlspecialchars($order['price'] * $order['quantity']); ?></p>
                 <p><strong>Status:</strong> <?php echo htmlspecialchars($order['status']); ?></p>
 
                 <!-- Action buttons for accepting or declining orders -->
