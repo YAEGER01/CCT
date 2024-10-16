@@ -155,6 +155,7 @@ $sellerResult->close();
     <!-- Header -->
     <div class="header">
         <h1>Meals from <?php echo $seller_name; ?></h1>
+        <a href="user_opened_convo.php?seller_id=<?php echo $seller_id; ?>" class="message-button">Message Seller</a>
     </div>
 
     <a href="user_dashboard.php" class="back-button">Back to Stores</a>
