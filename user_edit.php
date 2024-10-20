@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Redirect based on user role using PRG
-        if ($role === 'buyer') {
+        if ($role === 'user') {
             header("Location: user_dashboard.php?success=1");
         } elseif ($role === 'seller') {
             header("Location: seller_dashboard.php?success=1");
