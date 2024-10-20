@@ -93,6 +93,9 @@
 
             select {
                 border-radius: 10px;
+                background-color: #6A5ACD;
+                border: 1px solid #6A5ACD;
+                color: #fff;
             }
 
             .action-select {
@@ -108,23 +111,52 @@
                 background-color: white;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 border-radius: 10px;
+                height: 90vh;
             }
 
             .stores-grid {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 20px;
+                /* Space between items */
                 justify-content: space-around;
+                /* Center items in the grid */
             }
 
+            /* Style for each store */
             .store {
-                background-color: #fff;
+                width: 250px;
+                height: 250px;
+                background-image: url('CCT/images/PaikkotNaLogo.jpg');
+
                 border: 1px solid #ddd;
                 padding: 20px;
                 text-align: center;
-                width: 250px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* Optional: Aspect ratio for modern browsers */
+            @supports (aspect-ratio: 1/1) {
+                .store {
+                    aspect-ratio: 1 / 1;
+                    /* Maintain a 1:1 aspect ratio */
+                }
+            }
+
+            /* Responsive styling */
+            @media (max-width: 768px) {
+                .store {
+                    width: 80%;
+                    /* Make store cards wider on smaller screens */
+                    height: auto;
+                    /* Adjust height to maintain aspect ratio */
+                }
             }
 
             .store h3 {
@@ -132,7 +164,7 @@
             }
 
             .store .view-meals {
-                background-color: #333;
+                background-color: #6A5ACD;
                 color: white;
                 text-decoration: none;
                 padding: 10px 20px;
@@ -146,6 +178,20 @@
 
             .store:hover {
                 transform: translateY(-5px);
+            }
+
+            a {
+                text-decoration: none;
+                padding: 15px 30px;
+                background-color: #6A5ACD;
+                /* Purple background */
+                color: white;
+                border-radius: 12px;
+                /* Increased border radius */
+                font-size: 16px;
+                font-weight: bold;
+                display: inline-block;
+                transition: background-color 0.3s ease;
             }
 
             @media (max-width: 768px) {
