@@ -22,95 +22,104 @@ $username = $_SESSION['username'];
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
-            /* Grayish-black background */
-            color: white;
-            /* White text for contrast */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F2F2F2;
         }
 
         .header {
-            background-color: #6a0dad;
-            /* Purple header */
-            color: white;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 5px solid #4b0082;
-            /* Darker purple border */
-            border-radius: 0 0 15px 15px;
-            /* Rounded bottom corners */
+            background-color: #ffffff;
+            color: black;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .nav-dropdown {
-            background-color: #6a0dad;
-            /* Purple dropdown */
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
+        .header h1 {
+            margin: 0;
         }
 
         .nav-dropdown select {
-            background-color: #6a0dad;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #333;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 10px;
-        }
-
-        .logout {
-            background-color: red;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 5px;
-            float: right;
             transition: background-color 0.3s ease;
         }
 
-        .logout:hover {
-            background-color: darkred;
+        .nav-dropdown select:hover {
+            background-color: #555;
         }
 
         .section {
-            margin: 20px;
-            background-color: #333;
-            /* Dark gray background */
             padding: 20px;
-            border-radius: 15px;
-            /* Rounded corners for sections */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            /* Subtle shadow for depth */
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
         .meal {
-            background-color: #444;
-            /* Dark background for meal items */
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            /* Rounded corners for meal items */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            /* Subtle shadow for depth */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
         }
 
-        button {
-            background-color: #6a0dad;
-            /* Purple button */
+        .meal img {
+            margin-right: 20px;
+            border-radius: 10px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .meal h3 {
+            margin: 0 0 10px;
+        }
+
+        .meal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .meal-actions button {
+            padding: 8px 16px;
+            background-color: #333;
             color: white;
-            padding: 10px;
             border: none;
-            border-radius: 8px;
-            /* Rounded corners for buttons */
+            border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #4b0082;
-            /* Darker purple on hover */
+        .meal-actions button:hover {
+            background-color: #555;
+        }
+
+        .meal:hover {
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .meal {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .meal img {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
