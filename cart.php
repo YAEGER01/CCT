@@ -27,13 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['meal_id'])) {
     $meal_id = mysqli_real_escape_string($conn, $meal_id);
     $quantity = mysqli_real_escape_string($conn, $quantity);
 
-    // Fetch meal details (name and seller name) from meals table
-    $mealQuery = "SELECT name AS meal_name, seller_id FROM meals WHERE id = $meal_id";
+    // Fetch meal details (name, seller name, and price) from meals table
+    $mealQuery = "SELECT name AS meal_name, seller_id, price FROM meals WHERE id = $meal_id";
     $mealResult = mysqli_query($conn, $mealQuery);
 
     if ($mealResult && mysqli_num_rows($mealResult) > 0) {
         $mealData = mysqli_fetch_assoc($mealResult);
         $meal_name = mysqli_real_escape_string($conn, $mealData['meal_name']);
+        $price = floatval($mealData['price']); // Fetch price here
 
         // Fetch seller name based on seller_id
         $seller_id = $mealData['seller_id'];
@@ -55,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['meal_id'])) {
             mysqli_query($conn, $updateQuery);
         } else {
             // Add new meal to the cart with additional details
-            $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, seller_name, username, quantity) 
-                            VALUES ($user_id, $meal_id, '$meal_name', '$seller_name', '$username', $quantity)";
+            $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, seller_name, username, quantity, price) 
+                            VALUES ($user_id, $meal_id, '$meal_name', '$seller_name', '$username', $quantity, $price)";
             mysqli_query($conn, $insertQuery);
         }
 
@@ -65,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['meal_id'])) {
         exit();
     }
 }
+
 
 // Handle deletion of selected items
 if (isset($_POST['delete'])) {
@@ -81,8 +83,19 @@ if (isset($_POST['delete'])) {
     }
 }
 
-// Query to fetch the user's cart items
-$cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.seller_name, c.username, m.price, m.image 
+// Query to fetch the user's cart items including rice and drinks
+$cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.seller_name, c.username, m.price, m.image, 
+                     c.rice_option, c.drinks
+              FROM cart c 
+              JOIN meals m ON c.meal_id = m.id 
+              WHERE c.user_id = $user_id";
+$cartResult = mysqli_query($conn, $cartQuery);
+// Initialize total price variable
+$totalPrice = 0;
+
+// Query to fetch the user's cart items including rice and drinks
+$cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.seller_name, c.username, m.price, m.image, 
+                     c.rice_option, c.drinks
               FROM cart c 
               JOIN meals m ON c.meal_id = m.id 
               WHERE c.user_id = $user_id";
@@ -97,8 +110,8 @@ if (isset($_POST['checkout'])) {
             $quantity = intval($cartItem['quantity']);
 
             // Insert each cart item as a new order
-            $orderQuery = "INSERT INTO orders (user_id, meal_id, quantity, status) 
-                           VALUES ($user_id, $meal_id, $quantity, 'pending')";
+            $orderQuery = "INSERT INTO orders (user_id, meal_id, quantity, price, status)
+VALUES ($user_id, $meal_id, $quantity, $price, 'pending')";
             mysqli_query($conn, $orderQuery);
         }
 
@@ -240,6 +253,9 @@ if (isset($_POST['checkout'])) {
             if (mysqli_num_rows($cartResult) > 0) {
                 // Display cart items
                 while ($cartItem = mysqli_fetch_assoc($cartResult)) {
+                    $itemTotal = $cartItem['price'] * $cartItem['quantity']; // Calculate total for this item
+                    $totalPrice += $itemTotal; // Add to total price
+
                     echo "<div class='meal'>";
                     echo "<input type='checkbox' name='selected_meals[]' value='" . htmlspecialchars($cartItem['meal_id']) . "'>";
                     echo "<img src='" . htmlspecialchars($cartItem['image']) . "' alt='" . htmlspecialchars($cartItem['meal_name']) . "'>";
@@ -247,18 +263,22 @@ if (isset($_POST['checkout'])) {
                     echo "<h3>" . htmlspecialchars($cartItem['meal_name']) . "</h3>";
                     echo "<p>Seller: " . htmlspecialchars($cartItem['seller_name']) . "</p>";
                     echo "<p>Quantity: " . htmlspecialchars($cartItem['quantity']) . "</p>";
-                    echo "<p><strong>Price: ₱" . htmlspecialchars($cartItem['price']) . "</strong></p>";
+                    echo "<p>Rice Option: " . htmlspecialchars($cartItem['rice_option'] ?? 'N/A') . "</p>";
+                    echo "<p>Drink Option: " . htmlspecialchars($cartItem['drinks'] ?? 'N/A') . "</p>";
+                    echo "<p>Price: $" . htmlspecialchars($cartItem['price']) . "</p>";
+                    echo "<p>Total: $" . number_format($itemTotal, 2) . "</p>"; // Display total for this item
                     echo "</div>";
                     echo "</div>";
                 }
+                // Display total price for all items in the cart
+                echo "<h3>Total Price: $" . number_format($totalPrice, 2) . "</h3>";
             } else {
                 echo "<p>Your cart is empty.</p>";
             }
             ?>
-            <div>
-                <button type="submit" name="delete" class="button">Delete Selected</button>
-                <button type="submit" name="checkout" class="button">Checkout</button>
-            </div>
+            <br>
+            <button type="submit" name="delete" class="button">Delete Selected</button>
+            <button type="submit" name="checkout" class="button">Proceed to Checkout</button>
         </form>
     </div>
 </body>
