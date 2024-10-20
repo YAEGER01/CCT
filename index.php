@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #2E2E2E;
+            background-color: #F2F2F2;
             /* Grayish black background */
             margin: 0;
             padding: 0;
@@ -18,13 +18,13 @@
 
         h1 {
             margin-top: 50px;
-            color: #D3D3D3;
+            color: #333333;
             /* Light gray for contrast */
         }
 
         p {
             font-size: 18px;
-            color: #D3D3D3;
+            color: #333333;
             /* Light gray for contrast */
         }
 
@@ -60,7 +60,7 @@
         .container {
             display: inline-block;
             padding: 50px;
-            background-color: #383838;
+            background-color: #ffffff;
             /* Slightly lighter grayish black */
             border-radius: 12px;
             /* Increased border radius */

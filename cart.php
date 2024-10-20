@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id']; // Get the logged-in user ID
+$username = $_SESSION['username']; // Get the logged-in user's username
 
 // Handle adding a meal to the cart
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['meal_id'])) {
@@ -26,21 +27,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['meal_id'])) {
     $meal_id = mysqli_real_escape_string($conn, $meal_id);
     $quantity = mysqli_real_escape_string($conn, $quantity);
 
-    // Check if the meal is already in the cart
-    $checkQuery = "SELECT quantity FROM cart WHERE user_id = $user_id AND meal_id = $meal_id";
-    $result = mysqli_query($conn, $checkQuery);
+    // Fetch meal details (name and seller name) from meals table
+    $mealQuery = "SELECT name AS meal_name, seller_id FROM meals WHERE id = $meal_id";
+    $mealResult = mysqli_query($conn, $mealQuery);
 
-    if (mysqli_num_rows($result) > 0) {
-        // Update quantity if meal is already in the cart
-        $existingCartItem = mysqli_fetch_assoc($result);
-        $newQuantity = $existingCartItem['quantity'] + $quantity; // Add the new quantity to the existing one
+    if ($mealResult && mysqli_num_rows($mealResult) > 0) {
+        $mealData = mysqli_fetch_assoc($mealResult);
+        $meal_name = mysqli_real_escape_string($conn, $mealData['meal_name']);
 
-        $updateQuery = "UPDATE cart SET quantity = $newQuantity WHERE user_id = $user_id AND meal_id = $meal_id";
-        mysqli_query($conn, $updateQuery);
-    } else {
-        // Add new meal to the cart
-        $insertQuery = "INSERT INTO cart (user_id, meal_id, quantity) VALUES ($user_id, $meal_id, $quantity)";
-        mysqli_query($conn, $insertQuery);
+        // Fetch seller name based on seller_id
+        $seller_id = $mealData['seller_id'];
+        $sellerQuery = "SELECT username AS seller_name FROM users WHERE id = $seller_id";
+        $sellerResult = mysqli_query($conn, $sellerQuery);
+        $sellerData = mysqli_fetch_assoc($sellerResult);
+        $seller_name = mysqli_real_escape_string($conn, $sellerData['seller_name']);
+
+        // Check if the meal is already in the cart
+        $checkQuery = "SELECT quantity FROM cart WHERE user_id = $user_id AND meal_id = $meal_id";
+        $result = mysqli_query($conn, $checkQuery);
+
+        if (mysqli_num_rows($result) > 0) {
+            // Update quantity if meal is already in the cart
+            $existingCartItem = mysqli_fetch_assoc($result);
+            $newQuantity = $existingCartItem['quantity'] + $quantity; // Add the new quantity to the existing one
+
+            $updateQuery = "UPDATE cart SET quantity = $newQuantity WHERE user_id = $user_id AND meal_id = $meal_id";
+            mysqli_query($conn, $updateQuery);
+        } else {
+            // Add new meal to the cart with additional details
+            $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, seller_name, username, quantity) 
+                            VALUES ($user_id, $meal_id, '$meal_name', '$seller_name', '$username', $quantity)";
+            mysqli_query($conn, $insertQuery);
+        }
+
+        // Redirect to avoid form resubmission
+        header("Location: cart.php");
+        exit();
     }
 }
 
@@ -53,11 +75,14 @@ if (isset($_POST['delete'])) {
             $deleteQuery = "DELETE FROM cart WHERE user_id = $user_id AND meal_id = $meal_id";
             mysqli_query($conn, $deleteQuery);
         }
+        // Redirect to avoid form resubmission
+        header("Location: cart.php");
+        exit();
     }
 }
 
 // Query to fetch the user's cart items
-$cartQuery = "SELECT c.meal_id, c.quantity, m.name, m.price, m.image 
+$cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.seller_name, c.username, m.price, m.image 
               FROM cart c 
               JOIN meals m ON c.meal_id = m.id 
               WHERE c.user_id = $user_id";
@@ -100,79 +125,105 @@ if (isset($_POST['checkout'])) {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
-            color: #fff;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
         }
 
         .header {
-            background-color: #6a0dad;
-            color: white;
-            padding: 15px;
+            background-color: white;
+            padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #4b0082;
-            border-radius: 0 0 15px 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        .meal-container {
-            margin: 20px;
-            background-color: #333;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .meal {
-            background-color: #444;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #555;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .meal img {
-            max-width: 100px;
-            height: auto;
-            margin-right: 15px;
-            border-radius: 10px;
-        }
-
-        .button {
-            background-color: #6a0dad;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #4b0082;
+        .header h1 {
+            margin: 0;
+            color: #333;
         }
 
         .back-button {
-            margin: 20px;
-            background-color: #6a0dad;
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            border-radius: 10px;
             display: inline-block;
-            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            text-decoration: none;
+            background-color: #6c63ff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         .back-button:hover {
-            background-color: #4b0082;
+            background-color: #5a54e2;
         }
 
-        input[type='checkbox'] {
-            transform: scale(1.3);
+        .meal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .meal {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+            transition: background-color 0.3s;
+        }
+
+        .meal:hover {
+            background-color: #ebebeb;
+        }
+
+        .meal img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .meal h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .meal p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .button {
+            background-color: #6c63ff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #5a54e2;
+        }
+
+        @media (max-width: 600px) {
+            .meal {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .meal img {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -191,9 +242,10 @@ if (isset($_POST['checkout'])) {
                 while ($cartItem = mysqli_fetch_assoc($cartResult)) {
                     echo "<div class='meal'>";
                     echo "<input type='checkbox' name='selected_meals[]' value='" . htmlspecialchars($cartItem['meal_id']) . "'>";
-                    echo "<img src='" . htmlspecialchars($cartItem['image']) . "' alt='" . htmlspecialchars($cartItem['name']) . "'>";
+                    echo "<img src='" . htmlspecialchars($cartItem['image']) . "' alt='" . htmlspecialchars($cartItem['meal_name']) . "'>";
                     echo "<div>";
-                    echo "<h3>" . htmlspecialchars($cartItem['name']) . "</h3>";
+                    echo "<h3>" . htmlspecialchars($cartItem['meal_name']) . "</h3>";
+                    echo "<p>Seller: " . htmlspecialchars($cartItem['seller_name']) . "</p>";
                     echo "<p>Quantity: " . htmlspecialchars($cartItem['quantity']) . "</p>";
                     echo "<p><strong>Price: ₱" . htmlspecialchars($cartItem['price']) . "</strong></p>";
                     echo "</div>";
@@ -203,8 +255,10 @@ if (isset($_POST['checkout'])) {
                 echo "<p>Your cart is empty.</p>";
             }
             ?>
-            <button type="submit" name="delete" class="button">Delete Selected</button>
-            <button type="submit" name="checkout" class="button">Checkout</button>
+            <div>
+                <button type="submit" name="delete" class="button">Delete Selected</button>
+                <button type="submit" name="checkout" class="button">Checkout</button>
+            </div>
         </form>
     </div>
 </body>
