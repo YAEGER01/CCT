@@ -28,28 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if ($order) {
                 // Insert into accepted_orders table
-                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity) 
-                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']})";
+                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity, status, price) 
+                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 'accepted', {$order['price']})";
 
                 if (!mysqli_query($conn, $insertQuery)) {
                     die("Error inserting into accepted_orders: " . mysqli_error($conn)); // Debugging output
                 }
 
                 // Instead of deleting the order, update the status to 'accepted'
-                $updateStatusQuery = "UPDATE orders SET status = 'accepted' WHERE id = $order_id";
-                if (!mysqli_query($conn, $updateStatusQuery)) {
-                    die("Error updating order status: " . mysqli_error($conn)); // Debugging output
-                }
-
+                //$updateStatusQuery = "UPDATE orders SET status = 'accepted' WHERE id = $order_id";
+                //if (!mysqli_query($conn, $updateStatusQuery)) {
+                //    die("Error updating order status: " . mysqli_error($conn)); // Debugging output
+                //}
+                // Optionally, delete the order from accepted_orders once it's moved to transactions
+                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
+                mysqli_query($conn, $deleteQuery);
                 // Refresh the page or redirect
                 header("Location: track_orders.php");
                 exit();
             }
         }
     } elseif ($_POST['action'] === 'decline') {
-        // Optionally, update the order status to 'declined'
-        $updateQuery = "UPDATE orders SET status = 'declined' WHERE id = $order_id";
-        mysqli_query($conn, $updateQuery);
+
+        // Insert into transactions table
+        $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date)
+                        VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 
+                                $total_price, $seller_id, NOW())";
+        mysqli_query($conn, $insertQuery);
+
+
+        // Optionally, delete the order from accepted_orders once it's moved to transactions
+        $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
+        mysqli_query($conn, $deleteQuery);
 
         // Refresh the page or redirect
         header("Location: track_orders.php");
