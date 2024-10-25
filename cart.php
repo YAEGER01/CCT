@@ -108,10 +108,11 @@ if (isset($_POST['checkout'])) {
         while ($cartItem = mysqli_fetch_assoc($cartResult)) {
             $meal_id = intval($cartItem['meal_id']);
             $quantity = intval($cartItem['quantity']);
+            $price = floatval($cartItem['price'] * $cartItem['quantity']); // Fetch price here
 
             // Insert each cart item as a new order
-            $orderQuery = "INSERT INTO orders (user_id, meal_id, quantity, price, status)
-VALUES ($user_id, $meal_id, $quantity, $price, 'pending')";
+            $orderQuery
+                = "INSERT INTO orders (user_id, meal_id, quantity, status, price) VALUES ($user_id, $meal_id, $quantity, 'pending', $price)";
             mysqli_query($conn, $orderQuery);
         }
 
