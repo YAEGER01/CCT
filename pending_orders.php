@@ -47,8 +47,8 @@ if (isset($_POST['mark_completed'])) {
         mysqli_query($conn, $insertQuery);
 
         // Update the order status to completed in the accepted_orders table
-        $updateQuery = "UPDATE accepted_orders SET status = 'completed' WHERE id = $order_id";
-        mysqli_query($conn, $updateQuery);
+        //$updateQuery = "UPDATE accepted_orders SET status = 'completed' WHERE id = $order_id";
+        //mysqli_query($conn, $updateQuery);
 
         // Optionally, delete the order from accepted_orders once it's moved to transactions
         $deleteQuery = "DELETE FROM accepted_orders WHERE id = $order_id";
