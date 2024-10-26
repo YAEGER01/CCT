@@ -263,6 +263,33 @@
                                 <label for="quantity">Qty:</label>
                                 <input type="number" name="quantity" required min="1">
 
+                                <!-- Rice options dropdown -->
+                                <?php if (!empty($meal['rice_options'])): ?>
+                                    <label for="rice_option">Rice:</label>
+                                    <select name="rice_option">
+                                        <?php
+                                        // Assuming rice_options is stored as comma-separated values
+                                        $riceOptions = explode(',', $meal['rice_options']);
+                                        foreach ($riceOptions as $option) {
+                                            echo "<option value='" . htmlspecialchars(trim($option)) . "'>" . htmlspecialchars(trim($option)) . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                <?php endif; ?>
+
+                                <!-- Drink options dropdown -->
+                                <?php if (!empty($meal['drinks'])): ?>
+                                    <label for="drink_option">Drink:</label>
+                                    <select name="drink_option">
+                                        <?php
+                                        // Assuming drink_options is stored as comma-separated values
+                                        $drinkOptions = explode(',', $meal['drinks']);
+                                        foreach ($drinkOptions as $option) {
+                                            echo "<option value='" . htmlspecialchars(trim($option)) . "'>" . htmlspecialchars(trim($option)) . "</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                <?php endif; ?>
 
                                 <button type="submit">Add to Cart</button>
                             </form>
