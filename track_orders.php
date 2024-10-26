@@ -49,21 +49,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif ($_POST['action'] === 'decline') {
+        $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
+        $orderResult = mysqli_query($conn, $orderQuery);
 
-        // Insert into transactions table
-        $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date)
+        if (!$orderResult) {
+            die("Error fetching order for decline: " . mysqli_error($conn));
+        }
+
+        $order = mysqli_fetch_assoc($orderResult);
+
+        if ($order) {
+            $total_price = $order['price'] * $order['quantity'];
+
+            // Insert into transactions table
+            $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date)
                         VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 
                                 $total_price, $seller_id, NOW())";
-        mysqli_query($conn, $insertQuery);
+            mysqli_query($conn, $insertQuery);
 
+            // Delete the order from orders table
+            $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
+            mysqli_query($conn, $deleteQuery);
 
-        // Optionally, delete the order from accepted_orders once it's moved to transactions
-        $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
-        mysqli_query($conn, $deleteQuery);
-
-        // Refresh the page or redirect
-        header("Location: track_orders.php");
-        exit();
+            header("Location: track_orders.php");
+            exit();
+        }
     }
 }
 
