@@ -94,45 +94,69 @@ unset($_SESSION['error']); // Clear error after displaying
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #6A5ACD;
+            --secondary-color: #F2F2F2;
+            --font-primary: 'Roboto', sans-serif;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: var(--font-primary);
             margin: 0;
             padding: 0;
-            background-color: #2E2E2E;
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #383838;
-            padding: 20px;
-            border-radius: 8px;
-            color: #D3D3D3;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
         }
 
         h2 {
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 20px;
         }
 
         .form-group {
             margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
         }
 
         label {
-            display: block;
+            font-weight: bold;
             margin-bottom: 5px;
         }
 
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
             padding: 10px;
-            border: 1px solid #555;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #6A5ACD;
-            color: white;
+            width: 100%;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #333;
         }
 
         .btn-group {
@@ -141,28 +165,36 @@ unset($_SESSION['error']); // Clear error after displaying
             margin-top: 20px;
         }
 
-        input[type="submit"],
-        button {
-            background-color: #6A5ACD;
-            color: white;
-            padding: 10px;
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
             border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-            width: 48%;
+            transition: background-color 0.3s;
         }
 
-        input[type="submit"]:hover,
-        button:hover {
-            background-color: #5a4db1;
-        }
-
-        button.cancel-btn {
+        input[type="submit"]:hover {
             background-color: #555;
         }
 
-        button.cancel-btn:hover {
-            background-color: #444;
+        .cancel-btn {
+            padding: 10px 20px;
+            background-color: #ccc;
+            border: none;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background-color: #aaa;
         }
     </style>
 </head>
@@ -205,7 +237,7 @@ unset($_SESSION['error']); // Clear error after displaying
     <script>
         function cancelEdit() {
             const role = '<?php echo $role; ?>';
-            if (role === 'buyer') {
+            if (role === 'user') {
                 window.location.href = 'user_dashboard.php';
             } else if (role === 'seller') {
                 window.location.href = 'seller_dashboard.php';

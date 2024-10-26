@@ -53,6 +53,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo "$seller_name's Meals"; ?></title>
         <style>
+            :root {
+                --primary-color: #6A5ACD;
+                --secondary-color: #F2F2F2;
+                --font-primary: 'Roboto', sans-serif;
+            }
+
             body {
                 font-family: 'Roboto', sans-serif;
                 margin: 0;
@@ -80,6 +86,16 @@
                 color: white;
                 text-decoration: none;
                 border-radius: 5px;
+
+                padding: 10px 20px;
+                background-color: var(--primary-color);
+                border: none;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             }
 
             .message-button:hover {
@@ -96,6 +112,16 @@
                 border-radius: 5px;
                 text-align: center;
                 width: fit-content;
+
+                padding: 10px 20px;
+                background-color: var(--primary-color);
+                border: none;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             }
 
             .back-button:hover {
@@ -176,6 +202,16 @@
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+
+                padding: 10px 20px;
+                background-color: var(--primary-color);
+                border: none;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             }
 
             .meal-actions button:hover {

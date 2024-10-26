@@ -101,7 +101,7 @@ $cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.seller_name, c.userna
               WHERE c.user_id = $user_id";
 $cartResult = mysqli_query($conn, $cartQuery);
 
-// Handle checkout process
+/* // Handle checkout process
 if (isset($_POST['checkout'])) {
     if (mysqli_num_rows($cartResult) > 0) {
         // Loop through the cart items and insert them into the orders table
@@ -124,7 +124,41 @@ if (isset($_POST['checkout'])) {
         header("Location: confirmation.php");
         exit();
     } else {
-        echo "<p>Your cart is empty. Please add some items before checking out.</p>";
+        echo '<script>alert("CART IS MT DUMASS");</script>';
+    }
+} */ // Handle checkout process
+if (isset($_POST['checkout'])) {
+    // Check if any item is selected
+    if (!empty($_POST['selected_meals'])) {
+        foreach ($_POST['selected_meals'] as $meal_id) {
+            $meal_id = intval($meal_id);
+
+            // Get details of the selected item from the cart
+            $itemQuery = "SELECT quantity, price FROM cart WHERE user_id = $user_id AND meal_id = $meal_id";
+            $itemResult = mysqli_query($conn, $itemQuery);
+
+            if ($itemResult && mysqli_num_rows($itemResult) > 0) {
+                $cartItem = mysqli_fetch_assoc($itemResult);
+                $quantity = intval($cartItem['quantity']);
+                $price = floatval($cartItem['price'] * $quantity); // Calculate total price for this item
+
+                // Insert the selected cart item into the orders table
+                $orderQuery = "INSERT INTO orders (user_id, meal_id, quantity, status, price) 
+                               VALUES ($user_id, $meal_id, $quantity, 'pending', $price)";
+                mysqli_query($conn, $orderQuery);
+            }
+        }
+
+        // Remove only the selected items from the cart
+        $selectedMeals = implode(',', array_map('intval', $_POST['selected_meals']));
+        $clearSelectedQuery = "DELETE FROM cart WHERE user_id = $user_id AND meal_id IN ($selectedMeals)";
+        mysqli_query($conn, $clearSelectedQuery);
+
+        // Redirect to confirmation page
+        header("Location: confirmation.php");
+        exit();
+    } else {
+        echo '<script>alert("Please select at least one item to proceed to checkout.");</script>';
     }
 }
 ?>
@@ -137,109 +171,132 @@ if (isset($_POST['checkout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
     <style>
+        :root {
+            --primary-color: #6A5ACD;
+            --secondary-color: #F2F2F2;
+            --font-primary: 'Roboto', sans-serif;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .header {
-            background-color: white;
-            padding: 20px;
+            width: 100%;
+            padding: 1rem 2rem;
+            background-color: #6A5ACD;
+            color: #fff;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
         }
 
         .header h1 {
             margin: 0;
-            color: #333;
+            font-size: 1.8rem;
         }
 
         .back-button {
-            display: inline-block;
-            margin-top: 10px;
             text-decoration: none;
-            background-color: #6c63ff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .back-button:hover {
-            background-color: #5a54e2;
+            color: #fff;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            display: inline-block;
         }
 
         .meal-container {
+            width: 90%;
             max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .meal {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #e1e1e1;
-            border-radius: 8px;
-            background-color: #f7f7f7;
-            transition: background-color 0.3s;
-        }
-
-        .meal:hover {
-            background-color: #ebebeb;
+            padding: 1rem 0;
+            border-bottom: 1px solid #ddd;
         }
 
         .meal img {
-            width: 100px;
-            height: 100px;
-            border-radius: 5px;
-            margin-right: 15px;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+            object-fit: cover;
         }
 
         .meal h3 {
+            font-size: 1.2rem;
             margin: 0;
-            font-size: 18px;
             color: #333;
         }
 
         .meal p {
-            margin: 5px 0;
-            color: #555;
+            margin: 0.2rem 0;
+            color: #666;
+        }
+
+        .meal:last-child {
+            border-bottom: none;
         }
 
         .button {
-            background-color: #6c63ff;
-            color: white;
-            padding: 10px 15px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
             border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 10px;
             transition: background-color 0.3s;
         }
 
         .button:hover {
-            background-color: #5a54e2;
+            background-color: #555;
         }
 
-        @media (max-width: 600px) {
-            .meal {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
 
-            .meal img {
-                margin-bottom: 10px;
-            }
+        h3 {
+            color: #333;
+            text-align: right;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 1rem;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Attach a click event only to the checkout button to ensure validation
+            document.querySelector("button[name='checkout']").addEventListener("click", function(e) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+                if (!isChecked) {
+                    e.preventDefault(); // Prevent form submission
+                    alert("Please select at least one item to proceed to checkout.");
+                }
+            });
+
+            // Prevent form resubmission on page refresh
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        });
+    </script>
 </head>
 
 <body>
@@ -274,12 +331,12 @@ if (isset($_POST['checkout'])) {
                 // Display total price for all items in the cart
                 echo "<h3>Total Price: $" . number_format($totalPrice, 2) . "</h3>";
             } else {
-                echo "<p>Your cart is empty.</p>";
+                echo "<p>Your cart is empty, .</p>";
             }
             ?>
             <br>
-            <button type="submit" name="delete" class="button">Delete Selected</button>
-            <button type="submit" name="checkout" class="button">Proceed to Checkout</button>
+            <button type="submit" name="delete" class="button">Delete Item</button>
+            <button type="submit" name="checkout" class="button">Checkout</button>
         </form>
     </div>
 </body>
