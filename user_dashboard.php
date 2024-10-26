@@ -63,11 +63,17 @@
         <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            :root {
+                --primary-color: #6A5ACD;
+                --secondary-color: #F2F2F2;
+                --font-primary: 'Roboto', sans-serif;
+            }
+
             body {
-                font-family: 'Roboto', sans-serif;
+                font-family: var(--font-primary);
                 margin: 0;
                 padding: 0;
-                background-color: #F2F2F2;
+                background-color: var(--secondary-color);
             }
 
             .header {
@@ -102,6 +108,10 @@
                 padding: 10px;
                 font-size: 16px;
                 margin-left: 10px;
+                border-radius: 10px;
+                background-color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+                color: #fff;
             }
 
             .store-container {
@@ -115,12 +125,9 @@
             }
 
             .stores-grid {
-                display: flex;
-                flex-wrap: wrap;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 gap: 20px;
-                /* Space between items */
-                justify-content: space-around;
-                /* Center items in the grid */
             }
 
             /* Style for each store */
@@ -128,12 +135,10 @@
                 width: 250px;
                 height: 250px;
                 background-image: url('CCT/images/PaikkotNaLogo.jpg');
-
                 border: 1px solid #ddd;
                 padding: 20px;
                 text-align: center;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                transition: transform 0.3s ease;
                 border-radius: 10px;
                 display: flex;
                 flex-direction: column;
@@ -203,6 +208,13 @@
                 .store {
                     width: 80%;
                 }
+            }
+
+            .search-form-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-left: auto;
             }
         </style>
     </head>
