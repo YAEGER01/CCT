@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 $seller_id = $_SESSION['user_id'];
 
 // Fetch transactions for the seller
-$transactionQuery = "SELECT t.transaction_date, u.username AS customer_name, m.name AS meal_name, t.quantity, t.total_price
+$transactionQuery = "SELECT t.transaction_date, u.username AS customer_name, m.meal_name AS meal_name, t.quantity, t.total_price
                      FROM transactions t
                      JOIN users u ON t.user_id = u.id
                      JOIN meals m ON t.meal_id = m.id

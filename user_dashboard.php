@@ -36,7 +36,10 @@
             $action = $_POST['user_action'];
 
             switch ($action) {
-                case 'view_orders':
+                case 'Home':
+                    header("Location: user_dashboard.php");
+                    exit();
+                case 'view_cart':
                     header("Location: cart.php");
                     exit();
                 case 'edit_profile':
@@ -51,6 +54,7 @@
             }
         }
     }
+
     ?>
 
     <!DOCTYPE html>
@@ -74,6 +78,7 @@
                 margin: 0;
                 padding: 0;
                 background-color: var(--secondary-color);
+                scroll-behavior: smooth;
             }
 
             .header {
@@ -84,6 +89,8 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             }
 
             .site_name h2 {
@@ -121,7 +128,7 @@
                 background-color: white;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 border-radius: 10px;
-                height: 90vh;
+                height: 80vh;
             }
 
             .stores-grid {
@@ -230,7 +237,7 @@
                 <form action="user_dashboard.php" method="post">
                     <select name="user_action" class="action-select" onchange="this.form.submit()">
                         <option value="">Options</option>
-                        <option value="view_orders">View Orders</option>
+                        <option value="view_cart">View Cart</option>
                         <option value="edit_profile">Edit Profile</option>
                         <option value="logout">Logout</option>
                     </select>
@@ -240,7 +247,7 @@
 
         <!-- Stores Section -->
         <div class="store-container">
-            <h2>Available Stores</h2>
+            <h2>Stores</h2>
             <div class="stores-grid">
                 <?php renderStores($result); ?>
             </div>
