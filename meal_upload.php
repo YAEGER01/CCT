@@ -17,11 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $price = mysqli_real_escape_string($conn, $_POST['price']);
 
-    // Get selected rice options
+    // Get selected rice options and prices
     $rice_options = isset($_POST['rice_options']) ? implode(', ', $_POST['rice_options']) : '';
+    $rice_price_1 = mysqli_real_escape_string($conn, $_POST['rice_price_1']); // New: price for 1 cup rice
+    $rice_price_2 = mysqli_real_escape_string($conn, $_POST['rice_price_2']); // New: price for 2 cups rice
 
-    // Get uploaded drinks
+    // Get uploaded drinks and drink prices
     $drinks = isset($_POST['drinks']) ? mysqli_real_escape_string($conn, $_POST['drinks']) : '';
+    $drink_prices = isset($_POST['drink_prices']) ? mysqli_real_escape_string($conn, $_POST['drink_prices']) : ''; // New: drink prices
 
     // Image upload handling (same as before)
     if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === 0) {
@@ -32,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
         $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         if (in_array($file_type, ['jpg', 'jpeg', 'png', 'gif'])) {
             if (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
-                // Insert meal data including rice options, drinks, and the image path
-                $sql = "INSERT INTO meals (name, description, price, image, rice_options, drinks, seller_id) 
-                        VALUES ('$meal_name', '$description', '$price', '$target_file', '$rice_options', '$drinks', {$_SESSION['user_id']})";
+                // Insert meal data including rice options, drinks, drink prices, and the image path
+                $sql = "INSERT INTO meals (name, description, price, image, rice_options, rice_price_1, rice_price_2, drinks, drink_prices, seller_id) 
+                        VALUES ('$meal_name', '$description', '$price', '$target_file', '$rice_options', '$rice_price_1', '$rice_price_2', '$drinks', '$drink_prices', {$_SESSION['user_id']})";
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Meal uploaded successfully.');</script>";
                 } else {
@@ -48,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
         echo "<script>alert('Please upload a valid image.');</script>";
     }
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -233,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
                 <!-- Dynamic list of drinks with prices will appear here -->
             </div>
             <input type="text" id="drink-input" placeholder="Type a drink and click Add">
-            <input type="number" id="drink-price-input" placeholder="Price" required>
+            <input type="number" id="drink-price-input" placeholder="Price">
             <button type="button" onclick="addDrink()">Add Drink</button><br><br>
 
             <!-- Hidden input to store drink list -->
@@ -268,10 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
                 function updateDrinkList() {
                     const drinkList = document.getElementById('drink-list');
                     drinkList.innerHTML = drinks.map((drink, index) => `
-            <div>
-                ${drink} - Price: ${drinkPrices[index]} Pesos <button type="button" onclick="removeDrink(${index})">Remove</button>
-            </div>
-        `).join('');
+                    <div>${drink} - Price: ${drinkPrices[index]} Pesos <button type="button" onclick="removeDrink(${index})">Remove</button></div>`).join('');
                     document.getElementById('drinks').value = drinks.join(',');
                     document.getElementById('drink_prices').value = drinkPrices.join(',');
                 }
@@ -282,7 +282,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
                     updateDrinkList();
                 }
             </script>
-
 
 
 </body>
