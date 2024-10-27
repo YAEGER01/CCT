@@ -174,7 +174,7 @@ if (isset($_POST['delete_meal'])) {
 
         while ($meal = mysqli_fetch_assoc($meals_result)): ?>
             <div class="meal">
-                <h3><?php echo htmlspecialchars($meal['name']); ?></h3>
+                <h3><?php echo htmlspecialchars($meal['meal_name']); ?></h3>
                 <p><?php echo htmlspecialchars($meal['description']); ?></p>
                 <p><strong>Price:</strong> ₱<?php echo htmlspecialchars($meal['price']); ?></p>
                 <?php if (!empty($meal['image'])): ?>
