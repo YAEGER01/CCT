@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
 
     // Get uploaded drinks and drink prices
     $drinks = isset($_POST['drinks']) ? mysqli_real_escape_string($conn, $_POST['drinks']) : '';
-    $drink_prices = isset($_POST['drink_prices']) ? mysqli_real_escape_string($conn, $_POST['drink_prices']) : ''; // New: drink prices
+    $drinks_price = isset($_POST['drinks_price']) ? mysqli_real_escape_string($conn, $_POST['drinks_price']) : ''; // New: drink prices
 
     // Image upload handling (same as before)
     if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === 0) {
@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
         if (in_array($file_type, ['jpg', 'jpeg', 'png', 'gif'])) {
             if (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
                 // Insert meal data including rice options, drinks, drink prices, and the image path
-                $sql = "INSERT INTO meals (name, description, price, image, rice_options, rice_price_1, rice_price_2, drinks, drink_prices, seller_id) 
-                        VALUES ('$meal_name', '$description', '$price', '$target_file', '$rice_options', '$rice_price_1', '$rice_price_2', '$drinks', '$drink_prices', {$_SESSION['user_id']})";
+                $sql = "INSERT INTO meals (meal_name, description, price, image, rice_options, rice_price_1, rice_price_2, drinks, drinks_price, seller_id) 
+                        VALUES ('$meal_name', '$description', '$price', '$target_file', '$rice_options', '$rice_price_1', '$rice_price_2', '$drinks', '$drinks_price', {$_SESSION['user_id']})";
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Meal uploaded successfully.');</script>";
                 } else {
@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             </label><br>
             <label>
                 <input type="checkbox" name="rice_options[]" value="2 cups">
-                2 Cups Rice - Price: <input type="number" name="rice_price_2" value="" placeholder="Enter RICE price for 2 cup" required> Pesos
+                2 Cups Rice - Price: <input type="number" name="rice_price_2" value="" placeholder="Enter RICE price for 2 cup" required>
 
             </label><br>
 
@@ -241,9 +241,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
 
             <!-- Hidden input to store drink list -->
             <input type="hidden" name="drinks" id="drinks">
-
             <!-- Hidden input to store drink prices -->
-            <input type="hidden" name="drink_prices" id="drink_prices">
+            <input type="hidden" name="drinks_price" id="drinks_price">
 
             <button type="submit" name="upload_meal">Upload Meal</button>
 
@@ -273,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
                     drinkList.innerHTML = drinks.map((drink, index) => `
                     <div>${drink} - Price: ${drinkPrices[index]} Pesos <button type="button" onclick="removeDrink(${index})">Remove</button></div>`).join('');
                     document.getElementById('drinks').value = drinks.join(',');
-                    document.getElementById('drink_prices').value = drinkPrices.join(',');
+                    document.getElementById('drinks_price').value = drinkPrices.join(',');
                 }
 
                 function removeDrink(index) {
