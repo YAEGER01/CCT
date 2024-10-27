@@ -26,7 +26,7 @@ $user_id = $_SESSION['user_id']; // Get the logged-in user ID
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
-            background-color: #2b2b2b;
+            background-color: #F2F2F2;
             /* Grayish-black background */
             color: white;
             /* White text for contrast */
@@ -47,7 +47,8 @@ $user_id = $_SESSION['user_id']; // Get the logged-in user ID
         .message {
             font-size: 20px;
             margin: 20px 0;
-            background-color: #333;
+            color: #333;
+            background-color: #F2F2F2;
             /* Dark grayish-black background for message */
             padding: 20px;
             border-radius: 15px;
@@ -84,7 +85,7 @@ $user_id = $_SESSION['user_id']; // Get the logged-in user ID
 
     <div class="message">
         <h2>Your order has been placed successfully!</h2>
-        <p>Thank you for your purchase. You will receive an email confirmation shortly.</p>
+        <p>Thank you for your purchase. Please pay as you pick-up your meal, Eat Well bb. </p>
     </div>
 
     <a href="user_dashboard.php" class="back-button">Back to Dashboard</a>
