@@ -10,6 +10,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 
 // Fetch seller username
 $username = $_SESSION['username'];
+
+// Handle meal deletion
+if (isset($_POST['delete_meal'])) {
+    $meal_id = $_POST['meal_id'];
+    $delete_query = "DELETE FROM meals WHERE id = '$meal_id' AND seller_id = {$_SESSION['user_id']}";
+    mysqli_query($conn, $delete_query);
+    header("Location: seller_dashboard.php"); // Refresh the page after deletion
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
