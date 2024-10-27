@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Only JPG, JPEG, PNG & GIF files are allowed.";
         } elseif (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
             // Update meal with new image
-            $sql = "UPDATE meals SET name='$meal_name', description='$description', price='$price', image='$target_file' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+            $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', image='$target_file' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
         } else {
             echo "Error uploading file.";
         }
     } else {
         // Update meal without new image
-        $sql = "UPDATE meals SET name='$meal_name', description='$description', price='$price' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+        $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
     }
 
     if (mysqli_query($conn, $sql)) {
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h2>Edit Meal</h2>
         <form method="POST" action="edit_meal.php?meal_id=<?php echo $meal_id; ?>" enctype="multipart/form-data">
             <label>Meal Name:</label>
-            <input type="text" name="meal_name" value="<?php echo htmlspecialchars($meal['name']); ?>" required>
+            <input type="text" name="meal_name" value="<?php echo htmlspecialchars($meal['meal_name']); ?>" required>
 
             <label>Description:</label>
             <textarea name="description" required><?php echo htmlspecialchars($meal['description']); ?></textarea>
