@@ -9,78 +9,68 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 }
 
 $seller_id = $_SESSION['user_id']; // Get seller's ID
-
 // Handle accepting and declining orders
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
         $order_id = intval($_POST['order_id']); // Get the order ID
 
-        if ($_POST['action'] === 'accept') {
-            // Fetch the order details first
-            $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
-            $orderResult = mysqli_query($conn, $orderQuery);
-
-            if (!$orderResult) {
-                die("Error fetching order: " . mysqli_error($conn)); // Debugging output
-            }
-
-            $order = mysqli_fetch_assoc($orderResult);
-
-            if ($order) {
-                // Insert into accepted_orders table
-                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity, status, price) 
-                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 'accepted', {$order['price']})";
-
-                if (!mysqli_query($conn, $insertQuery)) {
-                    die("Error inserting into accepted_orders: " . mysqli_error($conn)); // Debugging output
-                }
-
-                // Instead of deleting the order, update the status to 'accepted'
-                //$updateStatusQuery = "UPDATE orders SET status = 'accepted' WHERE id = $order_id";
-                //if (!mysqli_query($conn, $updateStatusQuery)) {
-                //    die("Error updating order status: " . mysqli_error($conn)); // Debugging output
-                //}
-                // Optionally, delete the order from accepted_orders once it's moved to transactions
-                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
-                mysqli_query($conn, $deleteQuery);
-                // Refresh the page or redirect
-                header("Location: track_orders.php");
-                exit();
-            }
-        }
-    } elseif ($_POST['action'] === 'decline') {
+        // Fetch the order details first, including rice and drink options
         $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
         $orderResult = mysqli_query($conn, $orderQuery);
 
         if (!$orderResult) {
-            die("Error fetching order for decline: " . mysqli_error($conn));
+            die("Error fetching order: " . mysqli_error($conn));
         }
 
         $order = mysqli_fetch_assoc($orderResult);
 
         if ($order) {
-            $total_price = $order['price'] * $order['quantity'];
+            $rice_option = $order['rice_option'];
+            $rice_price = $order['rice_price'];
+            $drink_option = $order['drinks'];
+            $drink_price = $order['drinks_price'];
+            $total_price = $order['price'] * $order['quantity'] + $rice_price + $drink_price;
 
-            // Insert into transactions table
-            $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date)
-                        VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 
-                                $total_price, $seller_id, NOW())";
-            mysqli_query($conn, $insertQuery);
+            if ($_POST['action'] === 'accept') {
+                // Insert into accepted_orders table
+                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity, status, price, rice_option, rice_price, drinks, drinks_price) 
+                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 'accepted', {$order['price']}, 
+                                        '$rice_option', $rice_price, '$drink_option', $drink_price)";
 
-            // Delete the order from orders table
-            $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
-            mysqli_query($conn, $deleteQuery);
+                if (!mysqli_query($conn, $insertQuery)) {
+                    die("Error inserting into accepted_orders: " . mysqli_error($conn));
+                }
 
-            header("Location: track_orders.php");
-            exit();
+                // Delete the order from orders table
+                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
+                mysqli_query($conn, $deleteQuery);
+
+                header("Location: track_orders.php");
+                exit();
+            } elseif ($_POST['action'] === 'decline') {
+                // Insert into transactions table with additional fields
+                $seller_id = $_SESSION['seller_id'];
+                $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price)
+                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, $total_price, $seller_id, NOW(), 
+                                        '$rice_option', $rice_price, '$drink_option', $drink_price)";
+                mysqli_query($conn, $insertQuery);
+
+                // Delete the order from orders table
+                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
+                mysqli_query($conn, $deleteQuery);
+
+                header("Location: track_orders.php");
+                exit();
+            }
         }
     }
 }
 
 
+
 // Fetch orders made to the seller
 $orderQuery = "
-    SELECT o.id AS order_id, o.status, m.name AS meal_name, o.quantity, m.price, u.username AS customer_name 
+    SELECT o.id AS order_id, o.status, m.meal_name AS meal_name, o.quantity, m.price, u.username AS customer_name 
     FROM orders o
     JOIN meals m ON o.meal_id = m.id
     JOIN users u ON o.user_id = u.id
