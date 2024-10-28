@@ -83,168 +83,180 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             --font-primary: 'Roboto', sans-serif;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            width: 100%;
-            padding: 1rem 2rem;
-            background-color: var(--secondary-color);
-            color: #333;
-            text-align: center;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        .back-button {
-            text-decoration: none;
-            color: #fff;
-            text-decoration: underline;
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            display: inline-block;
-        }
-
-        .meal-container {
-            width: 90%;
-            max-width: 800px;
-            margin: 1.5rem auto;
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .meal {
-            display: flex;
-            align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .meal img {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            margin-right: 1.5rem;
-            object-fit: cover;
-            box-shadow: 0 2px 6px var(--shadow-color);
-        }
-
-        .meal h3 {
-            font-size: 1.2rem;
-            margin: 0;
-            color: #333;
-            text-align: left;
-        }
-
-        .meal p {
-            margin: 0.2rem 0;
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .meal:last-child {
-            border-bottom: none;
-        }
-
-
-
-        .btn-group {
-            display: flex;
-            justify-content: space-evenly;
-            background-color: var(--secondary-color);
-            box-shadow: 0 2px 6px var(--shadow-color);
-            padding: 20px 5px 20px 5px;
-            position: fixed;
-            bottom: 0;
-            left: 37.5%;
-            right: 37.5%;
-            width: 25%;
-            margin-bottom: 10px;
-            max-width: 800px;
-            margin: 1.5rem auto;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-            /* Responsive adjustments */
-            @media (max-width: 768px) {
-                width: 100%;
-                /* Full width on smaller screens */
-                left: 0;
-                right: 0;
-                justify-content: space-around;
-                /* Adjust button spacing */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: -webkit-linear-gradient(
+                to right,
+                #24243e,
+                #302b63,
+                #0f0c29
+                ); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(
+                to right,
+                #24243e,
+            #302b63,
+                #0f0c29
+    );
             }
-        }
 
-        .button {
-            padding: 10px 10px;
-            margin: 0 5px;
-            /* Add 5px margin on each side */
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+            .header {
+                width: 100%;
+                padding: 1rem 2rem;
+                background-color: var(--secondary-color);
+                color: #333;
+                text-align: center;
+                box-shadow: 0 2px 4px var(--shadow-color);
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
 
-        .button:hover {
-            background-color:
-                #555;
-        }
+            .header h1 {
+                margin: 0;
+                font-size: 1.8rem;
+            }
 
-        h3 {
-            color: #333;
-            text-align: right;
-        }
+            .back-button {
+                text-decoration: none;
+                color: #fff;
+                text-decoration: underline;
+                font-size: 1rem;
+                margin-top: 0.5rem;
+                display: inline-block;
+            }
 
-        input[type="checkbox"] {
-            margin-right: 1rem;
-            accent-color: var(--primary-color);
-        }
+            .meal-container {
+                width: 90%;
+                max-width: 800px;
+                margin: 1.5rem auto;
+                background-color: #fff;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
 
-        h3.total {
-            color: var(--text-color);
-            text-align: right;
-            margin-top: 1rem;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
+            .meal {
+                display: flex;
+                align-items: center;
+                padding: 1rem 0;
+                border-bottom: 1px solid #ddd;
+            }
 
-        select {
-            border-radius: 10px;
-            background-color: #6A5ACD;
-            border: 1px solid #6A5ACD;
-            color: #fff;
-        }
+            .meal img {
+                width: 80px;
+                height: 80px;
+                border-radius: 8px;
+                margin-right: 1.5rem;
+                object-fit: cover;
+                box-shadow: 0 2px 6px var(--shadow-color);
+            }
 
-        .action-select {
-            padding: 10px;
-            font-size: 16px;
-            margin-left: 10px;
-            border-radius: 10px;
-            background-color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            color: #fff;
-        }
+            .meal h3 {
+                font-size: 1.2rem;
+                margin: 0;
+                color: #333;
+                text-align: left;
+            }
+
+            .meal p {
+                margin: 0.2rem 0;
+                color: #666;
+                font-size: 0.95rem;
+            }
+
+            .meal:last-child {
+                border-bottom: none;
+            }
+
+
+
+            .btn-group {
+                display: flex;
+                justify-content: space-evenly;
+                background-color: var(--secondary-color);
+                box-shadow: 0 2px 6px var(--shadow-color);
+                padding: 20px 5px 20px 5px;
+                position: fixed;
+                bottom: 0;
+                left: 37.5%;
+                right: 37.5%;
+                width: 25%;
+                margin-bottom: 10px;
+                max-width: 800px;
+                margin: 1.5rem auto;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+                /* Responsive adjustments */
+                @media (max-width: 768px) {
+                    width: 100%;
+                    /* Full width on smaller screens */
+                    left: 0;
+                    right: 0;
+                    justify-content: space-around;
+                    /* Adjust button spacing */
+                }
+            }
+
+            .button {
+                padding: 10px 10px;
+                margin: 0 5px;
+                /* Add 5px margin on each side */
+                background-color: var(--primary-color);
+                border: none;
+                color: white;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .button:hover {
+                background-color:
+                    #555;
+            }
+
+            h3 {
+                color: #333;
+                text-align: right;
+            }
+
+            input[type="checkbox"] {
+                margin-right: 1rem;
+                accent-color: var(--primary-color);
+            }
+
+            h3.total {
+                color: var(--text-color);
+                text-align: right;
+                margin-top: 1rem;
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+            select {
+                border-radius: 10px;
+                background-color: #6A5ACD;
+                border: 1px solid #6A5ACD;
+                color: #fff;
+            }
+
+            .action-select {
+                padding: 10px;
+                font-size: 16px;
+                margin-left: 10px;
+                border-radius: 10px;
+                background-color: var(--primary-color);
+                border: 1px solid var(--primary-color);
+                color: #fff;
+            }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
