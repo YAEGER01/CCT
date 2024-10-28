@@ -84,6 +84,18 @@ mysqli_close($conn);
             align-items: center;
             height: 100vh;
             margin: 0;
+            background: -webkit-linear-gradient(
+    to right,
+    #24243e,
+    #302b63,
+    #0f0c29
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #24243e,
+    #302b63,
+    #0f0c29
+  );
         }
 
         .container {
@@ -136,20 +148,23 @@ mysqli_close($conn);
         }
 
         button {
-            width: 100%;
-            background-color: #6A5ACD;
-            /* Purple button */
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            /* Smooth edges */
-            cursor: pointer;
-            font-size: 16px;
+        padding: 15px 150px;
+        background-color: #f3f3f3;
+        color: purple;
+        border-radius: 20px;
+        font-size: 1em;
+        font-weight: bold;
+        display: inline-block;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        animation: fadeIn 2s ease-out, pulse 2s infinite;
+        box-shadow: 0 4px 10px rgba(106, 90, 205, 0.4);
         }
 
         button:hover {
             background-color: #5a4db1;
+            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
+            color: #fff;
+            transform: scale(1.05);
             /* Darker purple */
         }
 
