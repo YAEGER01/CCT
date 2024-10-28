@@ -142,6 +142,18 @@ $sellerResult->close();
             margin: 0;
             padding: 0;
             background-color: #F2F2F2;
+            background: -webkit-linear-gradient(
+            to right,
+            #24243e,
+            #302b63,
+            #0f0c29
+            ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #24243e,
+    #302b63,
+    #0f0c29
+  );
         }
 
         .header {
