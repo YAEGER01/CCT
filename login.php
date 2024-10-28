@@ -76,6 +76,18 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            background: -webkit-linear-gradient(
+            to right,
+            #24243e,
+            #302b63,
+            #0f0c29
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #24243e,
+    #302b63,
+    #0f0c29
+  );
         }
 
         .container {
@@ -124,20 +136,23 @@
         }
 
         button {
-            width: 100%;
-            padding: 15px;
-            background-color: #6A5ACD;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
+        padding: 15px 175px;
+        background-color: #f3f3f3;
+        color: purple;
+        border-radius: 20px;
+        font-size: 1em;
+        font-weight: bold;
+        display: inline-block;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        animation: fadeIn 2s ease-out, pulse 2s infinite;
+        box-shadow: 0 4px 10px rgba(106, 90, 205, 0.4);
         }
 
         button:hover {
             background-color: #5a4db1;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
+            color: #fff;
         }
 
         .form-footer {
