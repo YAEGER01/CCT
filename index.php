@@ -77,7 +77,7 @@
 
 <body>
     <div class="container">
-        <h1>Welcome TYRON</h1>
+        <h1>BAYRAL ITO SA TIKTOK TYRON</h1>
         <p>Please choose an option below to continue:</p>
         <ul>
             <li><a href="login.php">Login</a></li>
