@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Check if 'seller_id' is provided in the URL
+// Validate 'seller_id' in URL
 $seller_id = isset($_GET['seller_id']) ? intval($_GET['seller_id']) : null;
 if (!$seller_id) {
     echo "<p>No store selected!</p>";
@@ -28,24 +28,21 @@ if ($sellerResult->num_rows === 0) {
     exit();
 }
 
-// Fetch seller data
 $sellerData = $sellerResult->fetch_assoc();
 $seller_name = htmlspecialchars($sellerData['username']);
 
-// Fetch meals uploaded by this store (seller)
-// Fetch meals uploaded by this store (seller)
+// Fetch meals for this seller
 $stmt = $conn->prepare("SELECT id, meal_name, description, price, image, rice_options, drinks, rice_price_1, rice_price_2, drinks_price FROM meals WHERE seller_id = ?");
 $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $mealsResult = $stmt->get_result();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['quantity'])) {
     $meal_id = intval($_POST['meal_id']);
     $quantity = intval($_POST['quantity']);
-    $rice_option = htmlspecialchars($_POST['rice_option']);
-    $drink_option = htmlspecialchars($_POST['drink_option']);
+    $rice_option = $_POST['rice_option'] ?? '';
+    $drink_option = $_POST['drink_option'] ?? '';
 
-    // Fetch the meal details
     $stmt = $conn->prepare("SELECT meal_name, price, rice_price_1, rice_price_2, drinks_price FROM meals WHERE id = ?");
     $stmt->bind_param("i", $meal_id);
     $stmt->execute();
@@ -55,69 +52,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $meal_name = htmlspecialchars($mealData['meal_name']);
         $meal_price = floatval($mealData['price']);
         $rice_price = ($rice_option === '1 cup') ? floatval($mealData['rice_price_1']) : (($rice_option === '2 cups') ? floatval($mealData['rice_price_2']) : 0);
-        $drink_price = ($drink_option) ? floatval($mealData['drinks_price']) : 0;
+        $drink_price = $drink_option ? floatval($mealData['drinks_price']) : 0;
         $total_price = ($meal_price * $quantity) + $rice_price + $drink_price;
 
         $user_id = $_SESSION['user_id'];
-        $meal_id = $conn->real_escape_string($meal_id);
 
         // Check if item with same meal, rice, and drink already exists in the cart
-        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = '$user_id' AND meal_id = '$meal_id' AND rice_option = '$rice_option' AND drinks = '$drink_option'";
-        $checkResult = $conn->query($checkQuery);
+        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND rice_option = ? AND drinks = ?";
+        $stmt = $conn->prepare($checkQuery);
+        $stmt->bind_param("iiss", $user_id, $meal_id, $rice_option, $drink_option);
+        $stmt->execute();
+        $checkResult = $stmt->get_result();
 
         if ($checkResult->num_rows > 0) {
-            // Update quantity of existing cart item
             $existingItem = $checkResult->fetch_assoc();
             $new_quantity = $existingItem['quantity'] + $quantity;
-
-            // Calculate the new total price without modifying rice or drink prices
             $updated_total_price = ($meal_price * $new_quantity) + $rice_price + $drink_price;
 
-            $updateQuery = "UPDATE cart 
-                SET quantity = '$new_quantity', total_price = '$updated_total_price' 
-                WHERE id = '{$existingItem['id']}'";
-            $conn->query($updateQuery);
+            $updateQuery = "UPDATE cart SET quantity = ?, total_price = ? WHERE id = ?";
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("idi", $new_quantity, $updated_total_price, $existingItem['id']);
+            $stmt->execute();
 
             echo "<script>alert('Cart item updated successfully!');</script>";
         } else {
-            // Insert new item into cart
-            $sql = "INSERT INTO cart (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price) 
-                    VALUES ('$user_id', '$meal_id', '$meal_name', '$quantity', '$meal_price', '$rice_option', '$rice_price', '$drink_option', '$drink_price', '$total_price')";
-            $conn->query($sql);
+            $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($insertQuery);
+            $stmt->bind_param("iisidssdds", $user_id, $meal_id, $meal_name, $quantity, $meal_price, $rice_option, $rice_price, $drink_option, $drink_price, $total_price);
+            $stmt->execute();
+
             echo "<script>alert('Item added to cart successfully!');</script>";
         }
     } else {
         echo "<p>Error: Meal not found!</p>";
     }
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['user_action'])) {
-        $action = $_POST['user_action'];
 
-        switch ($action) {
-            case 'Home':
-                header("Location: user_dashboard.php");
-                exit();
-            case 'view_cart':
-                header("Location: cart.php");
-                exit();
-            case 'edit_profile':
-                header("Location: user_edit.php");
-                exit();
-            case 'logout':
-                session_destroy();
-                header("Location: login.php");
-                exit();
-            default:
-                echo "Invalid action!";
-        }
-        // Redirect to confirmation page
-        header("Location: confirmation.php");
-        exit();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_action'])) {
+    $action = $_POST['user_action'];
+    switch ($action) {
+        case 'Home':
+            header("Location: user_dashboard.php");
+            break;
+        case 'view_cart':
+            header("Location: cart.php");
+            break;
+        case 'edit_profile':
+            header("Location: user_edit.php");
+            break;
+        case 'logout':
+            session_destroy();
+            header("Location: login.php");
+            break;
+        default:
+            echo "Invalid action!";
     }
+    exit();
 }
 
-// Close the seller result set
 $sellerResult->close();
 ?>
 
