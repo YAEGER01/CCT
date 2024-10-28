@@ -109,6 +109,18 @@ unset($_SESSION['error']); // Clear error after displaying
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            background: -webkit-linear-gradient(
+            to right,
+            #24243e,
+            #302b63,
+            #0f0c29
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #24243e,
+    #302b63,
+    #0f0c29
+  );
         }
 
         .container {
