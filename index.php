@@ -114,13 +114,16 @@ p {
 
 /* Additional Link Styling */
 .link {
-    color: #ffeba7;
+    color: #333;
+    
     transition: color 0.3s ease;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .link:hover {
-    color: #c4c3ca;
+    text-decoration: none;
+    color: #ffeba7;
 }
 
 /* Responsive Design */
@@ -171,8 +174,8 @@ p {
         <h1 class="h1">Welcome</h1>
         <p class="p">Please choose an option below to continue:</p>
         <ul>
-            <li class="btn"><a href="login.php">Login</a></li> <br><br>
-            <li class="btn"><a href="signup.php">Signup</a></li>
+            <li class="btn"><a class="link" href="login.php">Login</a></li> <br><br>
+            <li class="btn"><a class="link" href="signup.php">Signup</a></li>
         </ul>
     </div>
 </body>
