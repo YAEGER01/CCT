@@ -21,18 +21,34 @@ if (!$meal) {
     header("Location: seller_dashboard.php");
     exit();
 }
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $meal_name = mysqli_real_escape_string($conn, $_POST['meal_name']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $price = mysqli_real_escape_string($conn, $_POST['price']);
     $rice_options = isset($_POST['rice_options']) ? implode(', ', $_POST['rice_options']) : '';
-    $rice_price_1 = mysqli_real_escape_string($conn, $_POST['rice_price_1']); // New: price for 1 cup rice
-    $rice_price_2 = mysqli_real_escape_string($conn, $_POST['rice_price_2']); // New: price for 2 cups rice
-
+    $rice_price_1 = !empty($_POST['rice_price_1']) ? mysqli_real_escape_string($conn, $_POST['rice_price_1']) : NULL;
+    $rice_price_2 = !empty($_POST['rice_price_2']) ? mysqli_real_escape_string($conn, $_POST['rice_price_2']) : NULL;
     $drinks = mysqli_real_escape_string($conn, $_POST['drinks']);
-    $drinks_price = mysqli_real_escape_string($conn, $_POST['drinks_price']);
+    $drinks_price = !empty($_POST['drinks_price']) ? mysqli_real_escape_string($conn, $_POST['drinks_price']) : NULL;
+
+    // Build the dynamic SQL query for non-empty fields
+    $update_fields = [
+        "meal_name='$meal_name'",
+        "description='$description'",
+        "price='$price'"
+    ];
+
+    if ($rice_options)
+        $update_fields[] = "rice_options='$rice_options'";
+    if ($rice_price_1)
+        $update_fields[] = "rice_price_1='$rice_price_1'";
+    if ($rice_price_2)
+        $update_fields[] = "rice_price_2='$rice_price_2'";
+    if ($drinks)
+        $update_fields[] = "drinks='$drinks'";
+    if ($drinks_price)
+        $update_fields[] = "drinks_price='$drinks_price'";
 
     // Check if a new image is uploaded
     if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === 0) {
@@ -44,15 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($file_type != "jpg" && $file_type != "png" && $file_type != "jpeg" && $file_type != "gif") {
             echo "Only JPG, JPEG, PNG & GIF files are allowed.";
         } elseif (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
-            // Update meal with new image
-            $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', rice_options='$rice_options',  rice_price_1='$rice_price_1', rice_price_2='$rice_price_2', drinks='$drinks', drinks_price='$drinks_price', image='$target_file' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+            $update_fields[] = "image='$target_file'";
         } else {
             echo "Error uploading file.";
         }
-    } else {
-        // Update meal without new image
-        $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', rice_options='$rice_options', rice_price='$rice_price', drinks='$drinks', drinks_price='$drinks_price' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
     }
+
+    // Convert the array into a string for SQL query
+    $sql = "UPDATE meals SET " . implode(', ', $update_fields) . " WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
 
     if (mysqli_query($conn, $sql)) {
         echo "Meal updated successfully!";
@@ -184,12 +199,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label>
                 <input type="checkbox" name="rice_options[]" value="1 cup">
                 1 Cup Rice - Price: <input type="number" name="rice_price_1" value=""
-                    placeholder="Enter RICE price for 1 cup" required>
+                    placeholder="Enter RICE price for 1 cup">
             </label><br>
             <label>
                 <input type="checkbox" name="rice_options[]" value="2 cups">
                 2 Cups Rice - Price: <input type="number" name="rice_price_2" value=""
-                    placeholder="Enter RICE price for 2 cup" required>
+                    placeholder="Enter RICE price for 2 cup">
 
             </label><br>
 
