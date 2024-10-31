@@ -49,11 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             } elseif ($_POST['action'] === 'decline') {
                 // Insert into transactions table with additional fields
-                $seller_id = $_SESSION['seller_id'];
+                // Use $seller_id from the session
                 $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price)
-                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, $total_price, $seller_id, NOW(), 
-                                        '$rice_option', $rice_price, '$drink_option', $drink_price)";
-                mysqli_query($conn, $insertQuery);
+                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, $total_price, $seller_id, NOW(), '$rice_option', $rice_price, '$drink_option', $drink_price)";
+
+                if (!mysqli_query($conn, $insertQuery)) {
+                    die("Error inserting into transactions: " . mysqli_error($conn));
+                }
 
                 // Delete the order from orders table
                 $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
@@ -65,8 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-
 
 // Fetch orders made to the seller
 $orderQuery = "
