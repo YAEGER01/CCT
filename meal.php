@@ -40,8 +40,8 @@ $mealsResult = $stmt->get_result();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['quantity'])) {
     $meal_id = intval($_POST['meal_id']);
     $quantity = intval($_POST['quantity']);
-    $rice_option = $_POST['rice_option'] ?? '';
-    $drink_option = $_POST['drink_option'] ?? '';
+    $rice_option = !empty($_POST['rice_option']) ? $_POST['rice_option'] : NULL;
+    $drink_option = !empty($_POST['drink_option']) ? $_POST['drink_option'] : NULL;
 
     $stmt = $conn->prepare("SELECT meal_name, price, rice_price_1, rice_price_2, drinks_price FROM meals WHERE id = ?");
     $stmt->bind_param("i", $meal_id);
@@ -51,23 +51,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
     if ($mealData) {
         $meal_name = htmlspecialchars($mealData['meal_name']);
         $meal_price = floatval($mealData['price']);
-        $rice_price = ($rice_option === '1 cup') ? floatval($mealData['rice_price_1']) : (($rice_option === '2 cups') ? floatval($mealData['rice_price_2']) : 0);
-        $drink_price = $drink_option ? floatval($mealData['drinks_price']) : 0;
-        $total_price = ($meal_price * $quantity) + $rice_price + $drink_price;
+        $rice_price = ($rice_option === '1 cup') ? floatval($mealData['rice_price_1']) : (($rice_option === '2 cups') ? floatval($mealData['rice_price_2']) : NULL);
+        $drink_price = $drink_option ? floatval($mealData['drinks_price']) : NULL;
+        $total_price = ($meal_price * $quantity) + ($rice_price ?? 0) + ($drink_price ?? 0);
 
         $user_id = $_SESSION['user_id'];
 
         // Check if item with same meal, rice, and drink already exists in the cart
-        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND rice_option = ? AND drinks = ?";
+        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND (rice_option = ? OR ? IS NULL) AND (drinks = ? OR ? IS NULL)";
         $stmt = $conn->prepare($checkQuery);
-        $stmt->bind_param("iiss", $user_id, $meal_id, $rice_option, $drink_option);
+        $stmt->bind_param("iissss", $user_id, $meal_id, $rice_option, $rice_option, $drink_option, $drink_option);
         $stmt->execute();
         $checkResult = $stmt->get_result();
 
         if ($checkResult->num_rows > 0) {
             $existingItem = $checkResult->fetch_assoc();
             $new_quantity = $existingItem['quantity'] + $quantity;
-            $updated_total_price = ($meal_price * $new_quantity) + $rice_price + $drink_price;
+            $updated_total_price = ($meal_price * $new_quantity) + ($rice_price ?? 0) + ($drink_price ?? 0);
 
             $updateQuery = "UPDATE cart SET quantity = ?, total_price = ? WHERE id = ?";
             $stmt = $conn->prepare($updateQuery);
@@ -76,13 +76,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
 
             echo "<script>alert('Cart item updated successfully!');</script>";
         } else {
+            // Prepare the insert statement with NULL check for optional fields
             $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insertQuery);
-            $stmt->bind_param("iisidssdds", $user_id, $meal_id, $meal_name, $quantity, $meal_price, $rice_option, $rice_price, $drink_option, $drink_price, $total_price);
+            $stmt->bind_param(
+                "iisid" . ($rice_option ? "s" : "s") . ($rice_price !== NULL ? "d" : "s") . ($drink_option ? "s" : "s") . ($drink_price !== NULL ? "d" : "s") . "d",
+                $user_id,
+                $meal_id,
+                $meal_name,
+                $quantity,
+                $meal_price,
+                $rice_option,
+                $rice_price,
+                $drink_option,
+                $drink_price,
+                $total_price
+            );
+
             $stmt->execute();
 
             echo "<script>alert('Item added to cart successfully!');</script>";
         }
+
+        // Redirect to prevent resubmission on refresh
+        header("Location: meal.php?seller_id=" . $seller_id);
+        exit();
     } else {
         echo "<p>Error: Meal not found!</p>";
     }
@@ -134,18 +152,15 @@ $sellerResult->close();
             margin: 0;
             padding: 0;
             background-color: #F2F2F2;
-            background: -webkit-linear-gradient(
-            to right,
-            #24243e,
-            #302b63,
-            #0f0c29
-            ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #24243e,
-    #302b63,
-    #0f0c29
-  );
+            background: -webkit-linear-gradient(to right,
+                    #24243e,
+                    #302b63,
+                    #0f0c29);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right,
+                    #24243e,
+                    #302b63,
+                    #0f0c29);
         }
 
         .header {
@@ -358,69 +373,65 @@ $sellerResult->close();
 
     <a href="user_dashboard.php" class="back-button">Back to Stores</a>
 
+
     <!-- Meals Section -->
     <div class="meal-container">
         <h2 style="color: white;">Available Meals</h2>
         <?php if ($mealsResult->num_rows > 0): ?>
-            <?php while ($meal = $mealsResult->fetch_assoc()): ?>
-
-                <div class="meal">
-                    <img src="<?php echo htmlspecialchars($meal['image']); ?>" alt="<?php echo htmlspecialchars($meal['meal_name']); ?>">
-                    <div class="meal-details">
-                        <h3><?php echo htmlspecialchars($meal['meal_name']); ?></h3>
-                        <p><?php echo htmlspecialchars($meal['description']); ?></p>
-                        <p><strong>Price: ₱<?php echo htmlspecialchars($meal['price']); ?></strong></p>
+            <div class="meal-grid">
+                <?php while ($meal = $mealsResult->fetch_assoc()): ?>
+                    <div class="meal">
+                        <img src="<?php echo htmlspecialchars($meal['image']); ?>"
+                            alt="<?php echo htmlspecialchars($meal['meal_name']); ?>">
+                        <div class="meal-details">
+                            <h3><?php echo htmlspecialchars($meal['meal_name']); ?></h3>
+                            <p><?php echo htmlspecialchars($meal['description']); ?></p>
+                            <p><strong>Price: ₱<?php echo htmlspecialchars($meal['price']); ?></strong></p>
+                        </div>
+                        <div class="meal-actions">
+                            <form method="POST" action="meal.php?seller_id=<?php echo $seller_id; ?>">
+                                <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
+                                <!-- Quantity input -->
+                                <label for="quantity">Qty:</label>
+                                <input type="number" name="quantity" required min="1" value="1">
+                                <!-- Rice options dropdown -->
+                                <?php if (!empty($meal['rice_options'])): ?>
+                                    <label for="rice_option">Rice:</label>
+                                    <select name="rice_option">
+                                        <option value="">Select Rice</option>
+                                        <option value="1 cup">1 cup (₱<?php echo htmlspecialchars($meal['rice_price_1']); ?>)
+                                        </option>
+                                        <option value="2 cups">2 cups (₱<?php echo htmlspecialchars($meal['rice_price_2']); ?>)
+                                        </option>
+                                    </select>
+                                <?php endif; ?>
+                                <!-- Drinks options dropdown -->
+                                <?php if (!empty($meal['drinks'])): ?>
+                                    <label for="drink_option">Drink:</label>
+                                    <select name="drink_option">
+                                        <option value="">Select Drink</option>
+                                        <?php foreach (explode(',', $meal['drinks']) as $drink): ?>
+                                            <option value="<?php echo htmlspecialchars(trim($drink)); ?>">
+                                                <?php echo htmlspecialchars(trim($drink)); ?>
+                                                (₱<?php echo htmlspecialchars($meal['drinks_price']); ?>)
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php endif; ?>
+                                <button type="submit">Add to Cart</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="meal-actions">
-                        <form method="POST" action="meal.php?seller_id=<?php echo $seller_id; ?>">
-                            <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
-
-                            <!-- Quantity input -->
-                            <label for="quantity">Qty:</label>
-                            <input type="number" name="quantity" required min="1" value="1">
-
-                            <!-- Rice options dropdown -->
-                            <?php if (!empty($meal['rice_options'])): ?>
-                                <label for="rice_option">Rice:</label>
-                                <select name="rice_option">
-                                    <?php
-                                    $riceOptions = explode(',', $meal['rice_options']);
-                                    foreach ($riceOptions as $option) {
-                                        echo "<option value='" . htmlspecialchars(trim($option)) . "'>" . htmlspecialchars(trim($option)) . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                            <?php endif; ?>
-
-                            <!-- Drink options dropdown -->
-                            <?php if (!empty($meal['drinks'])): ?>
-                                <label for="drink_option">Drink:</label>
-                                <select name="drink_option">
-                                    <?php
-                                    $drinkOptions = explode(',', $meal['drinks']);
-                                    foreach ($drinkOptions as $option) {
-                                        echo "<option value='" . htmlspecialchars(trim($option)) . "'>" . htmlspecialchars(trim($option)) . "</option>";
-                                    }
-                                    ?>
-                                </select>
-                            <?php endif; ?>
-
-                            <button type="submit">Add to Cart</button>
-                        </form>
-                    </div>
-                </div>
-            <?php endwhile; ?>
+                <?php endwhile; ?>
+            </div>
         <?php else: ?>
-            <p class="no-meals">No meals available from this store at the moment.</p>
+            <p class="no-meals">No meals available.</p>
         <?php endif; ?>
-
-        <!-- Close the meals result set -->
-        <?php $mealsResult->close(); ?>
     </div>
+
 
     <?php
     // Close the database connection
-    $stmt->close();
     $conn->close();
     ?>
 </body>
