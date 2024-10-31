@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $meal_name = mysqli_real_escape_string($conn, $_POST['meal_name']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $price = mysqli_real_escape_string($conn, $_POST['price']);
+    $rice_options = isset($_POST['rice_options']) ? implode(', ', $_POST['rice_options']) : '';
+    $rice_price_1 = mysqli_real_escape_string($conn, $_POST['rice_price_1']); // New: price for 1 cup rice
+    $rice_price_2 = mysqli_real_escape_string($conn, $_POST['rice_price_2']); // New: price for 2 cups rice
+
+    $drinks = mysqli_real_escape_string($conn, $_POST['drinks']);
+    $drinks_price = mysqli_real_escape_string($conn, $_POST['drinks_price']);
 
     // Check if a new image is uploaded
     if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === 0) {
@@ -39,13 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Only JPG, JPEG, PNG & GIF files are allowed.";
         } elseif (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
             // Update meal with new image
-            $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', image='$target_file' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+            $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', rice_options='$rice_options',  rice_price_1='$rice_price_1', rice_price_2='$rice_price_2', drinks='$drinks', drinks_price='$drinks_price', image='$target_file' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
         } else {
             echo "Error uploading file.";
         }
     } else {
         // Update meal without new image
-        $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+        $sql = "UPDATE meals SET meal_name='$meal_name', description='$description', price='$price', rice_options='$rice_options', rice_price='$rice_price', drinks='$drinks', drinks_price='$drinks_price' WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
     }
 
     if (mysqli_query($conn, $sql)) {
@@ -56,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Error updating meal: " . mysqli_error($conn);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -169,11 +176,80 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <textarea name="description" required><?php echo htmlspecialchars($meal['description']); ?></textarea>
 
             <label>Price:</label>
-            <input type="number" name="price" step="0.01" value="<?php echo htmlspecialchars($meal['price']); ?>" required>
+            <input type="number" name="price" step="0.01" value="<?php echo htmlspecialchars($meal['price']); ?>"
+                required>
 
+            <br>
+            <h3>Select Rice Options:</h3><br>
+            <label>
+                <input type="checkbox" name="rice_options[]" value="1 cup">
+                1 Cup Rice - Price: <input type="number" name="rice_price_1" value=""
+                    placeholder="Enter RICE price for 1 cup" required>
+            </label><br>
+            <label>
+                <input type="checkbox" name="rice_options[]" value="2 cups">
+                2 Cups Rice - Price: <input type="number" name="rice_price_2" value=""
+                    placeholder="Enter RICE price for 2 cup" required>
+
+            </label><br>
+
+            <h3>Upload Drinks:</h3>
+            <div id="drink-list">
+                <!-- Dynamic list of drinks with prices will appear here -->
+            </div>
+            <input type="text" id="drink-input" placeholder="Type a drink and click Add">
+            <input type="number" id="drink-price-input" placeholder="Price">
+            <button type="button" onclick="addDrink()">Add Drink</button><br><br>
+
+            <!-- Hidden input to store drink list -->
+            <input type="hidden" name="drinks" id="drinks">
+            <!-- Hidden input to store drink prices -->
+            <input type="hidden" name="drinks_price" id="drinks_price">
+
+            <button type="submit" name="upload_meal">Upload Meal</button>
+
+            <script>
+                let drinks = [];
+                let drinkPrices = [];
+
+                function addDrink() {
+                    const drinkInput = document.getElementById('drink-input');
+                    const drinkPriceInput = document.getElementById('drink-price-input');
+                    const drinkValue = drinkInput.value.trim();
+                    const drinkPrice = drinkPriceInput.value.trim();
+
+                    if (drinkValue && drinkPrice) {
+                        drinks.push(drinkValue);
+                        drinkPrices.push(drinkPrice);
+                        drinkInput.value = '';
+                        drinkPriceInput.value = '';
+                        updateDrinkList();
+                    } else {
+                        alert('Please provide both drink name and price.');
+                    }
+                }
+
+                function updateDrinkList() {
+                    const drinkList = document.getElementById('drink-list');
+                    drinkList.innerHTML = drinks.map((drink, index) => `
+                    <div>${drink} - Price: ${drinkPrices[index]} Pesos <button type="button" onclick="removeDrink(${index})">Remove</button></div>`).join('');
+                    document.getElementById('drinks').value = drinks.join(',');
+                    document.getElementById('drinks_price').value = drinkPrices.join(',');
+                }
+
+                function removeDrink(index) {
+                    drinks.splice(index, 1);
+                    drinkPrices.splice(index, 1);
+                    updateDrinkList();
+                }
+            </script>
+            <br>
+            <br>
             <label>Meal Image:</label>
             <input type="file" name="meal_image" accept="image/*">
-
+            <br>
+            <br>
+            <br>
             <button type="submit">Update Meal</button>
         </form>
     </div>
