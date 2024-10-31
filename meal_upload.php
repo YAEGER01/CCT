@@ -223,11 +223,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             <h3>Select Rice Options:</h3><br>
             <label>
                 <input type="checkbox" name="rice_options[]" value="1 cup">
-                1 Cup Rice - Price: <input type="number" name="rice_price_1" value="" placeholder="Enter RICE price for 1 cup" required>
+                1 Cup Rice - Price: <input type="number" name="rice_price_1" value=""
+                    placeholder="Enter RICE price for 1 cup" required>
             </label><br>
             <label>
                 <input type="checkbox" name="rice_options[]" value="2 cups">
-                2 Cups Rice - Price: <input type="number" name="rice_price_2" value="" placeholder="Enter RICE price for 2 cup" required>
+                2 Cups Rice - Price: <input type="number" name="rice_price_2" value=""
+                    placeholder="Enter RICE price for 2 cup" required>
 
             </label><br>
 
