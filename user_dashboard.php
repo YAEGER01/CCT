@@ -672,7 +672,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Footer -->
     <footer>
-        <p>© 2024 YouChews Food Ordering. All rights reserved.</p>
+        <p>© 2024 YouChews Food Ordering. All rights reserved..</p>
     </footer>
 
     <div id="popup" class="popup" onclick="openLink()">
