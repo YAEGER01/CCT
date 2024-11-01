@@ -99,7 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background: linear-gradient(to right,
                     #24243e,
                     #302b63,
-                    #0f0c29);
+                    #0f0c29);        
+                    background:
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                repeating-conic-gradient(#ffffff 0 25%, #0000 0 50%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(#0000 66%, #d056ef 68% 70%, #0000 72%) 0 calc(50px/2)/50px 50px #ffffff;;
+
         }
 
         .header {
@@ -116,6 +124,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .header h1 {
             margin: 0;
             font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
         }
 
         .back-button {
@@ -182,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             bottom: 0;
             left: 37.5%;
             right: 37.5%;
+            color: #131313;
             width: 25%;
             margin-bottom: 10px;
             max-width: 800px;
@@ -200,28 +211,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 /* Adjust button spacing */
             }
         }
-
-        .button {
-            padding: 10px 10px;
-            margin: 0 5px;
-            /* Add 5px margin on each side */
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
+        .btn {
+            padding: 1.1em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
             cursor: pointer;
-            transition: background-color 0.3s;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
         }
 
-        .button:hover {
-            background-color:
-                #555;
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-150%, -50%);
+            transition: all 0.5s;
         }
 
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(150%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
         h3 {
             color: #333;
+            margin-bottom: 10px;
             text-align: right;
         }
 
@@ -252,8 +285,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 10px;
             background-color: var(--primary-color);
             border: 1px solid var(--primary-color);
-            color: #fff;
+            color: #131313;
         }
+
+        
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -377,8 +412,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             ?>
             <div class="btn-group">
-                <button type="submit" name="delete" class="button">Delete Selected Items</button>
-                <button type="button" name="checkout" class="button" onclick="checkoutSelectedItems()">Checkout</button>
+                <button type="submit" name="delete" class="btn">Delete Items</button>
+                <button type="button" name="checkout" class="btn" onclick="checkoutSelectedItems()">Checkout</button>
 
 
             </div>

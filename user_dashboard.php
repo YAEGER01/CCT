@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #ffffff;
             /* Light background */
             margin: 0;
+            line-height: 1.6;
         }
 
         /* Header */
@@ -277,13 +278,254 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn:active {
             transform: scale(0.9);
         }
+        
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.info-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px; /* Increased padding */
+    gap: 30px; /* Increased gap */
+}
+
+.info-card {
+    text-align: center;
+    max-width: 400px; /* Increased max-width */
+    background-color: #f9f9f9; /* Light background color */
+    color: #333; /* Darker text color for contrast */
+    border: 1px solid #ddd; /* Light border for definition */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Deeper shadow for more depth */
+    border-radius: 20px; /* Increased border-radius */
+    transition: transform 0.3s; /* Smooth transition */
+}
+
+.info-card:hover {
+    transform: translateY(-5px); /* Slightly more lift on hover */
+}
+
+.image-wrapper {
+    width: 200px; /* Increased width */
+    height: 200px; /* Increased height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px; /* Matches the info-card */
+    overflow: hidden;
+    margin: 0 auto 20px; /* Increased margin */
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px; /* Adjusted for consistency */
+}
+
+h3 {
+    font-size: 1.5em; /* Increased font size */
+    font-weight: bold;
+    color: #333;
+}
+
+.underline {
+    width: 70px; /* Increased width */
+    height: 6px; /* Increased height */
+    border: none;
+    margin: 10px auto; /* Increased margin */
+}
+
+.yellow {
+    background-color: #ffb400;
+}
+
+.red {
+    background-color: #d12a1e;
+}
+
+p {
+    font-size: 1.1em; /* Increased font size */
+    color: #666;
+    padding: 0 15px; /* Increased padding */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.menu-section {
+    text-align: center;
+    padding: 80px; /* Increased padding */
+}
+
+.menu-section h2 {
+    font-size: 3em; /* Increased font size */
+    color: #333;
+    margin-bottom: 40px; /* Increased margin */
+}
+
+.menu-items {
+    display: flex;
+    justify-content: center;
+    gap: 50px; /* Increased gap between cards */
+}
+
+.menu-card {
+    width: 400px; /* Increased card width */
+    padding: 40px; /* Increased padding for more spacious layout */
+    border-radius: 25px; /* Increased border-radius */
+    color: white;
+    text-align: center;
+    position: relative;
+}
+
+.menu-card h3 {
+    font-size: 1.8em; /* Increased font size */
+    margin-bottom: 20px; /* Increased margin */
+    font-weight: bold;
+}
+
+.menu-card p {
+    font-size: 1.2em; /* Increased font size */
+    margin-bottom: 30px; /* Increased margin */
+}
+
+.menu-card img {
+    width: 180px; /* Increased image size */
+    height: auto;
+    margin-top: 30px; /* Increased margin */
+}
+
+.popup {
+            display: none;
+            position: fixed;
+            width: 200px;
+            padding: 20px;
+            background-color: #ffdd57;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            /* Ensure it's above everything else */
+            cursor: pointer;
+            /* Set cursor to pointer for interaction */
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+
+/* Header styles */
+header {
+  background-color: #ffcc00;
+  color: #900;
+  padding: 1rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+nav ul li {
+  margin: 0;
+}
+
+nav ul li a {
+  color: #900;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  color: #600;
+}
+
+/* Main content styles */
+main {
+  padding: 2rem;
+  text-align: center;
+}
+
+section {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 5px;
+}
+
+h2 {
+  color: #900;
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+}
+
+/* Button styles */
+button {
+    background-color: #ffcc00;
+    color: #900;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e6b800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
+
+/* Footer styles */
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+
     </style>
 </head>
 
 <body>
     <!-- Header -->
     <div class="header">
-        <div class="site_name">
+        <div class="site_name"> 
             <h2>You Chews</h2>
             <p>IKAW BAHALA</p>
         </div>
@@ -298,7 +540,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
-
     <!-- Stores Section -->
     <div class="store-container">
         <h2>Stores</h2>
@@ -307,11 +548,181 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
+    <div class="menu-section">
+    <h2>Featured Menu Items</h2>
+    <div class="menu-items">
+        <div class="menu-card" style="background-color: #d12a1e;">
+            <h3>Adobo</h3>
+            <p>The most delicious abodo ever, juicylicious.</p>
+            <img src="https://i.pinimg.com/564x/87/e6/e0/87e6e028a8aeed560cf368e83741e16e.jpg" alt="Adobo">
+        </div>
+        <div class="menu-card" style="background-color: #ffb400;">
+            <h3>Teryaki</h3>
+            <p>The sweetest chilly spicy sarap teryaki! </p>
+            <img src="https://i.pinimg.com/564x/1f/ce/8f/1fce8f49bbdfb98ca11f73904bc796ab.jpg" alt="Teryaki">
+        </div>
+        <div class="menu-card" style="background-color: #009bb8;">
+            <h3>Letchon Kawali</h3>
+            <p>Your favorite 100% crispy and delicious letchon kawali!.</p>
+            <img src="https://i.pinimg.com/564x/60/56/a7/6056a7af1a048fb36ec754d83bdec80a.jpg" alt="Letchon kawali">
+        </div>
+    </div>
+</div>
+
+    
+    <div class="info-section">
+    <div class="info-card">
+        <div class="image-wrapper" style="background-color: #ffb400;">
+            <img src="https://i.pinimg.com/564x/0e/37/f6/0e37f644cb6c80a68796854d05842e97.jpg" alt="What We Do">
+        </div>
+        <h2>What We Do</h2>
+        <hr class="underline yellow">
+        <p>Youchews' goal is to make everyone enjoy eating by providing delicious cuisine.</p>
+    </div>
+    <div class="info-card">
+        <div class="image-wrapper" style="background-color: #d12a1e;">
+            <img src="https://i.pinimg.com/564x/a7/5b/ab/a75bab2c7ba98bc5d631381612a6e77f.jpg" alt="What We Stand For">
+        </div>
+        <h2>What We Stand For</h2>
+        <hr class="underline red">
+        <p>Filipino pride is promoted by the local-friendly brand New YouChews, which also encourages student's values and unity.</p>
+    </div>
+</div>
+
+<nav>
+      <ul>
+        <li><a href="#how-to-order">How To Order</a></li>
+        <li><a href="#delivery">Delivery</a></li>
+        <li><a href="#locations">Locations</a></li>
+      </ul>
+    </nav>
+
+<!-- Main Content -->
+<main>
+    <section id="about">
+      <h2>About Us</h2>
+      <p>About YouChews | Corporate Information | Safety</p>
+    </section>
+
+    <section id="how-to-order">
+      <h2>How to Order</h2>
+      <p>Follow these easy steps to order your favorite meals.</p>
+      <ol>
+          <li>Choose your favorite items from our menu.</li>
+          <li>Add them to your cart.</li>
+          <li>Proceed to checkout and enter your details.</li>
+          <li>Enjoy your meal!</li>
+      </ol>
+    </section>
+
+    <section id="promotions">
+      <h2>Promotions</h2>
+      <p>Check out our latest deals and offers!</p>
+    </section>
+
+    <section id="menu">
+      <h2>View Menu</h2>
+      <p>Explore our delicious offerings:</p>
+      <ul>
+          <li>Adobo</li>
+          <li>Teryaki</li>
+          <li>Letchon Kawali</li
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+
+      <p>About Our Website | Privacy Notice | Terms & Conditions | Accessibility | Sitemap</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 YouChews Food Ordering. All rights reserved.</p>
+  </footer>
+
+<div id="popup" class="popup" onclick="openLink()">
+        <span class="close-btn" onclick="closePopup(event)">x</span>
+        <p>NO NUT NOVEMBER NA BAWAL MAG LULU BOY!!!</p>
+    </div>
+    <script>
+        let closeCount = 0; // Track the number of times "x" has been clicked
+
+        // Function to make the popup draggable
+        function makeDraggable(element) {
+            let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
+
+            element.onmousedown = function (event) {
+                event.preventDefault();
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+                document.onmousemove = dragElement;
+                document.onmouseup = closeDragElement;
+            };
+
+            function dragElement(event) {
+                event.preventDefault();
+                offsetX = mouseX - event.clientX;
+                offsetY = mouseY - event.clientY;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+
+                element.style.top = (element.offsetTop - offsetY) + "px";
+                element.style.left = (element.offsetLeft - offsetX) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+        }
+
+        // Initialize the popup and make it draggable
+        function showPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            popup.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            popup.style.display = 'block';
+
+            makeDraggable(popup); // Enable dragging on the popup
+
+            closeCount = 0; // Reset closeCount whenever the popup reappears
+        }
+
+        // Function to close the popup and manage different behaviors for the "x" button
+        function closePopup(event) {
+            event.stopPropagation(); // Prevents closing from triggering the link
+
+            if (closeCount === 0) {
+                // First click on "x" opens the link
+                openLink();
+            } else if (closeCount === 1) {
+                // Second click actually hides the popup
+                const popup = document.getElementById('popup');
+                popup.style.display = 'none';
+
+                // Schedule the popup to reappear after a random delay (10-59 seconds)
+                setTimeout(showPopup, Math.random() * 49000 + 10000);
+            }
+
+            closeCount++;
+        }
+
+        // Function to open a link when popup is clicked
+        function openLink() {
+            window.open("https://pinayflix2.co/", "_blank"); // Opens link in a new tab
+        }
+
+        // Initially show the popup after page load
+        setTimeout(showPopup, 2000); // First appearance after 2 seconds
+
+    </script>
+
     <?php
     // Close the result set and connection
     $result->close();
     $conn->close();
     ?>
 </body>
-
 </html>
