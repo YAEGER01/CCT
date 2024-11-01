@@ -67,208 +67,151 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Root Variables */
-        :root {
-            --primary-color: #6A5ACD;
-            --secondary-color: #F2F2F2;
-            --accent-color: #555;
-            --text-color: #333;
-            --font-primary: 'Roboto', sans-serif;
-            --shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s ease;
-        }
-
-        /* Global Styles */
+        /* Base Styles */
         body {
-            font-family: var(--font-primary);
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+            /* Light background */
             margin: 0;
-            padding: 0;
-            background-color: var(--secondary-color);
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-            background: -webkit-linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
         }
 
-        /* Header Styling */
+        /* Header */
         .header {
-            background-color: #ffffff;
-            color: var(--text-color);
+            background-color: #f8f8f8;
+            /* Light gray */
+            color: #333;
             padding: 20px;
-            text-align: center;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .site_name h2 {
+        .header h2 {
+            font-size: 24px;
             margin: 0;
+            color: #d056ef;
+            /* Accent color */
         }
 
-        /* Form Container Styling */
-        .form-container {
+        .header p {
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Form Container in Header */
+        .form-container form {
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin-left: auto;
         }
 
-        select,
         .action-select {
-            padding: 10px;
-            font-size: 16px;
             border-radius: 10px;
-            background-color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            color: #fff;
-            transition: var(--transition);
+            padding: 10px;
+            background-color: #d056ef;
+            /* Accent color */
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            appearance: none;
         }
 
-        select:hover,
         .action-select:hover {
-            background-color: var(--accent-color);
+            background-color: #b045c0;
+            /* Darker shade on hover */
         }
 
         /* Store Container */
         .store-container {
-            padding: 20px;
             max-width: 1200px;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: var(--shadow);
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            /* Light background */
             border-radius: 10px;
-            min-height: 80vh;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background:
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                repeating-conic-gradient(#ffffff 0 25%, #0000 0 50%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(#0000 66%, #d056ef 68% 70%, #0000 72%) 0 calc(50px/2)/50px 50px #ffffff;
+
         }
 
-        /* Grid Layout for Stores */
+        .store-container h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 10px;
+            width: 70px;
+        }
+
+        /* Store Grid */
         .stores-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
         }
 
-        /* Store Card Styling */
+        /* Individual Store */
         .store {
-            background-image: url('CCT/images/PaikkotNaLogo.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #ddd;
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
+            width: 260px;
+            background-color: white;
+            /* Light card background */
             border-radius: 10px;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             transition: transform 0.3s ease;
-        }
 
-        .store h3 {
-            margin: 0 0 10px;
-            color: var(--text-color);
-        }
-
-        .store .view-meals {
-            background-color: var(--primary-color);
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: var(--transition);
-        }
-
-        .store .view-meals:hover {
-            background-color: var(--accent-color);
         }
 
         .store:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            transform: scale(1.03);
         }
 
-        /* Link Styling */
-        a {
+        .store h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .view-meals {
+            background-color: #d056ef;
+            /* Accent color */
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
             text-decoration: none;
-            padding: 15px 30px;
-            background-color: var(--primary-color);
-            color: #fff;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            display: inline-block;
-            transition: var(--transition);
+            transition: background-color 0.3s ease;
         }
 
-        a:hover {
-            background-color: var(--accent-color);
+        .view-meals:hover {
+            background-color: #b045c0;
+            /* Darker shade on hover */
         }
 
-        /* Responsive Adjustments */
+        /* Store Grid - Responsive */
         @media (max-width: 768px) {
-            .store-container {
-                padding: 15px;
-                margin-top: 5%;
-            }
-
-            .header {
-                flex-direction: column;
-                padding: 15px;
-                text-align: center;
-            }
-
             .stores-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
             }
 
             .store {
-                width: 100%;
-                height: auto;
+                width: 90%;
             }
-        }
-
-        @media (max-width: 480px) {
-
-            select,
-            .action-select {
-                padding: 8px;
-                font-size: 14px;
-            }
-
-            .store h3 {
-                font-size: 1em;
-            }
-
-            .store .view-meals {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-
-            a {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-        }
-
-        /* Smooth Transition */
-        .search-form-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: auto;
         }
     </style>
-
 </head>
 
 <body>
