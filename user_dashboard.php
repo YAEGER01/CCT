@@ -655,7 +655,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </section>
 
         <section id="menu">
-            <h2>View Menu</h2>
+            <h2>View Menuu</h2>
             <p>Explore our delicious offerings:</p>
             <ul>
                 <li>Adoboo</li>
