@@ -23,7 +23,7 @@ function renderStores($result)
         while ($store = $result->fetch_assoc()) {
             echo "<div class='store'>";
             echo "<h3>" . htmlspecialchars($store['username']) . "</h3>";
-            echo "<a href='meal.php?seller_id=" . htmlspecialchars($store['id']) . "' class='view-meals'>View Meals</a>";
+            echo "<a href='meal.php?seller_id=" . htmlspecialchars($store['id']) . "' class='view-meals btn'>View Meals</a>";
             echo "</div>";
         }
     } else {
@@ -210,6 +210,72 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             .store {
                 width: 90%;
             }
+        }
+
+        /* Button */
+        button {
+            background-color: #d056ef;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b045c0;
+        }
+
+        /* No Meals Message */
+        .no-meals {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 1.1em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #ecd448;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-150%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #d056ef;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(150%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
         }
     </style>
 </head>

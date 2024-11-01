@@ -67,20 +67,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
         if ($checkResult->num_rows > 0) {
             $existingItem = $checkResult->fetch_assoc();
             $new_quantity = $existingItem['quantity'] + $quantity;
+
+            // Calculate the updated total price
             $updated_total_price = ($meal_price * $new_quantity) + ($rice_price ?? 0) + ($drink_price ?? 0);
 
+            // Debugging output
+            echo "New Quantity: $new_quantity<br>";
+            echo "Updated Total Price: $updated_total_price<br>";
+
+            // Prepare the update statement
             $updateQuery = "UPDATE cart SET quantity = ?, total_price = ? WHERE id = ?";
             $stmt = $conn->prepare($updateQuery);
             $stmt->bind_param("idi", $new_quantity, $updated_total_price, $existingItem['id']);
             $stmt->execute();
 
-            echo "<script>alert('Cart item updated successfully!');</script>";
+            if ($stmt->affected_rows > 0) {
+                echo "<script>alert('Cart item updated successfully!');</script>";
+            } else {
+                echo "<script>alert('Failed to update cart item.');</script>";
+            }
         } else {
             // Prepare the insert statement with NULL check for optional fields
             $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insertQuery);
+
+            // Prepare bind parameters ensuring correct data types
+            $rice_option = $rice_option ?? NULL; // Ensure $rice_option is NULL if not set
+            $drink_option = $drink_option ?? NULL; // Ensure $drink_option is NULL if not set
+
+            // Debugging output for insert
+            echo "Quantity: $quantity<br>";
+            echo "Total Price: $total_price<br>";
+
             $stmt->bind_param(
-                "iisid" . ($rice_option ? "s" : "s") . ($rice_price !== NULL ? "d" : "s") . ($drink_option ? "s" : "s") . ($drink_price !== NULL ? "d" : "s") . "d",
+                "iisidssssd",
                 $user_id,
                 $meal_id,
                 $meal_name,
@@ -93,9 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
                 $total_price
             );
 
-            $stmt->execute();
-
-            echo "<script>alert('Item added to cart successfully!');</script>";
+            if ($stmt->execute()) {
+                echo "<script>alert('Item added to cart successfully!');</script>";
+            } else {
+                echo "<script>alert('Failed to add item to cart.');</script>";
+            }
         }
 
         // Redirect to prevent resubmission on refresh
@@ -141,215 +163,315 @@ $sellerResult->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo "$seller_name's Meals"; ?></title>
     <style>
-        :root {
-            --primary-color: #6A5ACD;
-            --secondary-color: #F2F2F2;
-            --font-primary: 'Roboto', sans-serif;
-        }
-
+        /* Base Styles */
         body {
             font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #F2F2F2;
-            background: -webkit-linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-        }
-
-        .header {
             background-color: #ffffff;
-            color: black;
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
+            /* Light background */
             margin: 0;
-        }
-
-        .form-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-left: auto;
-        }
-
-        select {
-            border-radius: 10px;
-            background-color: #6A5ACD;
-            border: 1px solid #6A5ACD;
-            color: #fff;
-        }
-
-        .action-select {
-            padding: 10px;
-            font-size: 16px;
-            margin-left: 10px;
-            border-radius: 10px;
-            background-color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            color: #fff;
-        }
-
-        .message-button {
-            padding: 10px 15px;
-            background-color: #333;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .message-button:hover {
-            background-color: #555;
-        }
-
-        .back-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 15px;
-            background-color: #333;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            width: fit-content;
-
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .back-button:hover {
-            background-color: #555;
-        }
-
-        .meal-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .meal-container h2 {
-            color: black;
-            text-align: center;
-        }
-
-        .meal {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            background-color: #f9f9f9;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .meal img {
-            max-width: 100%;
-            border-radius: 10px;
-            height: auto;
-        }
-
-        .meal-details {
-            text-align: center;
-        }
-
-        .meal h3 {
-            margin: 10px 0;
             color: #333;
         }
 
-        .meal p {
-            margin: 5px 0;
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        /* Form Container */
+        .form-container select {
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #d056ef;
+            /* Accent color */
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            appearance: none;
+        }
+
+        .form-container select:hover {
+            background-color: #b045c0;
+            /* Darker accent */
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            margin: 15px 20px;
+            color: #d056ef;
+            /* Accent color */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #b045c0;
+        }
+
+        /* Meal Container */
+        .meal-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background:
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 50px 50px/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 100% 25%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(35.36% 35.36% at 0 75%, #0000 66%, #d056ef 68% 70%, #0000 72%) 0 0/calc(2*50px) calc(2*50px),
+                repeating-conic-gradient(#ffffff 0 25%, #0000 0 50%) 0 0/calc(2*50px) calc(2*50px),
+                radial-gradient(#0000 66%, #d056ef 68% 70%, #0000 72%) 0 calc(50px/2)/50px 50px #ffffff;
+
+        }
+
+        .meal-container h2 {
+            padding: 10px;
+            font-size: 24px;
+            color: #333;
+            background-color: white;
+            width: 100px;
+        }
+
+        /* Meal Grid */
+        .meal-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .meal {
+            width: 260px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .meal:hover {
+            transform: scale(1.03);
+        }
+
+        .meal h3 {
+            font-size: 20px;
             color: #555;
+            margin: 0 0 8px 0;
+            /* Adjusted margin */
+        }
+
+        .meal img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            align-self: center;
+        }
+
+        .description-box {
+            max-height: 80px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            word-break: break-word;
+        }
+
+        .description-box p {
+            margin: 0;
+            color: #666;
+            line-height: 1.4;
         }
 
         .meal-actions {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .meal-actions input[type="number"] {
-            width: 50px;
-            margin-right: 10px;
-            border-radius: 5px;
-            padding: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .meal-actions select {
-            margin-right: 10px;
-            border-radius: 5px;
-            padding: 5px;
-            border: 1px solid #ccc;
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
         }
 
         .meal-actions button {
-            padding: 5px 10px;
-            background-color: #333;
-            color: white;
+            background-color: #d056ef;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            padding: 8px 12px;
+            /* Increased padding for buttons */
+            border-radius: 4px;
             cursor: pointer;
-
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
         }
 
         .meal-actions button:hover {
-            background-color: #555;
+            background-color: #4500b5;
         }
 
-        .no-meals {
-            text-align: center;
-            font-weight: bold;
-            color: #777;
-        }
-
-        /* Responsive styling */
         @media (max-width: 768px) {
             .meal {
-                width: 90%;
+                width: 100%;
             }
+        }
+
+        .meal img {
+            width: 100%;
+            height: 150px;
+            /* Fixed height for image */
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Meal Details */
+        .meal-details {
+            flex-grow: 1;
+            margin-top: 10px;
+        }
+
+        .meal-details h3 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .meal-details p {
+            font-size: 12px;
+            color: #666;
+            overflow-y: auto;
+            /* Allow vertical scrolling */
+            overflow-x: hidden;
+            /* Prevent horizontal scrolling */
+            white-space: normal;
+            /* Allow multi-line text */
+            word-wrap: break-word;
+            /* Allow breaking long words */
+            padding-right: 5px;
+            /* Add padding to avoid scroll bar overlap */
+        }
+
+        /* Meal Actions */
+        .meal-actions {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .meal-actions label {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .meal-actions input[type="number"] {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+
+            width: 82%;
+        }
+
+        .meal-actions select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+
+            width: 100%;
+        }
+
+        /* Button */
+        button {
+            background-color: #d056ef;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b045c0;
+        }
+
+        /* No Meals Message */
+        .no-meals {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Button */
+        button {
+            background-color: #d056ef;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b045c0;
+        }
+
+        .btn {
+            padding: 1.1em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #ecd448;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-150%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #d056ef;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(150%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
@@ -371,12 +493,11 @@ $sellerResult->close();
         </div>
     </div>
 
-    <a href="user_dashboard.php" class="back-button">Back to Stores</a>
-
+    <br><br><br>
 
     <!-- Meals Section -->
     <div class="meal-container">
-        <h2 style="color: white;">Available Meals</h2>
+        <h2 style="color: #333;">Available Meals</h2>
         <?php if ($mealsResult->num_rows > 0): ?>
             <div class="meal-grid">
                 <?php while ($meal = $mealsResult->fetch_assoc()): ?>
@@ -384,9 +505,15 @@ $sellerResult->close();
                         <img src="<?php echo htmlspecialchars($meal['image']); ?>"
                             alt="<?php echo htmlspecialchars($meal['meal_name']); ?>">
                         <div class="meal-details">
+                            <hr>
                             <h3><?php echo htmlspecialchars($meal['meal_name']); ?></h3>
-                            <p><?php echo htmlspecialchars($meal['description']); ?></p>
                             <p><strong>Price: ₱<?php echo htmlspecialchars($meal['price']); ?></strong></p>
+                            <hr>
+                            <p>Description: </p>
+                            <div class="description-box">
+                                <p><?php echo htmlspecialchars($meal['description']); ?></p>
+                            </div>
+
                         </div>
                         <div class="meal-actions">
                             <form method="POST" action="meal.php?seller_id=<?php echo $seller_id; ?>">
@@ -418,7 +545,10 @@ $sellerResult->close();
                                         <?php endforeach; ?>
                                     </select>
                                 <?php endif; ?>
-                                <button type="submit">Add to Cart</button>
+                                <br><br>
+                                <hr>
+                                <br>
+                                <button class="btn" type="submit">Add to Cart</button>
                             </form>
                         </div>
                     </div>

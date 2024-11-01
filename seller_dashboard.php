@@ -372,7 +372,9 @@ $orderResult = $stmt->get_result();
                         <div class="meal-actions">
                             <form method="POST" action="seller_dashboard.php" style="display:inline;">
                                 <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
-                                <button type="submit" name="delete_meal">Delete Meal</button>
+                                <button type="submit" name="delete_meal"
+                                    onclick="return confirm('Are you sure you want to delete this meal?')">Delete
+                                    Meal</button>
                             </form>
                             <form method="GET" action="edit_meal.php" style="display:inline;">
                                 <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">

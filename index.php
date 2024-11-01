@@ -33,6 +33,10 @@
                     #24243e,
                     #302b63,
                     #0f0c29);
+
+            background-image: linear-gradient(#48145a 1px, transparent 1px), linear-gradient(to right, #48145a 1px, transparent 1px);
+            background-size: 38px 38px;
+            background-color: #ffffff;
         }
 
         /* Keyframe Animations */
@@ -72,6 +76,39 @@
             }
         }
 
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            text-align: center;
+            color: #ffeba7;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 40px 40px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 20px 20px / 40px 40px,
+                linear-gradient(#b23939 1px, transparent 1px) 0px -0.5px / 20px 20px,
+                linear-gradient(90deg, #b23939 1px, #ffffff 1px) -0.5px 0px / 20px 20px;
+            background-color: #ffffff;
+            animation: scrollPattern 10s linear infinite;
+        }
+
+        /* Keyframes for background scrolling */
+        @keyframes scrollPattern {
+            0% {
+                background-position: 0 0, 20px 20px, 0px 0px, 0px 0px;
+            }
+
+            100% {
+                background-position: 40px 40px, 60px 60px, 20px 20px, 20px 20px;
+            }
+        }
+
         /* Containers */
         .container {
             display: flex;
@@ -86,10 +123,8 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-top: 5%;
             animation: fadeIn 1s ease-out;
-            background-image: url('japanese.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-blend-mode: overlay;
+
+
         }
 
         /* Headings */
@@ -122,12 +157,14 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
             animation: fadeIn 2s ease-out, pulse 2s infinite;
             box-shadow: 0 4px 10px rgba(10 6, 90, 205, 0.4);
+
         }
 
         .btn:hover {
             background-color: #5a4db1;
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
+
         }
 
         /* Additional Link Styling */
