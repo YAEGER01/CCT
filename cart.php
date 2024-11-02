@@ -36,13 +36,9 @@ $cartResult = mysqli_query($conn, $cartQuery);
 // Initialize total price variable
 $totalPrice = 0;
 
-
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['user_action'])) {
         $action = $_POST['user_action'];
-
         switch ($action) {
             case 'Home':
                 header("Location: user_dashboard.php");
@@ -68,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -170,55 +165,84 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-bottom: none;
         }
 
-
-
         .btn-group {
             display: flex;
             justify-content: space-evenly;
-            background-color: var(--secondary-color);
-            box-shadow: 0 2px 6px var(--shadow-color);
-            padding: 20px 5px 20px 5px;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            /* Adjusted padding */
             position: fixed;
             bottom: 0;
             left: 37.5%;
             right: 37.5%;
             width: 25%;
-            margin-bottom: 10px;
-            max-width: 800px;
+            max-width: 100%;
             margin: 1.5rem auto;
-            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
-            /* Responsive adjustments */
-            @media (max-width: 768px) {
+        @media (max-width: 768px) {
+            .btn-group {
                 width: 100%;
-                /* Full width on smaller screens */
                 left: 0;
                 right: 0;
                 justify-content: space-around;
-                /* Adjust button spacing */
             }
         }
 
-        .button {
-            padding: 10px 10px;
-            margin: 0 5px;
-            /* Add 5px margin on each side */
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
+        .btn {
+            padding: 1.1em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
             cursor: pointer;
-            transition: background-color 0.3s;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: auto;
+            /* Adjusted to fit content */
+            margin: 0 10px;
+            /* Spacing between buttons */
         }
 
-        .button:hover {
-            background-color:
-                #555;
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-150%, -50%);
+            transition: all 0.5s;
         }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(150%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+
+        /* END OF BUTTONS */
+
+
 
         h3 {
             color: #333;
@@ -377,8 +401,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             ?>
             <div class="btn-group">
-                <button type="submit" name="delete" class="button">Delete Selected Items</button>
-                <button type="button" name="checkout" class="button" onclick="checkoutSelectedItems()">Checkout</button>
+                <button class="btn" type="submit" name="delete" class="button">Delete</button>
+                <button class="btn" type="button" name="checkout" class="button"
+                    onclick="checkoutSelectedItems()">Checkout</button>
 
 
             </div>
