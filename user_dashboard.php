@@ -277,7 +277,122 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn:active {
             transform: scale(0.9);
         }
+
+        .popup {
+            display: none;
+            position: fixed;
+            width: 200px;
+            padding: 20px;
+            background-color: #ffdd57;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            /* Ensure it's above everything else */
+            cursor: pointer;
+            /* Set cursor to pointer for interaction */
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
     </style>
+    <script>
+        let closeCount = 0; // Track the number of times "x" has been clicked
+
+        // Array of ad objects
+        const ads = [
+            { content: "Ad 1: Check out our sale!", link: "https://example1.com" },
+            { content: "Ad 2: Don't miss these deals!", link: "https://example2.com" },
+            { content: "Best Movies 2024!", link: "https://www.example3.com/domain/top10hd.com" },
+        ];
+
+        // Function to randomly select an ad
+        function getRandomAd() {
+            return ads[Math.floor(Math.random() * ads.length)];
+        }
+
+        // Function to make the popup draggable
+        function makeDraggable(element) {
+            let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
+
+            element.onmousedown = function (event) {
+                event.preventDefault();
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+                document.onmousemove = dragElement;
+                document.onmouseup = closeDragElement;
+            };
+
+            function dragElement(event) {
+                event.preventDefault();
+                offsetX = mouseX - event.clientX;
+                offsetY = mouseY - event.clientY;
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+
+                element.style.top = (element.offsetTop - offsetY) + "px";
+                element.style.left = (element.offsetLeft - offsetX) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+        }
+
+        // Initialize the popup and make it draggable
+        function showPopup() {
+            const popup = document.getElementById('popup');
+            const ad = getRandomAd(); // Get a random ad
+            popup.innerHTML = `<span class="close-btn" onclick="closePopup(event)">x</span><p>${ad.content}</p>`;
+            popup.dataset.link = ad.link; // Store the ad link in data attribute
+
+            popup.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            popup.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            popup.style.display = 'block';
+
+            makeDraggable(popup); // Enable dragging on the popup
+
+            closeCount = 0; // Reset closeCount whenever the popup reappears
+        }
+
+        // Function to close the popup and manage different behaviors for the "x" button
+        function closePopup(event) {
+            event.stopPropagation(); // Prevents closing from triggering the link
+
+            const popup = document.getElementById('popup');
+
+            if (closeCount === 0) {
+                // First click on "x" opens the link
+                window.open(popup.dataset.link, "_blank");
+            } else if (closeCount === 1) {
+                // Second click actually hides the popup
+                popup.style.display = 'none';
+
+                // Schedule the popup to reappear after a random delay (10-59 seconds)
+                setTimeout(showPopup, Math.random() * 49000 + 10000);
+            }
+
+            closeCount++;
+        }
+
+        // Function to open the link when the popup is clicked
+        function openLink() {
+            const popup = document.getElementById('popup');
+            window.open(popup.dataset.link, "_blank"); // Opens link in a new tab
+        }
+
+        // Initially show the popup after page load
+        setTimeout(showPopup, 2000); // First appearance after 2 seconds
+
+    </script>
 </head>
 
 <body>
@@ -298,6 +413,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
         </div>
     </div>
+    <div id="popup" class="popup" onclick="openLink()">
+        <span class="close-btn" onclick="closePopup(event)">x</span>
+        <p>HOT MOMS IN YOUR AREAA!!!</p>
+    </div>
+
+
+
 
     <!-- Stores Section -->
     <div class="store-container">
