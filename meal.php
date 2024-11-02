@@ -307,20 +307,7 @@ $sellerResult->close();
             margin-top: auto;
         }
 
-        .meal-actions button {
-            background-color: #d056ef;
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            /* Increased padding for buttons */
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
 
-        .meal-actions button:hover {
-            background-color: #4500b5;
-        }
 
         @media (max-width: 768px) {
             .meal {
@@ -392,21 +379,6 @@ $sellerResult->close();
             width: 100%;
         }
 
-        /* Button */
-        button {
-            background-color: #d056ef;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #b045c0;
-        }
 
         /* No Meals Message */
         .no-meals {
@@ -416,21 +388,14 @@ $sellerResult->close();
             margin-top: 20px;
         }
 
-        /* Button */
-        button {
-            background-color: #d056ef;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
 
-        button:hover {
-            background-color: #b045c0;
-        }
+
+
+
+
+        /* BUTTONS */
+
+
 
         .btn {
             padding: 1.1em 2em;
@@ -443,9 +408,10 @@ $sellerResult->close();
             overflow: hidden;
             transition: all 0.3s;
             border-radius: 12px;
-            background-color: #ecd448;
+            background-color: #d056ef;
             font-weight: bolder;
             box-shadow: 0 2px 0 2px #000;
+            width: 100%;
         }
 
         .btn:before {
@@ -460,7 +426,7 @@ $sellerResult->close();
         }
 
         .btn:hover {
-            background-color: #d056ef;
+            background-color: #4500b5;
             color: #fff;
             box-shadow: 0 2px 0 2px #0d3b66;
         }
@@ -473,6 +439,9 @@ $sellerResult->close();
         .btn:active {
             transform: scale(0.9);
         }
+
+
+        /* END OF BUTTONS */
     </style>
 </head>
 
