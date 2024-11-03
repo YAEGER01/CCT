@@ -322,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 .map(meal => meal.value);
 
             if (selectedMeals.length === 0) {
-                alert("Please select at least one item to proceed to checkout.");
+
                 return;
             }
 
@@ -365,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select name="user_action" class="action-select" onchange="this.form.submit()">
                     <option value="">Options</option>
                     <option value="Home">Home</option>
-                    <option value="view_cart">View Orders</option>
+
                     <option value="edit_profile">Edit Profile</option>
                     <option value="logout">Logout</option>
                 </select>
@@ -404,7 +404,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <button class="btn" type="submit" name="delete" class="button">Delete</button>
                 <button class="btn" type="button" name="checkout" class="button"
                     onclick="checkoutSelectedItems()">Checkout</button>
-
 
             </div>
         </form>

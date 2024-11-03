@@ -64,6 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
         $stmt->execute();
         $checkResult = $stmt->get_result();
 
+        // Check if item with same meal, rice, and drink already exists in the cart
+        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND rice_option = ? AND drinks = ?";
+        $stmt = $conn->prepare($checkQuery);
+        $stmt->bind_param("iiss", $user_id, $meal_id, $rice_option, $drink_option);
+        $stmt->execute();
+        $checkResult = $stmt->get_result();
+
         if ($checkResult->num_rows > 0) {
             $existingItem = $checkResult->fetch_assoc();
             $new_quantity = $existingItem['quantity'] + $quantity;
@@ -501,19 +508,28 @@ $sellerResult->close();
                                         </option>
                                     </select>
                                 <?php endif; ?>
-                                <!-- Drinks options dropdown -->
-                                <?php if (!empty($meal['drinks'])): ?>
+                                <!-- Drinks options dropdown with individual prices -->
+                                <?php if (!empty($meal['drinks']) && !empty($meal['drinks_price'])): ?>
                                     <label for="drink_option">Drink:</label>
                                     <select name="drink_option">
                                         <option value="">Select Drink</option>
-                                        <?php foreach (explode(',', $meal['drinks']) as $drink): ?>
-                                            <option value="<?php echo htmlspecialchars(trim($drink)); ?>">
-                                                <?php echo htmlspecialchars(trim($drink)); ?>
-                                                (₱<?php echo htmlspecialchars($meal['drinks_price']); ?>)
+                                        <?php
+                                        $drinks = explode(',', $meal['drinks']);
+                                        $prices = explode(',', $meal['drinks_price']);
+
+                                        foreach ($drinks as $index => $drink_option):
+                                            $drink_name = trim($drink_option);
+                                            $drink_price = isset($prices[$index]) ? trim($prices[$index]) : '0';
+                                            ?>
+                                            <option value="<?php echo htmlspecialchars($drink_name); ?>">
+                                                <?php echo htmlspecialchars($drink_name); ?> -
+                                                ₱<?php echo htmlspecialchars($drink_price); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                 <?php endif; ?>
+
+
                                 <br><br>
                                 <hr>
                                 <br>
