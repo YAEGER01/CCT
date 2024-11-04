@@ -109,18 +109,15 @@ unset($_SESSION['error']); // Clear error after displaying
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: -webkit-linear-gradient(
-            to right,
-            #24243e,
-            #302b63,
-            #0f0c29
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #24243e,
-    #302b63,
-    #0f0c29
-  );
+            background: -webkit-linear-gradient(to right,
+                    #24243e,
+                    #302b63,
+                    #0f0c29);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right,
+                    #24243e,
+                    #302b63,
+                    #0f0c29);
         }
 
         .container {
@@ -208,6 +205,96 @@ unset($_SESSION['error']); // Clear error after displaying
         .cancel-btn:hover {
             background-color: #aaa;
         }
+
+        /* Button Styles with Animation */
+        .btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(80%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Button Styles with Animation */
+        .btn-update {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+        }
+
+        .btn-update:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn-update:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn-update:hover::before {
+            transform: skewX(30deg) translate(130%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn-update:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
 
@@ -218,17 +305,20 @@ unset($_SESSION['error']); // Clear error after displaying
         <form action="user_edit.php" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                <input type="text" id="username" name="username"
+                    value="<?php echo htmlspecialchars($user['username']); ?>" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>"
+                    required>
             </div>
 
             <h3>Change Password (Optional)</h3>
             <div class="form-group">
                 <label for="current_password">Current Password</label>
-                <input type="password" id="current_password" name="current_password" placeholder="Enter your current password">
+                <input type="password" id="current_password" name="current_password"
+                    placeholder="Enter your current password">
             </div>
             <div class="form-group">
                 <label for="new_password">New Password</label>
@@ -236,12 +326,14 @@ unset($_SESSION['error']); // Clear error after displaying
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirm New Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your new password">
+                <input type="password" id="confirm_password" name="confirm_password"
+                    placeholder="Confirm your new password">
             </div>
 
             <div class="btn-group">
-                <input type="submit" value="Update Profile">
-                <button type="button" class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+                <!--input type="submit" value="Update Profile"-->
+                <button class="btn-update" type="submit" value="Update Profile">Update Profile</button>
+                <button type="button" class="cancel-btn btn" onclick="cancelEdit()">Cancel</button>
             </div>
         </form>
     </div>

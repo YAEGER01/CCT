@@ -97,10 +97,30 @@ $orderResult = $stmt->get_result();
             /* Grayish-black background */
             color: white;
             /* White text for contrast */
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+
+        }
+
+        /* Keyframes for Diagonal Scrolling */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         .header {
-            background-color: #6a0dad;
+            background-color: #4500b5;
             /* Purple header */
             color: white;
             padding: 15px;
@@ -127,7 +147,8 @@ $orderResult = $stmt->get_result();
         }
 
         .order {
-            background-color: #333;
+            background-color: #ffffff;
+            color: #333;
             /* Dark background for orders */
             border: 1px solid #444;
             /* Slightly lighter gray for border */
@@ -175,6 +196,52 @@ $orderResult = $stmt->get_result();
             box-shadow: 0 0 10px #6a0dad;
             /* Purple glow on focus */
         }
+
+        /* Button Styles with Animation */
+        .btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #4500b5;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+            text-decoration: none;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(110%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
 
@@ -199,8 +266,10 @@ $orderResult = $stmt->get_result();
                     <?php if ($order['status'] === 'pending'): ?>
                         <form method="POST" action="">
                             <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                            <button type="submit" name="action" value="accept" class="button accept">Accept Order</button>
-                            <button type="submit" name="action" value="decline" class="button decline">Decline Order</button>
+                            <button type="submit" name="action" value="accept" class="button accept btn
+                            ">Accept Order</button>
+                            <button type="submit" name="action" value="decline" class="button decline btn
+                            ">Decline Order</button>
                         </form>
                     <?php else: ?>
                         <p><strong>This order has been <?php echo htmlspecialchars($order['status']); ?>.</strong></p>

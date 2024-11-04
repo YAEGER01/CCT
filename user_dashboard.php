@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         /* Header */
         .header {
-            background-color: #f8f8f8;
+            background-color: #ffffff;
             /* Light gray */
             color: #333;
             padding: 20px;
@@ -213,20 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         /* Button */
-        button {
-            background-color: #d056ef;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
 
-        button:hover {
-            background-color: #b045c0;
-        }
 
         /* No Meals Message */
         .no-meals {
@@ -236,8 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: 20px;
         }
 
+        /* Button Styles with Animation */
         .btn {
-            padding: 1.1em 2em;
+            padding: 0.5em 2em;
             background: none;
             border: 2px solid #fff;
             font-size: 15px;
@@ -247,9 +235,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             overflow: hidden;
             transition: all 0.3s;
             border-radius: 12px;
-            background-color: #ecd448;
+            background-color: #d056ef;
             font-weight: bolder;
             box-shadow: 0 2px 0 2px #000;
+            width: 200px;
+            margin: 10px;
         }
 
         .btn:before {
@@ -259,12 +249,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: 120%;
             background-color: #ff6700;
             top: 50%;
-            transform: skewX(30deg) translate(-150%, -50%);
+            transform: skewX(30deg) translate(-110%, -50%);
             transition: all 0.5s;
         }
 
         .btn:hover {
-            background-color: #d056ef;
+            background-color: #4500b5;
             color: #fff;
             box-shadow: 0 2px 0 2px #0d3b66;
         }
@@ -277,6 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn:active {
             transform: scale(0.9);
         }
+
 
         .popup {
             display: none;

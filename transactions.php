@@ -39,19 +39,41 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
             /* White text for contrast */
             margin: 0;
             padding: 20px;
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+
+        }
+
+        /* Keyframes for Diagonal Scrolling */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         h1 {
             color: #6a0dad;
             /* Purple headings */
             text-align: center;
+            background-color: white;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
-            background-color: #333;
+            background-color: #ffffff;
+            color: #333;
             /* Dark gray background for table */
             border-radius: 15px;
             /* Rounded corners for the table */
@@ -76,36 +98,68 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
         }
 
         tr:nth-child(even) {
-            background-color: #444;
+            background-color: #ffffff;
             /* Darker row background */
         }
 
         tr:hover {
-            background-color: #555;
+            background-color: #b792f2;
             /* Hover effect for rows */
         }
 
-        a {
-            color: white;
+
+
+
+        /* Button Styles with Animation */
+        .back-btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #4500b5;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
             text-decoration: none;
-            background-color: #6a0dad;
-            /* Purple button */
-            padding: 10px 15px;
-            border-radius: 8px;
-            /* Rounded corners for buttons */
-            margin-bottom: 20px;
-            display: inline-block;
         }
 
-        a:hover {
-            background-color: #4b0082;
-            /* Darker purple on hover */
+        .back-btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .back-btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .back-btn:hover::before {
+            transform: skewX(30deg) translate(160%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .back-btn:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
 
 <body>
-    <a href="seller_dashboard.php">Dashboard</a>
+    <a href="seller_dashboard.php"><button class="back-btn">Back to Dashboard</button></a>
     <h1>Recent Transactions</h1>
     <table>
         <thead>

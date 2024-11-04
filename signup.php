@@ -84,18 +84,25 @@ mysqli_close($conn);
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: -webkit-linear-gradient(
-    to right,
-    #24243e,
-    #302b63,
-    #0f0c29
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #24243e,
-    #302b63,
-    #0f0c29
-  );
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+
+        }
+
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         .container {
@@ -147,26 +154,52 @@ mysqli_close($conn);
             /* Dark gray text */
         }
 
-        button {
-        padding: 15px 150px;
-        background-color: #f3f3f3;
-        color: purple;
-        border-radius: 20px;
-        font-size: 1em;
-        font-weight: bold;
-        display: inline-block;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        animation: fadeIn 2s ease-out, pulse 2s infinite;
-        box-shadow: 0 4px 10px rgba(106, 90, 205, 0.4);
+        /* Button Styles with Animation */
+        .btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
         }
 
-        button:hover {
-            background-color: #5a4db1;
-            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
-            color: #fff;
-            transform: scale(1.05);
-            /* Darker purple */
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
         }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(80%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+
 
         .form-footer {
             margin-top: 15px;
@@ -192,7 +225,7 @@ mysqli_close($conn);
 <body>
     <div class="container">
         <h2>Create an Account</h2>
-        <?php if (!empty($error)) : ?>
+        <?php if (!empty($error)): ?>
             <script>
                 alert("<?php echo htmlspecialchars($error); ?>");
             </script>
@@ -205,13 +238,14 @@ mysqli_close($conn);
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter an 8-character password" required>
             <label for="confirm_password">Confirm Password</label>
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-type your password" required>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-type your password"
+                required>
             <label for="role">Role</label>
             <select id="role" name="role" required>
                 <option value="user">Buyer</option>
                 <option value="seller">Seller</option>
             </select>
-            <button type="submit">Sign Up</button>
+            <button class="btn" type="submit">Sign Up</button>
             <div class="form-footer">
                 <p>Already have an account? <a href="login.php">Login here</a></p>
             </div>

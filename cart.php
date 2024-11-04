@@ -86,15 +86,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: -webkit-linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+
+        }
+
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         .header {
@@ -192,8 +202,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
+        /* Button Styles with Animation */
         .btn {
-            padding: 1.1em 2em;
+            padding: 0.5em 2em;
             background: none;
             border: 2px solid #fff;
             font-size: 15px;
@@ -206,12 +217,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #d056ef;
             font-weight: bolder;
             box-shadow: 0 2px 0 2px #000;
-            width: auto;
-            /* Adjusted to fit content */
-            margin: 0 10px;
-            /* Spacing between buttons */
+            width: 250px;
+            margin: 10px;
         }
-
 
         .btn:before {
             content: "";
@@ -220,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             height: 120%;
             background-color: #ff6700;
             top: 50%;
-            transform: skewX(30deg) translate(-150%, -50%);
+            transform: skewX(30deg) translate(-110%, -50%);
             transition: all 0.5s;
         }
 
@@ -231,13 +239,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .btn:hover::before {
-            transform: skewX(30deg) translate(150%, -50%);
+            transform: skewX(30deg) translate(90%, -50%);
             transition-delay: 0.1s;
         }
 
         .btn:active {
             transform: scale(0.9);
         }
+
 
 
         /* END OF BUTTONS */

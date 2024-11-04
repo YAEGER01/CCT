@@ -175,6 +175,101 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             font-size: 12px;
         }
 
+        /* Button Styles with Animation */
+        button,
+        .btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #4500b5;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+            text-decoration: none;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(110%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Button Styles with Animation */
+        .btn-dashb {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #4500b5;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+            text-decoration: none;
+        }
+
+        .btn-dashb:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn-dashb:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn-dashb:hover::before {
+            transform: skewX(30deg) translate(160%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn-dashb:active {
+            transform: scale(0.9);
+        }
+
+
+
         @media (max-width: 768px) {
 
             .header,
@@ -199,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
     <!-- Header -->
     <div class="header">
         <h1>Upload one of your meal</h1>
-        <a href="seller_dashboard.php" class="logout">Back to Dashboard</a>
+        <a href="seller_dashboard.php" class="btn-dashb">Back to Dashboard</a>
     </div>
 
     <!-- Meal Upload Section -->
@@ -239,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             </div>
             <input type="text" id="drink-input" placeholder="Type a drink and click Add">
             <input type="number" id="drink-price-input" placeholder="Price">
-            <button type="button" onclick="addDrink()">Add Drink</button><br><br>
+            <button type="button" class="btn" onclick="addDrink()">Add Drink</button><br><br>
 
             <!-- Hidden input to store drink list -->
             <input type="hidden" name="drinks" id="drinks">

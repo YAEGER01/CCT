@@ -76,15 +76,23 @@ $conn->close();
         align-items: center;
         height: 100vh;
         margin: 0;
-        background: -webkit-linear-gradient(to right,
-                #24243e,
-                #302b63,
-                #0f0c29);
-        /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right,
-                #24243e,
-                #302b63,
-                #0f0c29);
+        background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+            radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+            linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+            linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+        background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+        background-color: #ffffff;
+        animation: scroll-diagonal 10s linear infinite;
+    }
+
+    @keyframes scroll-diagonal {
+        0% {
+            background-position: 0 0;
+        }
+
+        100% {
+            background-position: 64px 64px;
+        }
     }
 
     .container {
@@ -94,6 +102,9 @@ $conn->close();
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         max-width: 400px;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     h2 {
@@ -118,13 +129,9 @@ $conn->close();
         padding: 10px;
         margin: 10px 0 20px;
         border: 1px solid #cccccc;
-        /* Light gray border */
         border-radius: 8px;
-        /* Smooth edges */
         background-color: #f8f8f8;
-        /* Light gray background */
         color: #333333;
-        /* Dark gray text */
     }
 
     input:focus {
@@ -132,24 +139,49 @@ $conn->close();
         outline: none;
     }
 
-    button {
-        padding: 15px 175px;
-        background-color: #f3f3f3;
-        color: purple;
-        border-radius: 20px;
-        font-size: 1em;
-        font-weight: bold;
-        display: inline-block;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        animation: fadeIn 2s ease-out, pulse 2s infinite;
-        box-shadow: 0 4px 10px rgba(106, 90, 205, 0.4);
+    .btn {
+        padding: 0.5em 2em;
+        background: none;
+        border: 2px solid #fff;
+        font-size: 15px;
+        color: #131313;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+        border-radius: 12px;
+        background-color: #d056ef;
+        font-weight: bolder;
+        box-shadow: 0 2px 0 2px #000;
+        width: 56%;
+        margin: 10px 0;
+        margin-left: 90px;
     }
 
-    button:hover {
-        background-color: #5a4db1;
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
+    .btn:before {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 120%;
+        background-color: #ff6700;
+        top: 50%;
+        transform: skewX(30deg) translate(-110%, -50%);
+        transition: all 0.5s;
+    }
+
+    .btn:hover {
+        background-color: #4500b5;
         color: #fff;
+        box-shadow: 0 2px 0 2px #0d3b66;
+    }
+
+    .btn:hover::before {
+        transform: skewX(30deg) translate(80%, -50%);
+        transition-delay: 0.1s;
+    }
+
+    .btn:active {
+        transform: scale(0.9);
     }
 
     .form-footer {
@@ -177,8 +209,9 @@ $conn->close();
             padding: 30px;
         }
 
-        button {
+        .btn {
             padding: 12px;
+            margin-left: 80px;
         }
     }
 </style>
@@ -200,7 +233,7 @@ $conn->close();
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
-            <button type="submit">Login</button>
+            <button class="btn" type="submit">Login</button>
 
             <div class="form-footer">
                 <p>Don't have an account? <a href="signup.php">Sign up here</a></p>

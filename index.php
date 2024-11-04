@@ -9,13 +9,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 
-        /* Global Styles */
         body {
             font-family: 'Poppins', Arial, sans-serif;
             font-weight: 300;
             line-height: 1.7;
             text-align: center;
-            background-color: #f2f2f2;
             color: #ffeba7;
             margin: 0;
             padding: 0;
@@ -24,19 +22,26 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: -webkit-linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-
-            background-image: linear-gradient(#48145a 1px, transparent 1px), linear-gradient(to right, #48145a 1px, transparent 1px);
-            background-size: 38px 38px;
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
             background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+
+        }
+
+        /* Keyframes for Diagonal Scrolling */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         /* Keyframe Animations */
@@ -76,27 +81,7 @@
             }
         }
 
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            font-weight: 300;
-            line-height: 1.7;
-            text-align: center;
-            color: #ffeba7;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background:
-                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 40px 40px,
-                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 20px 20px / 40px 40px,
-                linear-gradient(#b23939 1px, transparent 1px) 0px -0.5px / 20px 20px,
-                linear-gradient(90deg, #b23939 1px, #ffffff 1px) -0.5px 0px / 20px 20px;
-            background-color: #ffffff;
-            animation: scrollPattern 10s linear infinite;
-        }
+
 
         /* Keyframes for background scrolling */
         @keyframes scrollPattern {
@@ -123,8 +108,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-top: 5%;
             animation: fadeIn 1s ease-out;
-
-
         }
 
         /* Headings */
@@ -147,30 +130,53 @@
 
         /* Button Styles with Animation */
         .btn {
-            padding: 15px 30px;
-            background-color: #f3f3f3;
-            color: white;
-            border-radius: 20px;
-            font-size: 1em;
-            font-weight: bold;
-            display: inline-block;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            animation: fadeIn 2s ease-out, pulse 2s infinite;
-            box-shadow: 0 4px 10px rgba(10 6, 90, 205, 0.4);
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 250px;
+            margin: 10px;
+        }
 
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
         }
 
         .btn:hover {
-            background-color: #5a4db1;
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.6);
-
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
         }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(80%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
 
         /* Additional Link Styling */
         .link {
             color: #333;
-
             transition: color 0.3s ease;
             font-weight: 600;
             text-decoration: none;
@@ -228,10 +234,8 @@
     <div class="container">
         <h1 class="h1">Welcome</h1>
         <p class="p">Please choose an option below to continue:</p>
-        <ul>
-            <li class="btn"><a class="link" href="login.php">Login</a></li> <br><br>
-            <li class="btn"><a class="link" href="signup.php">Signup</a></li>
-        </ul>
+        <a class="link" href="login.php"><button class="btn">Login</button></a>
+        <a class="link" href="signup.php"><button class="btn">Signup</button></a>
     </div>
 </body>
 

@@ -109,8 +109,28 @@ $orderResult = $stmt->get_result();
             padding: 20px;
             max-width: 1600px;
             margin: auto;
+            border-radius: 20px;
             gap: 20px;
-            outline: 1px dashed #333;
+            /* Background Style */
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#4500b5 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #4500b5 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Keyframes for Diagonal Scrolling */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         .meal_section,
@@ -277,6 +297,52 @@ $orderResult = $stmt->get_result();
             /* Show by default */
         }
 
+        /* Button Styles with Animation */
+        .btn {
+            padding: 0.5em 2em;
+            background: none;
+            border: 2px solid #fff;
+            font-size: 15px;
+            color: #131313;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            border-radius: 12px;
+            background-color: #d056ef;
+            font-weight: bolder;
+            box-shadow: 0 2px 0 2px #000;
+            width: 100px;
+            margin: 10px;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #ff6700;
+            top: 50%;
+            transform: skewX(30deg) translate(-110%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn:hover {
+            background-color: #4500b5;
+            color: #fff;
+            box-shadow: 0 2px 0 2px #0d3b66;
+        }
+
+        .btn:hover::before {
+            transform: skewX(30deg) translate(80%, -50%);
+            transition-delay: 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+
         /* Media query for mobile */
         @media (max-width: 768px) {
             .mobile-only {
@@ -335,7 +401,8 @@ $orderResult = $stmt->get_result();
             </select>
         </div>
     </div>
-
+    <br><br>
+    <hr><br><br>
     <div class="content-container">
         <div class="meal_section">
             <h2>Your Uploaded Meals</h2>
@@ -372,13 +439,12 @@ $orderResult = $stmt->get_result();
                         <div class="meal-actions">
                             <form method="POST" action="seller_dashboard.php" style="display:inline;">
                                 <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
-                                <button type="submit" name="delete_meal"
-                                    onclick="return confirm('Are you sure you want to delete this meal?')">Delete
-                                    Meal</button>
+                                <button class="btn" type="submit" name="delete_meal"
+                                    onclick="return confirm('Are you sure you want to delete this meal?')">Delete</button>
                             </form>
                             <form method="GET" action="edit_meal.php" style="display:inline;">
                                 <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
-                                <button type="submit">Edit Meal</button>
+                                <button class="btn" type="submit">Edit</button>
                             </form>
                         </div>
                     </div>
