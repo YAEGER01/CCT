@@ -170,6 +170,24 @@ $sellerResult->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo "$seller_name's Meals"; ?></title>
     <style>
+        @font-face {
+            font-family: 'MyCustomFont1';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MyCustomFont2';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
         /* Base Styles */
         body {
             font-family: 'Roboto', sans-serif;
@@ -186,12 +204,14 @@ $sellerResult->close();
             color: #333;
             padding: 20px;
             display: flex;
+
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 24px;
             margin: 0;
         }
@@ -204,6 +224,7 @@ $sellerResult->close();
             /* Accent color */
             color: white;
             border: none;
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
@@ -248,10 +269,11 @@ $sellerResult->close();
 
         .meal-container h2 {
             padding: 10px;
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 24px;
             color: #333;
             background-color: white;
-            width: 100px;
+            width: 120px;
         }
 
         /* Meal Grid */
@@ -271,6 +293,8 @@ $sellerResult->close();
             flex-direction: column;
             justify-content: space-between;
             transition: transform 0.3s ease;
+            font-family: 'MyCustomFont1', sans-serif;
+            font-weight: 500;
         }
 
         .meal:hover {
@@ -278,6 +302,7 @@ $sellerResult->close();
         }
 
         .meal h3 {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 20px;
             color: #555;
             margin: 0 0 8px 0;
@@ -303,6 +328,8 @@ $sellerResult->close();
         }
 
         .description-box p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-weight: 900;
             margin: 0;
             color: #666;
             line-height: 1.4;
@@ -389,6 +416,7 @@ $sellerResult->close();
 
         /* No Meals Message */
         .no-meals {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 18px;
             color: #666;
             text-align: center;
@@ -405,6 +433,7 @@ $sellerResult->close();
 
 
         .btn {
+            font-family: 'MyCustomFont2', sans-serif;
             padding: 1.1em 2em;
             background: none;
             border: 2px solid #fff;

@@ -72,6 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CART</title>
     <style>
+        @font-face {
+            font-family: 'MyCustomFont1';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MyCustomFont2';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
         :root {
             --primary-color: #6A5ACD;
             --secondary-color: #F2F2F2;
@@ -119,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .header h1 {
+            font-family: 'MyCustomFont2', sans-serif;
             margin: 0;
             font-size: 1.8rem;
         }
@@ -204,6 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         /* Button Styles with Animation */
         .btn {
+            font-family: 'MyCustomFont2', sans-serif;
             padding: 0.5em 2em;
             background: none;
             border: 2px solid #fff;
@@ -254,6 +274,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         h3 {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-weight: 690;
             color: #333;
             text-align: right;
         }
@@ -269,12 +291,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-top: 1rem;
             font-size: 1.2rem;
             font-weight: bold;
+            font-family: 'MyCustomFont2', sans-serif;
         }
 
         select {
+            font-family: 'MyCustomFont2', sans-serif;
             border-radius: 10px;
-            background-color: #6A5ACD;
-            border: 1px solid #6A5ACD;
+            background-color: #d056ef;
+            border: 1px solid #d056ef;
             color: #fff;
         }
 
@@ -283,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 16px;
             margin-left: 10px;
             border-radius: 10px;
-            background-color: var(--primary-color);
+            background-color: #d056ef;
             border: 1px solid var(--primary-color);
             color: #fff;
         }

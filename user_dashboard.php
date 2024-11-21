@@ -67,6 +67,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'MyCustomFont1';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MyCustomFont2';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
         /* Base Styles */
         body {
             font-family: 'Roboto', sans-serif;
@@ -88,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 24px;
             margin: 0;
             color: #d056ef;
@@ -95,8 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .header p {
+            font-family: 'MyCustomFont1', sans-serif;
             font-size: 12px;
+            font-weight: 690;
             color: #555;
+            text-align: center;
         }
 
         /* Form Container in Header */
@@ -106,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .action-select {
+            font-family: 'MyCustomFont2', sans-serif;
             border-radius: 10px;
             padding: 10px;
             background-color: #d056ef;
@@ -143,6 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .store-container h2 {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 24px;
             color: #333;
             margin-bottom: 20px;
@@ -178,6 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .store h3 {
+            font-family: 'MyCustomFont2', sans-serif;
             font-size: 18px;
             color: #333;
             margin-bottom: 10px;
@@ -225,6 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         /* Button Styles with Animation */
         .btn {
+            font-family: 'MyCustomFont2', sans-serif;
             padding: 0.5em 2em;
             background: none;
             border: 2px solid #fff;

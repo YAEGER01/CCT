@@ -68,8 +68,26 @@ $conn->close();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
 <style>
+    @font-face {
+        font-family: 'MyCustomFont1';
+        /* Give your font a name */
+        src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+        /* Path to the TTF file */
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'MyCustomFont2';
+        /* Give your font a name */
+        src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+        /* Path to the TTF file */
+        font-weight: normal;
+        font-style: normal;
+    }
+
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'MyCustomFont2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background-color: #F2F2F2;
         display: flex;
         justify-content: center;
@@ -108,6 +126,7 @@ $conn->close();
     }
 
     h2 {
+        font-family: 'MyCustomFont2', sans-serif;
         margin-bottom: 30px;
         text-align: center;
         color: #333333;
