@@ -70,7 +70,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Fetch orders made to the seller
 $orderQuery = "
-    SELECT o.id AS order_id, o.status, m.meal_name AS meal_name, o.quantity, m.price, u.username AS customer_name 
+    SELECT 
+        o.id AS order_id, 
+        o.status, 
+        m.meal_name AS meal_name, 
+        o.quantity, 
+        m.price, 
+        u.username AS customer_name,
+        o.rice_option, 
+        o.rice_price, 
+        o.drinks, 
+        o.drinks_price
     FROM orders o
     JOIN meals m ON o.meal_id = m.id
     JOIN users u ON o.user_id = u.id
@@ -93,57 +103,102 @@ $orderResult = $stmt->get_result();
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
+            background-color: #F2F2F2;
             /* Grayish-black background */
             color: white;
             /* White text for contrast */
-            /* Background Style */
-            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
-                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
-                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
-                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
-            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
-            background-color: #ffffff;
-            animation: scroll-diagonal 10s linear infinite;
 
         }
 
-        /* Keyframes for Diagonal Scrolling */
-        @keyframes scroll-diagonal {
-            0% {
-                background-position: 0 0;
-            }
 
-            100% {
-                background-position: 64px 64px;
-            }
-        }
-
+        /* Header */
         .header {
-            background-color: #4500b5;
-            /* Purple header */
-            color: white;
-            padding: 15px;
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: 80%;
+            }
+        }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 15px;
+            }
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
             text-align: center;
-            border-bottom: 5px solid #4b0082;
-            /* Darker purple border */
-            border-radius: 0 0 15px 15px;
-            /* Rounded bottom corners */
         }
 
-        .header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
         }
 
-        .header a:hover {
-            color: #ddd;
-            /* Lighter shade on hover */
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
         }
 
         .order-container {
+
             margin: 20px;
+            backdrop-filter: blur(3px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 35px 35px 68px 0px rgba(198, 198, 198, 0.5), inset -6px -6px 16px 0px rgba(198, 198, 198, 0.6), inset 0px 11px 28px 0px rgb(255, 255, 255);
+        }
+
+        .order-container p {
+            color: #000;
         }
 
         .order {
@@ -242,14 +297,55 @@ $orderResult = $stmt->get_result();
         .btn:active {
             transform: scale(0.9);
         }
+
+        .more-info .details {
+            background-color: #f7f7f7;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .see-more-btn {
+            background-color: transparent;
+            color: black;
+            border: 0.5px solid #000;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .see-more-btn:hover {
+            background-color: #333;
+            color: white;
+        }
     </style>
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </head>
 
 <body>
 
     <div class="header">
-        <h1>Track Orders</h1>
-        <a href="seller_dashboard.php" style="color: white;">Back to Dashboard</a>
+        <h2 class="welcome-message desktop-only">Store username: <?php echo htmlspecialchars($username); ?></h2>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option value="" style="display:none">Options</option>
+                <option value="seller_dashboard.php">Home</option>
+                <option value="meal_upload.php">Upload Meal</option>
+                <option value="track_orders.php">Orders</option>
+                <option value="pending_orders.php">Accepted Orders</option>
+                <option value="transactions.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
+        </div>
     </div>
 
     <div class="order-container">
@@ -259,17 +355,27 @@ $orderResult = $stmt->get_result();
                     <h3>Meal: <?php echo htmlspecialchars($order['meal_name']); ?></h3>
                     <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['customer_name']); ?></p>
                     <p><strong>Quantity:</strong> <?php echo htmlspecialchars($order['quantity']); ?></p>
-                    <p><strong>Total Price:</strong> ₱<?php echo htmlspecialchars($order['price'] * $order['quantity']); ?></p>
                     <p><strong>Status:</strong> <?php echo htmlspecialchars($order['status']); ?></p>
+                    <div class="more-info">
+                        <button class="see-more-btn">See More</button>
+                        <div class="details" style="display: none;">
+                            <p><strong>Rice Option:</strong> <?php echo htmlspecialchars($order['rice_option'] ?? 'None'); ?>
+                            </p>
+                            <p><strong>Drink Option:</strong> <?php echo htmlspecialchars($order['drinks'] ?? 'None'); ?></p>
+                            <p><strong>Rice Price:</strong> ₱<?php echo htmlspecialchars($order['rice_price'] ?? '0'); ?></p>
+                            <p><strong>Drink Price:</strong> ₱<?php echo htmlspecialchars($order['drinks_price'] ?? '0'); ?></p>
+                            <p><strong>Total Price:</strong>
+                                ₱<?php echo htmlspecialchars(($order['price'] * $order['quantity']) + ($order['rice_price'] ?? 0) + ($order['drinks_price'] ?? 0)); ?>
+                            </p>
 
+                        </div>
+                    </div>
                     <!-- Action buttons for accepting or declining orders -->
                     <?php if ($order['status'] === 'pending'): ?>
                         <form method="POST" action="">
                             <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                            <button type="submit" name="action" value="accept" class="button accept btn
-                            ">Accept Order</button>
-                            <button type="submit" name="action" value="decline" class="button decline btn
-                            ">Decline Order</button>
+                            <button type="submit" name="action" value="accept" class="button accept btn">Accept Order</button>
+                            <button type="submit" name="action" value="decline" class="button decline btn">Decline Order</button>
                         </form>
                     <?php else: ?>
                         <p><strong>This order has been <?php echo htmlspecialchars($order['status']); ?>.</strong></p>
@@ -280,6 +386,22 @@ $orderResult = $stmt->get_result();
             <p>No orders found.</p>
         <?php endif; ?>
     </div>
+
+    <script>
+        // JavaScript for the "See More" feature
+        document.querySelectorAll('.see-more-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const details = button.nextElementSibling;
+                if (details.style.display === 'none' || details.style.display === '') {
+                    details.style.display = 'block';
+                    button.textContent = 'See Less';
+                } else {
+                    details.style.display = 'none';
+                    button.textContent = 'See More';
+                }
+            });
+        });
+    </script>
 
 </body>
 

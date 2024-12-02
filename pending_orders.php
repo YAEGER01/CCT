@@ -64,51 +64,27 @@ if (isset($_POST['mark_completed'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <title>Pending Orders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
+            background-color: #F2F2F2;
             /* Grayish-black background */
             color: white;
             /* White text for contrast */
             margin: 0;
-            padding: 20px;
-            /* Background Style */
-            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
-                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
-                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
-                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
-            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
-            background-color: #ffffff;
-            animation: scroll-diagonal 10s linear infinite;
-            text-align: center;
+            padding: 10px;
         }
 
-        /* Keyframes for Diagonal Scrolling */
-        @keyframes scroll-diagonal {
-            0% {
-                background-position: 0 0;
-            }
-
-            100% {
-                background-position: 64px 64px;
-            }
-        }
-
-        h1 {
-            color: #333;
-            /* Purple headings */
-            text-align: center;
-            background-color: white;
-            border-radius: 10px;
-            width: 250px;
-        }
 
         table {
-            width: 100%;
+            width: 98.5%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-left: 15px;
+            margin-right: 10px;
             color: #333;
             background-color: white;
             /* Dark gray background for table */
@@ -120,10 +96,17 @@ if (isset($_POST['mark_completed'])) {
             /* Shadow for depth */
         }
 
+        @media (max-width: 600px) {
+            table {
+                width: 70vw;
+                margin-left: 15px;
+            }
+        }
+
         th,
         td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #555;
             /* Grayish border */
         }
@@ -140,7 +123,7 @@ if (isset($_POST['mark_completed'])) {
         }
 
         tr:hover {
-            background-color: #555;
+            background-color: #ffffff;
             /* Hover effect for rows */
         }
 
@@ -252,12 +235,176 @@ if (isset($_POST['mark_completed'])) {
         .back-btn:active {
             transform: scale(0.9);
         }
+
+        .modal-content {
+            background-color: white;
+            /* Match your table's background */
+            border-radius: 10px;
+            /* Rounded corners */
+            color: #333;
+            /* Dark text for contrast */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Shadow for depth */
+            padding: 20px;
+        }
+
+        .modal-header {
+            background-color: #4500b5;
+            /* Purple header */
+            color: white;
+            border-bottom: none;
+            /* Remove default border */
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .modal-footer {
+            border-top: none;
+            /* Remove default border */
+            text-align: center;
+        }
+
+        .modal-body p {
+            margin: 10px 0;
+            /* Spacing between paragraphs */
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;
+                /* Slightly smaller text for the table */
+            }
+
+            button {
+                padding: 8px;
+                /* Smaller padding for buttons */
+                font-size: 12px;
+                /* Reduced font size */
+            }
+
+            .back-btn {
+                width: auto;
+                /* Allow buttons to adjust width dynamically */
+                padding: 5px 10px;
+                /* Compact padding */
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+                /* Reduce padding in table cells */
+            }
+
+            .modal-content {
+                font-size: 14px;
+                /* Smaller text inside modals */
+            }
+        }
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 97.5vw;
+            border-radius: 15px;
+            margin: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: 93%;
+            }
+        }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 15px;
+            }
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
+        }
     </style>
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </head>
 
 <body>
-    <a href="seller_dashboard.php"><button class="back-btn">Back to Dashboard</button></a>
-    <h1>Pending Orders</h1>
+    <div class="header">
+        <h2 class="welcome-message desktop-only">Store username: <?php echo htmlspecialchars($username); ?></h2>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option value="" style="display:none">Options</option>
+                <option value="seller_dashboard.php">Home</option>
+                <option value="meal_upload.php">Upload Meal</option>
+                <option value="track_orders.php">Orders</option>
+                <option value="pending_orders.php">Accepted Orders</option>
+                <option value="transactions.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
+        </div>
+    </div>
     <table>
         <thead>
             <tr>
@@ -272,25 +419,53 @@ if (isset($_POST['mark_completed'])) {
             <?php
             if (!empty($orders)) {
                 foreach ($orders as $order) {
+                    $modalId = "orderModal" . $order['id']; // Unique modal ID
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($order['user_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['meal_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['quantity']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['status']) . "</td>";
                     echo "<td>
-                            <form method='POST' action='pending_orders.php'>
-                                <input type='hidden' name='order_id' value='" . $order['id'] . "'>
-                                <button type='submit 'class='back-btn' name='mark_completed'>Mark as Completed</button>
-                            </form>
-                          </td>";
+                    <button type='button' class='back-btn' data-bs-toggle='modal' data-bs-target='#$modalId'>See More</button>
+                    <form method='POST' action='pending_orders.php' style='display:inline;'>
+                        <input type='hidden' name='order_id' value='" . $order['id'] . "'>
+                        <button type='submit' class='back-btn' name='mark_completed'>Mark as Completed</button>
+                    </form>
+                  </td>";
                     echo "</tr>";
+
+                    // Modal for showing detailed information
+                    echo "
+            <div class='modal fade' id='$modalId' tabindex='-1' aria-labelledby='{$modalId}Label' aria-hidden='true'>
+                <div class='modal-dialog modal-dialog-centered'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h5 class='modal-title' id='{$modalId}Label'>Order Details</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                        </div>
+                        <div class='modal-body'>
+                            <p><strong>Meal Name:</strong> " . htmlspecialchars($order['meal_name']) . "</p>
+                            <p><strong>Quantity:</strong> " . htmlspecialchars($order['quantity']) . "</p>
+                            <p><strong>Rice Option:</strong> " . htmlspecialchars($order['rice_option']) . "</p>
+                            <p><strong>Rice Price:</strong> ₱" . number_format($order['rice_price'], 2) . "</p>
+                            <p><strong>Drinks:</strong> " . htmlspecialchars($order['drinks']) . "</p>
+                            <p><strong>Drinks Price:</strong> ₱" . number_format($order['drinks_price'], 2) . "</p>
+                            <p><strong>Total Price:</strong> ₱" . number_format($order['quantity'] * ($order['price'] + $order['rice_price'] + $order['drinks_price']), 2) . "</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>";
                 }
             } else {
                 echo "<tr><td colspan='5'>No pending orders.</td></tr>";
             }
             ?>
         </tbody>
+
+
     </table>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

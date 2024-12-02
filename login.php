@@ -125,6 +125,12 @@ $conn->close();
         align-items: center;
     }
 
+    @media (max-width: 768px) {
+        .container {
+            width: 70vw;
+        }
+    }
+
     h2 {
         font-family: 'MyCustomFont2', sans-serif;
         margin-bottom: 30px;
@@ -239,7 +245,7 @@ $conn->close();
 <body>
 
     <div class="container">
-        <h2>Login</h2>
+        <h2><a href="index.php" style="text-decoration:none">YouChews</a>Login</h2>
 
         <?php if (isset($error)): ?>
             <div class="error"><?php echo htmlspecialchars($error); ?></div>

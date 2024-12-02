@@ -33,32 +33,13 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
+            background-color: #f2f2f2;
             /* Grayish-black background */
             color: white;
             /* White text for contrast */
             margin: 0;
             padding: 20px;
             /* Background Style */
-            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
-                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
-                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
-                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
-            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
-            background-color: #ffffff;
-            animation: scroll-diagonal 10s linear infinite;
-
-        }
-
-        /* Keyframes for Diagonal Scrolling */
-        @keyframes scroll-diagonal {
-            0% {
-                background-position: 0 0;
-            }
-
-            100% {
-                background-position: 64px 64px;
-            }
         }
 
         h1 {
@@ -66,6 +47,15 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
             /* Purple headings */
             text-align: center;
             background-color: white;
+        }
+
+        .tbl-container {
+            border-radius: 20px;
+            overflow-x: auto;
+            /* Enable horizontal scrolling */
+            white-space: nowrap;
+            /* Prevent text wrapping */
+
         }
 
         table {
@@ -92,7 +82,7 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
         }
 
         th {
-            background-color: #6a0dad;
+            background-color: #4500b5;
             /* Purple header */
             color: white;
         }
@@ -155,40 +145,140 @@ $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
         .back-btn:active {
             transform: scale(0.9);
         }
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: 90%;
+            }
+        }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 15px;
+            }
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
+        }
     </style>
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </head>
 
 <body>
-    <a href="seller_dashboard.php"><button class="back-btn">Back to Dashboard</button></a>
-    <h1>Recent Transactions</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Transaction Date</th>
-                <th>Customer Name</th>
-                <th>Meal Name</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (!empty($transactions)) {
-                foreach ($transactions as $transaction) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($transaction['transaction_date']) . "</td>";
-                    echo "<td>" . htmlspecialchars($transaction['customer_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($transaction['meal_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($transaction['quantity']) . "</td>";
-                    echo "<td>₱" . htmlspecialchars($transaction['total_price']) . "</td>";
-                    echo "</tr>";
+    <div class="header">
+        <h2 class="welcome-message desktop-only">Store username: <?php echo htmlspecialchars($username); ?></h2>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option value="" style="display:none">Options</option>
+                <option value="seller_dashboard.php">Home</option>
+                <option value="meal_upload.php">Upload Meal</option>
+                <option value="track_orders.php">Orders</option>
+                <option value="pending_orders.php">Accepted Orders</option>
+                <option value="transactions.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
+        </div>
+    </div>
+    <div class="tbl-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Customer Name</th>
+                    <th>Meal Name</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if (!empty($transactions)) {
+                    foreach ($transactions as $transaction) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($transaction['transaction_date']) . "</td>";
+                        echo "<td>" . htmlspecialchars($transaction['customer_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($transaction['meal_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($transaction['quantity']) . "</td>";
+                        echo "<td>₱" . htmlspecialchars($transaction['total_price']) . "</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='5'>No transactions found.</td></tr>";
                 }
-            } else {
-                echo "<tr><td colspan='5'>No transactions found.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+                ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

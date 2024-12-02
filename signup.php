@@ -119,6 +119,12 @@ mysqli_close($conn);
 
         }
 
+        @media (max-width: 768px) {
+            .container {
+                width: 70vw;
+            }
+        }
+
         h2 {
             margin-bottom: 20px;
             color: #333333;
@@ -141,7 +147,7 @@ mysqli_close($conn);
         input[type="email"],
         input[type="password"],
         select {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             margin: 10px 0 20px;
             border: 1px solid #cccccc;

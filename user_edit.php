@@ -109,15 +109,25 @@ unset($_SESSION['error']); // Clear error after displaying
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: -webkit-linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
-            /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right,
-                    #24243e,
-                    #302b63,
-                    #0f0c29);
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#4500b5 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #4500b5 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
+            background-color: #ffffff;
+            animation: scroll-diagonal 10s linear infinite;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Keyframes for Diagonal Scrolling */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
         .container {
@@ -127,6 +137,12 @@ unset($_SESSION['error']); // Clear error after displaying
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 80vw;
+            }
         }
 
         h2 {

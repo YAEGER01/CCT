@@ -42,12 +42,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             case 'view_cart':
                 header("Location: cart.php");
                 exit();
+            case 'my_orders':
+                header("Location: user_orders.php");
+                exit();
+            case 'user_transact':
+                header("Location: user_transacts.php");
+                exit();
             case 'edit_profile':
                 header("Location: user_edit.php");
                 exit();
             case 'logout':
                 session_destroy();
-                header("Location: login.php");
+                header("Location: index.php");
                 exit();
             default:
                 echo "Invalid action!";
@@ -91,35 +97,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #ffffff;
             /* Light background */
             margin: 0;
-        }
-
-        /* Header */
-        .header {
+            background: radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 0% 0% / 64px 64px,
+                radial-gradient(circle, transparent 20%, #ffffff 20%, #ffffff 80%, transparent 80%, transparent) 32px 32px / 64px 64px,
+                linear-gradient(#a43fc6 2px, transparent 2px) 0px -1px / 32px 32px,
+                linear-gradient(90deg, #a43fc6 2px, #ffffff 2px) -1px 0px / 32px 32px #ffffff;
+            background-size: 64px 64px, 64px 64px, 32px 32px, 32px 32px;
             background-color: #ffffff;
-            /* Light gray */
-            color: #333;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: scroll-diagonal 10s linear infinite;
         }
 
-        .header h2 {
-            font-family: 'MyCustomFont2', sans-serif;
-            font-size: 24px;
-            margin: 0;
-            color: #d056ef;
-            /* Accent color */
+        @keyframes scroll-diagonal {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 64px 64px;
+            }
         }
 
-        .header p {
-            font-family: 'MyCustomFont1', sans-serif;
-            font-size: 12px;
-            font-weight: 690;
-            color: #555;
-            text-align: center;
-        }
 
         /* Form Container in Header */
         .form-container form {
@@ -165,6 +161,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         }
 
+        @media (max-width: 768px) {
+            .store-container {
+                width: 80vw;
+            }
+        }
+
         .store-container h2 {
             font-family: 'MyCustomFont2', sans-serif;
             font-size: 24px;
@@ -199,6 +201,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         .store:hover {
             transform: scale(1.03);
+
+            color: #DAA520;
+            /* A rich gold color */
+            box-shadow: 0px 30px 90px rgba(139, 69, 19, 0.5);
+            /* Subtle shadow */
+            /
         }
 
         .store h3 {
@@ -295,120 +303,157 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
 
-        .popup {
-            display: none;
-            position: fixed;
-            width: 200px;
+
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
             padding: 20px;
-            background-color: #ffdd57;
-            border: 2px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: 80vw;
+            }
+        }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
             border-radius: 8px;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 9999;
-            /* Ensure it's above everything else */
             cursor: pointer;
-            /* Set cursor to pointer for interaction */
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
+        }
+
+
+        .overlay {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .popup-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            transform: translate(225%, 50%);
+        }
+
+        @media (max-width: 768px) {
+            .popup-card {
+                transform: translate(15%, 55%);
+            }
+        }
+
+        .popup-card h3 {
+            margin: 0 0 15px;
+            text-align: center;
+        }
+
+        .popup-card img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .popup-buttons {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .popup-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         .close-btn {
-            position: absolute;
-            top: 2px;
-            right: 4px;
-            font-size: 12px;
-            cursor: pointer;
+            background-color: #f44336;
+            color: white;
+        }
+
+        .view-more-btn {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
     <script>
-        let closeCount = 0; // Track the number of times "x" has been clicked
-
-        // Array of ad objects
-        const ads = [
-            { content: "Ad 1: Check out our sale!", link: "https://example1.com" },
-            { content: "Ad 2: Don't miss these deals!", link: "https://example2.com" },
-            { content: "Best Movies 2024!", link: "https://www.example3.com/domain/top10hd.com" },
-        ];
-
-        // Function to randomly select an ad
-        function getRandomAd() {
-            return ads[Math.floor(Math.random() * ads.length)];
-        }
-
-        // Function to make the popup draggable
-        function makeDraggable(element) {
-            let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
-
-            element.onmousedown = function (event) {
-                event.preventDefault();
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-                document.onmousemove = dragElement;
-                document.onmouseup = closeDragElement;
-            };
-
-            function dragElement(event) {
-                event.preventDefault();
-                offsetX = mouseX - event.clientX;
-                offsetY = mouseY - event.clientY;
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-
-                element.style.top = (element.offsetTop - offsetY) + "px";
-                element.style.left = (element.offsetLeft - offsetX) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmousemove = null;
-                document.onmouseup = null;
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
             }
         }
-
-        // Initialize the popup and make it draggable
-        function showPopup() {
-            const popup = document.getElementById('popup');
-            const ad = getRandomAd(); // Get a random ad
-            popup.innerHTML = `<span class="close-btn" onclick="closePopup(event)">x</span><p>${ad.content}</p>`;
-            popup.dataset.link = ad.link; // Store the ad link in data attribute
-
-            popup.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-            popup.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-            popup.style.display = 'block';
-
-            makeDraggable(popup); // Enable dragging on the popup
-
-            closeCount = 0; // Reset closeCount whenever the popup reappears
-        }
-
-        // Function to close the popup and manage different behaviors for the "x" button
-        function closePopup(event) {
-            event.stopPropagation(); // Prevents closing from triggering the link
-
-            const popup = document.getElementById('popup');
-
-            if (closeCount === 0) {
-                // First click on "x" opens the link
-                window.open(popup.dataset.link, "_blank");
-            } else if (closeCount === 1) {
-                // Second click actually hides the popup
-                popup.style.display = 'none';
-
-                // Schedule the popup to reappear after a random delay (10-59 seconds)
-                setTimeout(showPopup, Math.random() * 49000 + 10000);
-            }
-
-            closeCount++;
-        }
-
-        // Function to open the link when the popup is clicked
-        function openLink() {
-            const popup = document.getElementById('popup');
-            window.open(popup.dataset.link, "_blank"); // Opens link in a new tab
-        }
-
-        // Initially show the popup after page load
-        setTimeout(showPopup, 2000); // First appearance after 2 seconds
-
     </script>
 </head>
 
@@ -419,21 +464,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h2>You Chews</h2>
             <p>IKAW BAHALA</p>
         </div>
-        <div class="form-container">
-            <form action="user_dashboard.php" method="post">
-                <select name="user_action" class="action-select" onchange="this.form.submit()">
-                    <option value="">Options</option>
-                    <option value="view_cart">View Cart</option>
-                    <option value="edit_profile">Edit Profile</option>
-                    <option value="logout">Logout</option>
-                </select>
-            </form>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option style="display: none" value="">Options</option>
+                <option value="user_dashboard.php">Home</option>
+                <option value="cart.php">Cart</option>
+                <option value="user_orders.php">My Orders</option>
+                <option value="user_transacts.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
         </div>
     </div>
-    <div id="popup" class="popup" onclick="openLink()">
-        <span class="close-btn" onclick="closePopup(event)">x</span>
-        <p>HOT MOMS IN YOUR AREAA!!!</p>
-    </div>
+
 
 
 
@@ -445,12 +488,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php renderStores($result); ?>
         </div>
     </div>
+    <!-- Best Seller Modal -->
+    <div class="overlay" id="bestSellerOverlay">
+        <div class="popup-card">
+            <h3>Best Seller of the Week!</h3>
+            <img src="" alt="Best Seller Image" id="bestSellerImage">
+            <p><strong id="bestSellerName"></strong> by <span id="bestSellerSeller"></span></p>
+            <p>FOR ONLY <strong>₱<span id="bestSellerPrice"></span></strong>!!!</p>
+            <div class="popup-buttons">
+                <button class="btn" id="closePopup">Close</button>
+                <button class="btn" onclick="window.location.href='ranking.php';">View More</button>
+            </div>
+        </div>
+    </div>
 
     <?php
     // Close the result set and connection
     $result->close();
     $conn->close();
     ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Simulate a login trigger (replace this with actual logic if needed)
+            const userLoggedIn = true;
+
+            if (userLoggedIn) {
+                fetch('get_rankings.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fetched data:', data); // Log the whole response
+
+                        if (Array.isArray(data)) {
+                            // If the response is an array, loop through it to display all items
+                            data.forEach(item => {
+                                console.log('Meal Name:', item.meal_name);
+                                console.log('Price:', item.price);
+                                console.log('Image:', item.image);
+                                console.log('Seller Name:', item.seller_name);
+                                console.log('Total Sold:', item.total_sold);
+
+                                // Populate the modal with the first item's data
+                                document.getElementById('bestSellerImage').src = item.image || 'default.jpg';
+                                document.getElementById('bestSellerName').innerText = item.meal_name || 'Popular Meal';
+                                document.getElementById('bestSellerSeller').innerText = item.seller_name || 'Top Seller';
+                                document.getElementById('bestSellerPrice').innerText = item.price || '0.00';
+                                document.getElementById('bestSellerOverlay').style.display = 'block';
+                            });
+                        } else if (data) {
+                            // If the response is a single object, handle it directly
+                            document.getElementById('bestSellerImage').src = data.image || 'default.jpg';
+                            document.getElementById('bestSellerName').innerText = data.meal_name || 'Popular Meal';
+                            document.getElementById('bestSellerSeller').innerText = data.seller_name || 'Top Seller';
+                            document.getElementById('bestSellerPrice').innerText = data.price || '0.00';
+                            document.getElementById('bestSellerOverlay').style.display = 'block';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching best seller:', error));
+            }
+
+            // Close button handler
+            document.getElementById('closePopup').addEventListener('click', () => {
+                document.getElementById('bestSellerOverlay').style.display = 'none';
+            });
+        });
+
+    </script>
 </body>
 
 </html>

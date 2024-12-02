@@ -63,49 +63,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
     <title>Upload Meal</title>
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        @font-face {
+            font-family: 'MyCustomFont1';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MyCustomFont2';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
         }
 
         body {
-            background-color: #f4f4f9;
-            padding: 20px;
-        }
-
-        .header {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .header .logout {
-            background-color: #6c63ff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F2F2F2;
         }
 
         .section {
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             margin: auto;
+        }
+
+        @media (max-width: 750px) {
+            .section {
+                width: 80vw;
+            }
         }
 
         .section h2 {
@@ -123,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
         input[type="number"],
         textarea,
         input[type="file"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             margin-top: 5px;
             margin-bottom: 20px;
@@ -268,35 +263,111 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             transform: scale(0.9);
         }
 
-
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin: 20px;
+        }
 
         @media (max-width: 768px) {
-
-            .header,
-            .section {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .logout {
-                margin-top: 10px;
+            .header {
+                width: 80vw;
             }
         }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 15px;
+            }
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
+        }
     </style>
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </head>
 
 <body>
 
     <!-- Header -->
     <div class="header">
-        <h1>Upload one of your meal</h1>
-        <a href="seller_dashboard.php" class="btn-dashb">Back to Dashboard</a>
+        <h2 class="welcome-message desktop-only">Meal Upload</h2>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option value="" style="display:none">Options</option>
+                <option value="seller_dashboard.php">Home</option>
+                <option value="meal_upload.php">Upload Meal</option>
+                <option value="track_orders.php">Orders</option>
+                <option value="pending_orders.php">Accepted Orders</option>
+                <option value="transactions.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
+        </div>
     </div>
-
     <!-- Meal Upload Section -->
     <!-- Meal Upload Section -->
     <div class="section">
@@ -341,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
             <!-- Hidden input to store drink prices -->
             <input type="hidden" name="drinks_price" id="drinks_price">
 
-            <button type="submit" name="upload_meal">Upload Meal</button>
+            <button type="submit" class="btn" name="upload_meal">Upload Meal</button>
 
             <script>
                 let drinks = [];

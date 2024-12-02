@@ -125,22 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        .header {
-            width: 100%;
-            padding: 1rem 2rem;
-            background-color: var(--secondary-color);
-            color: #333;
-            text-align: center;
-            box-shadow: 0 2px 4px var(--shadow-color);
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .header h1 {
-            font-family: 'MyCustomFont2', sans-serif;
-            margin: 0;
-            font-size: 1.8rem;
-        }
 
         .back-button {
             text-decoration: none;
@@ -159,6 +143,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .meal-container {
+                width: 80vw;
+            }
         }
 
         .meal {
@@ -311,6 +301,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: 1px solid var(--primary-color);
             color: #fff;
         }
+
+
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: 80vw;
+            }
+        }
+
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -379,7 +441,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 .catch(error => console.error("Error:", error));
         }
     </script>
-
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 
 </head>
 
@@ -393,16 +462,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <h2>You Chews</h2>
             <p>IKAW BAHALA</p>
         </div>
-        <div class="form-container">
-            <form action="user_dashboard.php" method="post">
-                <select name="user_action" class="action-select" onchange="this.form.submit()">
-                    <option value="">Options</option>
-                    <option value="Home">Home</option>
-
-                    <option value="edit_profile">Edit Profile</option>
-                    <option value="logout">Logout</option>
-                </select>
-            </form>
+        <div class="nav-dropdown">
+            <select id="options-dropdown" onchange="navigateToPage(this)">
+                <option style="display: none" value="">Options</option>
+                <option value="user_dashboard.php">Home</option>
+                <option value="cart.php">Cart</option>
+                <option value="user_orders.php">My Orders</option>
+                <option value="user_transacts.php">Transactions</option>
+                <option value="user_edit.php">Edit User</option>
+                <option value="logout.php">Logout</option>
+            </select>
         </div>
     </div>
     <div class="meal-container">

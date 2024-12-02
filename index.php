@@ -106,7 +106,6 @@
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            margin-top: 5%;
             animation: fadeIn 1s ease-out;
         }
 
@@ -191,7 +190,8 @@
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
-                margin-top: 15%;
+                width: 80vw;
+
             }
 
             h1 {
@@ -236,7 +236,11 @@
         <p class="p">Please choose an option below to continue:</p>
         <a class="link" href="login.php"><button class="btn">Login</button></a>
         <a class="link" href="signup.php"><button class="btn">Signup</button></a>
+
+        <br><br><br>
+        <a href="about_page.php" class="link">About Us</a>
     </div>
+
 </body>
 
 </html>

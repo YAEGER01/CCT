@@ -41,65 +41,29 @@ $orderResult = $stmt->get_result();
     <title>Seller Dashboard</title>
     <link rel="icon" type="image/png" href="images/Logo/logoplate.png">
     <style>
+        @font-face {
+            font-family: 'MyCustomFont1';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-ExtraLight.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'MyCustomFont2';
+            /* Give your font a name */
+            src: url('fonts/nexa/Nexa-Heavy.ttf') format('truetype');
+            /* Path to the TTF file */
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #F2F2F2;
-        }
-
-        .header {
-            background-color: #ffffff;
-            color: black;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .nav-dropdown {
-            position: relative;
-        }
-
-        .nav-dropdown select {
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 16px;
-            background-color: #6200ea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            appearance: none;
-            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="white" d="M7 10l5 5 5-5H7z"/%3E%3C/svg%3E');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px;
-        }
-
-        .nav-dropdown select:hover {
-            background-color: #4500b5;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .header h1 {
-                display: none;
-            }
-
-            .nav-dropdown {
-                width: 100%;
-            }
-
-            .nav-dropdown select {
-                width: 100%;
-                padding: 15px;
-            }
         }
 
         .content-container {
@@ -120,6 +84,13 @@ $orderResult = $stmt->get_result();
             background-color: #ffffff;
             animation: scroll-diagonal 10s linear infinite;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            .content-container {
+                width: 80%;
+                margin: 20px;
+            }
         }
 
         /* Keyframes for Diagonal Scrolling */
@@ -157,12 +128,14 @@ $orderResult = $stmt->get_result();
         }
 
         .meal_section h2 {
+            font-family: 'MyCustomFont2';
             font-size: 24px;
             color: #333;
             margin-bottom: 20px;
         }
 
         .meal-container {
+
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-start;
@@ -183,11 +156,16 @@ $orderResult = $stmt->get_result();
             transition: transform 0.3s ease;
         }
 
+        .meal p {
+            font-family: 'MyCustomFont1';
+        }
+
         .meal:hover {
             transform: scale(1.03);
         }
 
         .meal h3 {
+            font-family: 'MyCustomFont2';
             font-size: 20px;
             color: #555;
             margin: 0 0 8px 0;
@@ -213,6 +191,7 @@ $orderResult = $stmt->get_result();
         }
 
         .description-box p {
+            font-family: 'MyCustomFont1';
             margin: 0;
             color: #666;
             line-height: 1.4;
@@ -343,35 +322,81 @@ $orderResult = $stmt->get_result();
         }
 
 
-        /* Media query for mobile */
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            /* Light gray */
+            color: #333;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            border-radius: 15px;
+            margin-top: 15px;
+            margin: 20px;
+        }
+
         @media (max-width: 768px) {
-            .mobile-only {
-                display: block;
-                /* Show on mobile */
-            }
-
-            .desktop-only {
-                display: none;
-                /* Hide on mobile */
-            }
-
-            .orders-sidebar {
-                display: none;
-                /* Hide messages sidebar on mobile */
+            .header {
+                width: 80%;
             }
         }
 
-        /* Media query for desktop */
-        @media (min-width: 769px) {
-            .mobile-only {
-                display: none;
-                /* Hide on desktop */
-            }
+        .header h2 {
+            font-family: 'MyCustomFont2', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #d056ef;
+            /* Accent color */
+        }
 
-            .orders-sidebar {
-                display: block;
-                /* Show sidebar on desktop */
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header h2 {
+                font-size: 15px;
             }
+        }
+
+        .header p {
+            font-family: 'MyCustomFont1', sans-serif;
+            font-size: 12px;
+            font-weight: 690;
+            color: #555;
+            text-align: center;
+        }
+
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        #options-dropdown {
+            appearance: none;
+            /* Remove default appearance */
+            -webkit-appearance: none;
+            /* For Safari */
+            -moz-appearance: none;
+            /* For Firefox */
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f2f2f2;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #options-dropdown:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #007bff;
+        }
+
+        #options-dropdown option {
+            padding: 10px;
+            font-size: 16px;
+
         }
     </style>
     <script>
@@ -387,22 +412,22 @@ $orderResult = $stmt->get_result();
 <body>
 
     <div class="header">
-        <h1 class="welcome-message desktop-only">Welcome, <?php echo htmlspecialchars($username); ?></h1>
+
+        <h2 class="welcome-message desktop-only">Store username: <?php echo htmlspecialchars($username); ?></h2>
         <div class="nav-dropdown">
             <select id="options-dropdown" onchange="navigateToPage(this)">
-                <option value="">OPTIONS</option>
+                <option value="" style="display:none">Options</option>
+                <option value="seller_dashboard.php">Home</option>
                 <option value="meal_upload.php">Upload Meal</option>
                 <option value="track_orders.php">Orders</option>
                 <option value="pending_orders.php">Accepted Orders</option>
-                <option value="messages.php" class="mobile-only">Messages</option> <!-- Messages link for mobile -->
                 <option value="transactions.php">Transactions</option>
                 <option value="user_edit.php">Edit User</option>
                 <option value="logout.php">Logout</option>
             </select>
         </div>
     </div>
-    <br><br>
-    <hr><br><br>
+
     <div class="content-container">
         <div class="meal_section">
             <h2>Your Uploaded Meals</h2>
