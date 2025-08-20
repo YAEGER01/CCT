@@ -29,7 +29,7 @@ if (isset($_POST['delete'])) {
 // Query to fetch the user's cart items
 $cartQuery = "SELECT c.meal_id, c.quantity, c.meal_name, c.rice_option, c.rice_price, c.drinks, c.drink_price, m.price, m.image
               FROM cart c 
-              JOIN meals m ON c.meal_id = m.id 
+              JOIN meals m ON c.meal_id = m.meal_id
               WHERE c.user_id = $user_id";
 $cartResult = mysqli_query($conn, $cartQuery);
 
