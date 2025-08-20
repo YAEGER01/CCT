@@ -9,15 +9,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'user') {
 }
 
 $user_id = $_SESSION['user_id'];
-
-// Fetch transactions for the buyer, including new fields
 $transactionQuery = "SELECT t.id, t.transaction_date, s.username AS seller_name, m.meal_name AS meal_name, t.quantity, t.rice_option, t.rice_price, t.drinks, t.drinks_price, t.total_price
                      FROM transactions t
                      JOIN users s ON t.seller_id = s.id
-                     JOIN meals m ON t.meal_id = m.id
+                     JOIN meals m ON t.meal_id = m.meal_id
                      WHERE t.user_id = $user_id
                      ORDER BY t.transaction_date DESC";
 $transactionResult = mysqli_query($conn, $transactionQuery);
+
+// Fetch transactions into an array
+$transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);
 
 // Fetch transactions into an array
 $transactions = mysqli_fetch_all($transactionResult, MYSQLI_ASSOC);

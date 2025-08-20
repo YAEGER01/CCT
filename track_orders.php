@@ -4,71 +4,64 @@ include 'db.php';
 
 // Check if seller is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
-    header("Location: login.php"); // Redirect to login if not a seller
+    header("Location: login.php");
     exit();
 }
 
-$seller_id = $_SESSION['user_id']; // Get seller's ID
+$seller_id = $_SESSION['user_id']; // Seller's ID
+
+// Fetch seller username
+$stmtUser = $conn->prepare("SELECT username FROM users WHERE id = ?");
+$stmtUser->bind_param('i', $seller_id);
+$stmtUser->execute();
+$resultUser = $stmtUser->get_result();
+$seller = $resultUser->fetch_assoc();
+$username = $seller ? $seller['username'] : 'Unknown';
+
 // Handle accepting and declining orders
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['action'])) {
-        $order_id = intval($_POST['order_id']); // Get the order ID
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $order_id = intval($_POST['order_id']); // Get the order ID
 
-        // Fetch the order details first, including rice and drink options
-        $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
-        $orderResult = mysqli_query($conn, $orderQuery);
+    // Fetch the order details including rice and drinks
+    $orderQuery = "SELECT * FROM orders WHERE id = $order_id";
+    $orderResult = mysqli_query($conn, $orderQuery);
+    if (!$orderResult)
+        die("Error fetching order: " . mysqli_error($conn));
 
-        if (!$orderResult) {
-            die("Error fetching order: " . mysqli_error($conn));
-        }
+    $order = mysqli_fetch_assoc($orderResult);
+    if ($order) {
+        $rice_option = $order['rice_option'];
+        $rice_price = $order['rice_price'];
+        $drink_option = $order['drinks'];
+        $drink_price = $order['drinks_price'];
+        $total_price = $order['price'] * $order['quantity'] + $rice_price + $drink_price;
 
-        $order = mysqli_fetch_assoc($orderResult);
+        if ($_POST['action'] === 'accept') {
+            $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity, status, price, rice_option, rice_price, drinks, drinks_price) 
+                            VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 'accepted', {$order['price']}, 
+                                    '$rice_option', $rice_price, '$drink_option', $drink_price)";
+            if (!mysqli_query($conn, $insertQuery))
+                die("Error inserting into accepted_orders: " . mysqli_error($conn));
 
-        if ($order) {
-            $rice_option = $order['rice_option'];
-            $rice_price = $order['rice_price'];
-            $drink_option = $order['drinks'];
-            $drink_price = $order['drinks_price'];
-            $total_price = $order['price'] * $order['quantity'] + $rice_price + $drink_price;
+            mysqli_query($conn, "DELETE FROM orders WHERE id = $order_id");
+            header("Location: track_orders.php");
+            exit();
 
-            if ($_POST['action'] === 'accept') {
-                // Insert into accepted_orders table
-                $insertQuery = "INSERT INTO accepted_orders (order_id, user_id, meal_id, quantity, status, price, rice_option, rice_price, drinks, drinks_price) 
-                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 'accepted', {$order['price']}, 
-                                        '$rice_option', $rice_price, '$drink_option', $drink_price)";
+        } elseif ($_POST['action'] === 'decline') {
+            $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price)
+                            VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, $total_price, $seller_id, NOW(), '$rice_option', $rice_price, '$drink_option', $drink_price)";
+            if (!mysqli_query($conn, $insertQuery))
+                die("Error inserting into transactions: " . mysqli_error($conn));
 
-                if (!mysqli_query($conn, $insertQuery)) {
-                    die("Error inserting into accepted_orders: " . mysqli_error($conn));
-                }
-
-                // Delete the order from orders table
-                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
-                mysqli_query($conn, $deleteQuery);
-
-                header("Location: track_orders.php");
-                exit();
-            } elseif ($_POST['action'] === 'decline') {
-                // Insert into transactions table with additional fields
-                // Use $seller_id from the session
-                $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price)
-                                VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, $total_price, $seller_id, NOW(), '$rice_option', $rice_price, '$drink_option', $drink_price)";
-
-                if (!mysqli_query($conn, $insertQuery)) {
-                    die("Error inserting into transactions: " . mysqli_error($conn));
-                }
-
-                // Delete the order from orders table
-                $deleteQuery = "DELETE FROM orders WHERE id = $order_id";
-                mysqli_query($conn, $deleteQuery);
-
-                header("Location: track_orders.php");
-                exit();
-            }
+            mysqli_query($conn, "DELETE FROM orders WHERE id = $order_id");
+            header("Location: track_orders.php");
+            exit();
         }
     }
 }
 
-// Fetch orders made to the seller
+// Fetch pending orders for this seller
+// Fetch pending orders for this seller
 $orderQuery = "
     SELECT 
         o.id AS order_id, 
@@ -82,16 +75,20 @@ $orderQuery = "
         o.drinks, 
         o.drinks_price
     FROM orders o
-    JOIN meals m ON o.meal_id = m.id
+    JOIN meals m ON o.meal_id = m.meal_id
     JOIN users u ON o.user_id = u.id
     WHERE m.seller_id = ? AND o.status = 'pending'
     ORDER BY o.id DESC";
 
 $stmt = $conn->prepare($orderQuery);
+if (!$stmt)
+    die("Error preparing query: " . $conn->error);
+
 $stmt->bind_param('i', $seller_id);
 $stmt->execute();
 $orderResult = $stmt->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

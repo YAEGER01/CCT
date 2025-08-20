@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 $meal_id = mysqli_real_escape_string($conn, $_GET['meal_id']);
 
 // Fetch meal details from the database
-$sql = "SELECT * FROM meals WHERE id = '$meal_id' AND seller_id = {$_SESSION['user_id']}";
+$sql = "SELECT * FROM meals WHERE meal_id = '$meal_id' AND seller_id = {$_SESSION['user_id']}";
 $result = mysqli_query($conn, $sql);
 $meal = mysqli_fetch_assoc($result);
 
@@ -21,6 +21,7 @@ if (!$meal) {
     header("Location: seller_dashboard.php");
     exit();
 }
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $meal_name = mysqli_real_escape_string($conn, $_POST['meal_name']);
@@ -41,13 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($rice_options)
         $update_fields[] = "rice_options='$rice_options'";
-    if ($rice_price_1)
+    if ($rice_price_1 !== NULL)
         $update_fields[] = "rice_price_1='$rice_price_1'";
-    if ($rice_price_2)
+    if ($rice_price_2 !== NULL)
         $update_fields[] = "rice_price_2='$rice_price_2'";
     if ($drinks)
         $update_fields[] = "drinks='$drinks'";
-    if ($drinks_price)
+    if ($drinks_price !== NULL)
         $update_fields[] = "drinks_price='$drinks_price'";
 
     // Check if a new image is uploaded
@@ -57,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $target_file = $target_dir . time() . "_" . $file_name;
 
         $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        if ($file_type != "jpg" && $file_type != "png" && $file_type != "jpeg" && $file_type != "gif") {
+        if (!in_array($file_type, ["jpg", "jpeg", "png", "gif"])) {
             echo "Only JPG, JPEG, PNG & GIF files are allowed.";
         } elseif (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
             $update_fields[] = "image='$target_file'";
@@ -67,17 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Convert the array into a string for SQL query
-    $sql = "UPDATE meals SET " . implode(', ', $update_fields) . " WHERE id='$meal_id' AND seller_id={$_SESSION['user_id']}";
+    $sql = "UPDATE meals SET " . implode(', ', $update_fields) . " WHERE meal_id='$meal_id' AND seller_id={$_SESSION['user_id']}";
 
     if (mysqli_query($conn, $sql)) {
-        echo "Meal updated successfully!";
         header("Location: seller_dashboard.php"); // Redirect to seller dashboard after successful update
         exit();
     } else {
         echo "Error updating meal: " . mysqli_error($conn);
     }
 }
-
 ?>
 
 <!DOCTYPE html>

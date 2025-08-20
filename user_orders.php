@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $orderQuery = "
             SELECT o.*, m.seller_id, m.price AS meal_price 
             FROM orders o
-            JOIN meals m ON o.meal_id = m.id
+            JOIN meals m ON o.meal_id = m.meal_id
             WHERE o.id = $order_id AND o.user_id = $user_id";
 
         $orderResult = mysqli_query($conn, $orderQuery);
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $orderQuery = "
     SELECT o.id AS order_id, o.status, m.meal_name AS meal_name, o.quantity, m.price, o.rice_option, o.drinks 
     FROM orders o
-    JOIN meals m ON o.meal_id = m.id
+    JOIN meals m ON o.meal_id = m.meal_id
     WHERE o.user_id = ? AND o.status = 'pending'
     ORDER BY o.id DESC";
 
@@ -93,6 +93,7 @@ if (!$stmt->execute()) {
 
 $orderResult = $stmt->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

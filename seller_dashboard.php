@@ -9,10 +9,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 
 $username = $_SESSION['username'];
 
+// Delete a meal
 if (isset($_POST['delete_meal'])) {
-    $meal_id = $_POST['meal_id'];
-    $delete_query = "DELETE FROM meals WHERE id = '$meal_id' AND seller_id = {$_SESSION['user_id']}";
-    mysqli_query($conn, $delete_query);
+    $meal_id = intval($_POST['meal_id']); // sanitize input
+    $delete_query = "DELETE FROM meals WHERE meal_id = ? AND seller_id = ?";
+    $stmt = $conn->prepare($delete_query);
+    $stmt->bind_param('ii', $meal_id, $_SESSION['user_id']);
+    $stmt->execute();
     header("Location: seller_dashboard.php");
     exit();
 }
@@ -21,17 +24,18 @@ if (isset($_POST['delete_meal'])) {
 $orderQuery = "
     SELECT o.id AS order_id, o.status, m.meal_name AS meal_name, o.quantity, m.price, o.rice_option, o.drinks, u.username AS customer_name 
     FROM orders o
-    JOIN meals m ON o.meal_id = m.id
+    JOIN meals m ON o.meal_id = m.meal_id
     JOIN users u ON o.user_id = u.id
     WHERE m.seller_id = ? AND o.status = 'pending'
     ORDER BY o.id DESC";
 
 $stmt = $conn->prepare($orderQuery);
-$seller_id = $_SESSION['user_id']; // Make sure to set the seller_id correctly
+$seller_id = $_SESSION['user_id'];
 $stmt->bind_param('i', $seller_id);
 $stmt->execute();
 $orderResult = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -462,15 +466,17 @@ $orderResult = $stmt->get_result();
                         <?php endif; ?>
                         <p><strong>Price:</strong> ₱<?php echo htmlspecialchars($meal['price']); ?></p>
                         <div class="meal-actions">
+                            <!-- Delete/Edit Meal Forms -->
                             <form method="POST" action="seller_dashboard.php" style="display:inline;">
-                                <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
+                                <input type="hidden" name="meal_id" value="<?php echo $meal['meal_id']; ?>">
                                 <button class="btn" type="submit" name="delete_meal"
                                     onclick="return confirm('Are you sure you want to delete this meal?')">Delete</button>
                             </form>
                             <form method="GET" action="edit_meal.php" style="display:inline;">
-                                <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
+                                <input type="hidden" name="meal_id" value="<?php echo $meal['meal_id']; ?>">
                                 <button class="btn" type="submit">Edit</button>
                             </form>
+
                         </div>
                     </div>
                 <?php endwhile; ?>

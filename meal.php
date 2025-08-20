@@ -1,5 +1,4 @@
 <?php
-// Start session and include database connection
 session_start();
 include 'db.php';
 
@@ -32,18 +31,28 @@ $sellerData = $sellerResult->fetch_assoc();
 $seller_name = htmlspecialchars($sellerData['username']);
 
 // Fetch meals for this seller
-$stmt = $conn->prepare("SELECT id, meal_name, description, price, image, rice_options, drinks, rice_price_1, rice_price_2, drinks_price FROM meals WHERE seller_id = ?");
+$stmt = $conn->prepare("
+    SELECT meal_id, meal_name, description, price, image, rice_options, drinks, rice_price_1, rice_price_2, drinks_price
+    FROM meals
+    WHERE seller_id = ?
+");
 $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $mealsResult = $stmt->get_result();
 
+// Handle adding to cart
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['quantity'])) {
     $meal_id = intval($_POST['meal_id']);
     $quantity = intval($_POST['quantity']);
     $rice_option = !empty($_POST['rice_option']) ? $_POST['rice_option'] : NULL;
     $drink_option = !empty($_POST['drink_option']) ? $_POST['drink_option'] : NULL;
 
-    $stmt = $conn->prepare("SELECT meal_name, price, rice_price_1, rice_price_2, drinks_price FROM meals WHERE id = ?");
+    // Fetch meal details
+    $stmt = $conn->prepare("
+        SELECT meal_name, price, rice_price_1, rice_price_2, drinks_price
+        FROM meals
+        WHERE meal_id = ?
+    ");
     $stmt->bind_param("i", $meal_id);
     $stmt->execute();
     $mealData = $stmt->get_result()->fetch_assoc();
@@ -51,21 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
     if ($mealData) {
         $meal_name = htmlspecialchars($mealData['meal_name']);
         $meal_price = floatval($mealData['price']);
-        $rice_price = ($rice_option === '1 cup') ? floatval($mealData['rice_price_1']) : (($rice_option === '2 cups') ? floatval($mealData['rice_price_2']) : NULL);
-        $drink_price = $drink_option ? floatval($mealData['drinks_price']) : NULL;
-        $total_price = ($meal_price * $quantity) + ($rice_price ?? 0) + ($drink_price ?? 0);
+        $rice_price = ($rice_option === '1 cup') ? floatval($mealData['rice_price_1']) :
+            (($rice_option === '2 cups') ? floatval($mealData['rice_price_2']) : 0);
+        $drink_price = $drink_option ? floatval($mealData['drinks_price']) : 0;
+        $total_price = ($meal_price * $quantity) + $rice_price + $drink_price;
 
         $user_id = $_SESSION['user_id'];
 
-        // Check if item with same meal, rice, and drink already exists in the cart
-        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND (rice_option = ? OR ? IS NULL) AND (drinks = ? OR ? IS NULL)";
-        $stmt = $conn->prepare($checkQuery);
-        $stmt->bind_param("iissss", $user_id, $meal_id, $rice_option, $rice_option, $drink_option, $drink_option);
-        $stmt->execute();
-        $checkResult = $stmt->get_result();
-
-        // Check if item with same meal, rice, and drink already exists in the cart
-        $checkQuery = "SELECT id, quantity FROM cart WHERE user_id = ? AND meal_id = ? AND rice_option = ? AND drinks = ?";
+        // Check if same item exists in cart
+        $checkQuery = "
+            SELECT id, quantity
+            FROM cart
+            WHERE user_id = ? AND meal_id = ? AND rice_option = ? AND drinks = ?
+        ";
         $stmt = $conn->prepare($checkQuery);
         $stmt->bind_param("iiss", $user_id, $meal_id, $rice_option, $drink_option);
         $stmt->execute();
@@ -74,38 +81,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
         if ($checkResult->num_rows > 0) {
             $existingItem = $checkResult->fetch_assoc();
             $new_quantity = $existingItem['quantity'] + $quantity;
+            $updated_total_price = ($meal_price * $new_quantity) + $rice_price + $drink_price;
 
-            // Calculate the updated total price
-            $updated_total_price = ($meal_price * $new_quantity) + ($rice_price ?? 0) + ($drink_price ?? 0);
-
-            // Debugging output
-            echo "New Quantity: $new_quantity<br>";
-            echo "Updated Total Price: $updated_total_price<br>";
-
-            // Prepare the update statement
+            // Update existing cart item
             $updateQuery = "UPDATE cart SET quantity = ?, total_price = ? WHERE id = ?";
             $stmt = $conn->prepare($updateQuery);
             $stmt->bind_param("idi", $new_quantity, $updated_total_price, $existingItem['id']);
             $stmt->execute();
-
-            if ($stmt->affected_rows > 0) {
-                echo "<script>alert('Cart item updated successfully!');</script>";
-            } else {
-                echo "<script>alert('Failed to update cart item.');</script>";
-            }
         } else {
-            // Prepare the insert statement with NULL check for optional fields
-            $insertQuery = "INSERT INTO cart (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $insertQuery = "
+                INSERT INTO cart
+                (user_id, meal_id, meal_name, quantity, price, rice_option, rice_price, drinks, drink_price, total_price)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ";
             $stmt = $conn->prepare($insertQuery);
-
-            // Prepare bind parameters ensuring correct data types
-            $rice_option = $rice_option ?? NULL; // Ensure $rice_option is NULL if not set
-            $drink_option = $drink_option ?? NULL; // Ensure $drink_option is NULL if not set
-
-            // Debugging output for insert
-            echo "Quantity: $quantity<br>";
-            echo "Total Price: $total_price<br>";
-
             $stmt->bind_param(
                 "iisidssssd",
                 $user_id,
@@ -119,15 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
                 $drink_price,
                 $total_price
             );
-
-            if ($stmt->execute()) {
-                echo "<script>alert('Item added to cart successfully!');</script>";
-            } else {
-                echo "<script>alert('Failed to add item to cart.');</script>";
-            }
+            $stmt->execute();
         }
 
-        // Redirect to prevent resubmission on refresh
         header("Location: meal.php?seller_id=" . $seller_id);
         exit();
     } else {
@@ -135,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meal_id'], $_POST['qu
     }
 }
 
+// Handle dropdown actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_action'])) {
     $action = $_POST['user_action'];
     switch ($action) {
@@ -159,7 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_action'])) {
 
 $sellerResult->close();
 ?>
-
 
 
 <!DOCTYPE html>
@@ -594,7 +577,7 @@ $sellerResult->close();
                         </div>
                         <div class="meal-actions">
                             <form method="POST" action="meal.php?seller_id=<?php echo $seller_id; ?>">
-                                <input type="hidden" name="meal_id" value="<?php echo $meal['id']; ?>">
+                                <input type="hidden" name="meal_id" value="<?php echo $meal['meal_id']; ?>">
                                 <!-- Quantity input -->
                                 <label for="quantity">Qty:</label>
                                 <input type="number" name="quantity" required min="1" value="1">

@@ -8,65 +8,105 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
     exit();
 }
 
-$seller_id = $_SESSION['user_id']; // Use the seller's user ID
+$seller_id = $_SESSION['user_id'];
 
-// Fetch accepted orders from the database, including rice and drinks options
-$orderQuery = "SELECT a.id, u.username AS user_name, m.meal_name, a.quantity, a.status, m.price, 
-                      a.rice_option, a.rice_price, a.drinks, a.drinks_price 
-               FROM accepted_orders a 
-               JOIN users u ON a.user_id = u.id 
-               JOIN meals m ON a.meal_id = m.id";
-$orderResult = mysqli_query($conn, $orderQuery);
+// Fetch seller username
+$stmtUser = $conn->prepare("SELECT username FROM users WHERE id = ?");
+$stmtUser->bind_param('i', $seller_id);
+$stmtUser->execute();
+$resultUser = $stmtUser->get_result();
+$seller = $resultUser->fetch_assoc();
+$username = $seller ? $seller['username'] : 'Unknown';
+
+// Fetch accepted orders
+$orderQuery = "
+    SELECT 
+        a.id, 
+        u.username AS user_name, 
+        m.meal_name, 
+        a.quantity, 
+        a.status, 
+        m.price, 
+        a.rice_option, 
+        a.rice_price, 
+        a.drinks, 
+        a.drinks_price
+    FROM accepted_orders a
+    JOIN users u ON a.user_id = u.id
+    JOIN meals m ON a.meal_id = m.meal_id
+    WHERE m.seller_id = ?
+    ORDER BY a.id DESC
+";
+
+$stmtOrders = $conn->prepare($orderQuery);
+$stmtOrders->bind_param('i', $seller_id);
+$stmtOrders->execute();
+$orderResult = $stmtOrders->get_result();
 
 $orders = [];
-if ($orderResult) {
-    while ($row = mysqli_fetch_assoc($orderResult)) {
-        $orders[] = $row;
-    }
+while ($row = $orderResult->fetch_assoc()) {
+    $orders[] = $row;
 }
 
-// Handle marking an order as completed
+// Handle marking order as completed
 if (isset($_POST['mark_completed'])) {
     $order_id = intval($_POST['order_id']);
 
-    // Fetch the order details, including rice and drinks options
-    $orderQuery = "SELECT a.*, m.price 
-                   FROM accepted_orders a 
-                   JOIN meals m ON a.meal_id = m.id 
-                   WHERE a.id = $order_id";
-    $orderResult = mysqli_query($conn, $orderQuery);
-    $order = mysqli_fetch_assoc($orderResult);
+    // Fetch order details
+    $orderQuery = "
+        SELECT a.*, m.price 
+        FROM accepted_orders a
+        JOIN meals m ON a.meal_id = m.meal_id
+        WHERE a.id = ?
+    ";
+    $stmtOrder = $conn->prepare($orderQuery);
+    $stmtOrder->bind_param('i', $order_id);
+    $stmtOrder->execute();
+    $orderResult = $stmtOrder->get_result();
+    $order = $orderResult->fetch_assoc();
 
     if ($order) {
-        // Calculate the total price, including rice and drinks prices
         $total_price = $order['quantity'] * ($order['price'] + $order['rice_price'] + $order['drinks_price']);
 
-        // Insert into transactions table with rice and drinks details
-        $insertQuery = "INSERT INTO transactions (order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price)
-                        VALUES ($order_id, {$order['user_id']}, {$order['meal_id']}, {$order['quantity']}, 
-                                $total_price, $seller_id, NOW(), '{$order['rice_option']}', {$order['rice_price']}, '{$order['drinks']}', {$order['drinks_price']})";
-        mysqli_query($conn, $insertQuery);
+        // Insert into transactions
+        $insertQuery = "
+            INSERT INTO transactions (
+                order_id, user_id, meal_id, quantity, total_price, seller_id, transaction_date, rice_option, rice_price, drinks, drinks_price
+            ) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)
+        ";
+        $stmtInsert = $conn->prepare($insertQuery);
+        $stmtInsert->bind_param(
+            'iiiidissdi',
+            $order_id,
+            $order['user_id'],
+            $order['meal_id'],
+            $order['quantity'],
+            $total_price,
+            $seller_id,
+            $order['rice_option'],
+            $order['rice_price'],
+            $order['drinks'],
+            $order['drinks_price']
+        );
+        $stmtInsert->execute();
 
-        // Delete the order from accepted_orders once it's moved to transactions
-        $deleteQuery = "DELETE FROM accepted_orders WHERE id = $order_id";
-        mysqli_query($conn, $deleteQuery);
+        // Delete from accepted_orders
+        $stmtDelete = $conn->prepare("DELETE FROM accepted_orders WHERE id = ?");
+        $stmtDelete->bind_param('i', $order_id);
+        $stmtDelete->execute();
 
-        // Redirect after marking the order as completed
         header("Location: pending_orders.php");
         exit();
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <title>Pending Orders</title>
     <style>
         body {
@@ -419,53 +459,57 @@ if (isset($_POST['mark_completed'])) {
             <?php
             if (!empty($orders)) {
                 foreach ($orders as $order) {
-                    $modalId = "orderModal" . $order['id']; // Unique modal ID
+                    $modalId = "orderModal" . $order['id'];
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($order['user_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['meal_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['quantity']) . "</td>";
                     echo "<td>" . htmlspecialchars($order['status']) . "</td>";
                     echo "<td>
-                    <button type='button' class='back-btn' data-bs-toggle='modal' data-bs-target='#$modalId'>See More</button>
-                    <form method='POST' action='pending_orders.php' style='display:inline;'>
-                        <input type='hidden' name='order_id' value='" . $order['id'] . "'>
-                        <button type='submit' class='back-btn' name='mark_completed'>Mark as Completed</button>
-                    </form>
-                  </td>";
+                        <button type='button' class='back-btn' data-bs-toggle='modal' data-bs-target='#$modalId'>See More</button>
+                        <form method='POST' action='pending_orders.php' style='display:inline;'>
+                            <input type='hidden' name='order_id' value='" . $order['id'] . "'>
+                            <button type='submit' class='back-btn' name='mark_completed'>Mark as Completed</button>
+                        </form>
+                      </td>";
                     echo "</tr>";
 
-                    // Modal for showing detailed information
                     echo "
-            <div class='modal fade' id='$modalId' tabindex='-1' aria-labelledby='{$modalId}Label' aria-hidden='true'>
-                <div class='modal-dialog modal-dialog-centered'>
-                    <div class='modal-content'>
-                        <div class='modal-header'>
-                            <h5 class='modal-title' id='{$modalId}Label'>Order Details</h5>
-                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                <div class='modal fade' id='$modalId' tabindex='-1' aria-labelledby='{$modalId}Label' aria-hidden='true'>
+                    <div class='modal-dialog modal-dialog-centered'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <h5 class='modal-title' id='{$modalId}Label'>Order Details</h5>
+                                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                            </div>
+                            <div class='modal-body'>
+                                <p><strong>Meal Name:</strong> " . htmlspecialchars($order['meal_name']) . "</p>
+                                <p><strong>Quantity:</strong> " . htmlspecialchars($order['quantity']) . "</p>
+                                <p><strong>Rice Option:</strong> " . htmlspecialchars($order['rice_option']) . "</p>
+                                <p><strong>Rice Price:</strong> ₱" . number_format($order['rice_price'], 2) . "</p>
+                                <p><strong>Drinks:</strong> " . htmlspecialchars($order['drinks']) . "</p>
+                                <p><strong>Drinks Price:</strong> ₱" . number_format($order['drinks_price'], 2) . "</p>
+                                <p><strong>Total Price:</strong> ₱" . number_format($order['quantity'] * ($order['price'] + $order['rice_price'] + $order['drinks_price']), 2) . "</p>
+                            </div>
                         </div>
-                        <div class='modal-body'>
-                            <p><strong>Meal Name:</strong> " . htmlspecialchars($order['meal_name']) . "</p>
-                            <p><strong>Quantity:</strong> " . htmlspecialchars($order['quantity']) . "</p>
-                            <p><strong>Rice Option:</strong> " . htmlspecialchars($order['rice_option']) . "</p>
-                            <p><strong>Rice Price:</strong> ₱" . number_format($order['rice_price'], 2) . "</p>
-                            <p><strong>Drinks:</strong> " . htmlspecialchars($order['drinks']) . "</p>
-                            <p><strong>Drinks Price:</strong> ₱" . number_format($order['drinks_price'], 2) . "</p>
-                            <p><strong>Total Price:</strong> ₱" . number_format($order['quantity'] * ($order['price'] + $order['rice_price'] + $order['drinks_price']), 2) . "</p>
-                        </div>
-                        
                     </div>
-                </div>
-            </div>";
+                </div>";
                 }
             } else {
                 echo "<tr><td colspan='5'>No pending orders.</td></tr>";
             }
             ?>
         </tbody>
-
-
     </table>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function navigateToPage(selectElement) {
+            const selectedValue = selectElement.value;
+            if (selectedValue) {
+                window.location.href = selectedValue;
+            }
+        }
+    </script>
 </body>
 
 </html>

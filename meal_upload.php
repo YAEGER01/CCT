@@ -4,7 +4,7 @@ include 'db.php';
 
 // Check if seller is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
-    header("Location: login.php"); // Redirect to login if not seller
+    header("Location: login.php");
     exit();
 }
 
@@ -15,29 +15,32 @@ $username = $_SESSION['username'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_meal'])) {
     $meal_name = mysqli_real_escape_string($conn, $_POST['meal_name']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
-    $price = mysqli_real_escape_string($conn, $_POST['price']);
 
-    // Get selected rice options and prices
+    // Convert numeric inputs safely
+    $price = isset($_POST['price']) && $_POST['price'] !== '' ? floatval($_POST['price']) : 0.00;
+    $rice_price_1 = isset($_POST['rice_price_1']) && $_POST['rice_price_1'] !== '' ? floatval($_POST['rice_price_1']) : 0.00;
+    $rice_price_2 = isset($_POST['rice_price_2']) && $_POST['rice_price_2'] !== '' ? floatval($_POST['rice_price_2']) : 0.00;
+    $drinks_price = isset($_POST['drinks_price']) && $_POST['drinks_price'] !== '' ? floatval($_POST['drinks_price']) : 0.00;
+
+    // Get selected rice options and drinks
     $rice_options = isset($_POST['rice_options']) ? implode(', ', $_POST['rice_options']) : '';
-    $rice_price_1 = mysqli_real_escape_string($conn, $_POST['rice_price_1']); // New: price for 1 cup rice
-    $rice_price_2 = mysqli_real_escape_string($conn, $_POST['rice_price_2']); // New: price for 2 cups rice
-
-    // Get uploaded drinks and drink prices
     $drinks = isset($_POST['drinks']) ? mysqli_real_escape_string($conn, $_POST['drinks']) : '';
-    $drinks_price = isset($_POST['drinks_price']) ? mysqli_real_escape_string($conn, $_POST['drinks_price']) : ''; // New: drink prices
 
-    // Image upload handling (same as before)
+    // Handle image upload
     if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === 0) {
-        $target_dir = "uploads/"; // Directory to store uploaded images
+        $target_dir = "uploads/";
         $file_name = basename($_FILES["meal_image"]["name"]);
-        $target_file = $target_dir . time() . "_" . $file_name; // Unique name using time
+        $target_file = $target_dir . time() . "_" . $file_name;
 
         $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         if (in_array($file_type, ['jpg', 'jpeg', 'png', 'gif'])) {
             if (move_uploaded_file($_FILES["meal_image"]["tmp_name"], $target_file)) {
-                // Insert meal data including rice options, drinks, drink prices, and the image path
-                $sql = "INSERT INTO meals (meal_name, description, price, image, rice_options, rice_price_1, rice_price_2, drinks, drinks_price, seller_id) 
-                        VALUES ('$meal_name', '$description', '$price', '$target_file', '$rice_options', '$rice_price_1', '$rice_price_2', '$drinks', '$drinks_price', {$_SESSION['user_id']})";
+                // Insert into meals table
+                $sql = "INSERT INTO meals 
+                        (meal_name, description, price, image, rice_options, rice_price_1, rice_price_2, drinks, drinks_price, seller_id) 
+                        VALUES 
+                        ('$meal_name', '$description', $price, '$target_file', '$rice_options', $rice_price_1, $rice_price_2, '$drinks', $drinks_price, {$_SESSION['user_id']})";
+
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Meal uploaded successfully.');</script>";
                 } else {
